@@ -1,0 +1,8 @@
+# TSA23 FEMIC instance dependencies
+# Pin versions from parent femic where applicable.
+# Add TSA23-specific dependencies below as needed.
+
+# Primary dependency: local install of parent femic package
+# Editable install from submodule requires special handling;
+# typically use: pip install -e ../femic  # when in external/femic-tsa23-instance
+-e ../../  # placeholder; adjust based on actual submodule position

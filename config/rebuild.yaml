@@ -1,0 +1,59 @@
+# TSA23 Instance Rebuild Spec
+# 
+# This file defines required inputs, command steps, and invariant checks
+# for rebuilding the TSA23 instance. Follow FEMIC P13 canonical rebuild contract.
+#
+# DO NOT hand-edit generated artifacts; regenerate via the rebuild runner.
+
+spec_version: "1.0"
+instance_id: tsa23
+parent_femic_version: ""  # pin parent femic version for reproducibility
+
+required_inputs:
+  - path: data/vri/
+    description: "VRI polygon/stand data (materialized from external source)"
+    required: true
+  - path: data/siteprod/
+    description: "SiteProd artifacts (canonical preferred, ArcRasterRescue fallback)"
+    required: false
+  - path: config/tsr/overlay.yaml
+    description: "Reviewed TSR overlay for TSA23"
+    required: true
+  - path: reference/Patchworks/
+    description: "Local Patchworks install (proprietary, provide locally)"
+    required: false
+
+required_config:
+  - config/run_profile.tsa23.yaml
+  - config/seral.tsa23.yaml
+  - config/vdyp_fit_policy.yaml
+
+command_steps:
+  - step: source_discovery
+    description: "Materialize and validate source layers"
+    run_before: data_materialization
+  - step: data_materialization
+    description: "Run VDYP, build curve tables, AU assignment"
+    run_before: tipsy_handoff
+  - step: tipsy_handoff
+    description: "Generate BatchTIPSY input files for human review"
+    run_before: model_input_generation
+  - step: model_input_generation
+    description: "Generate forestmodel.xml, fragments, tracks/"
+    run_before: patchworks_runtime
+  - step: patchworks_runtime
+    description: "Run Matrix Builder, validate accounts.csv"
+    run_before: evidence_collection
+
+invariant_checks:
+  - check: managed_species_yield_nonzero
+    description: "Managed species must have nonzero yield where source share > 0"
+    fail_on_violation: true
+  - check: seral_completeness
+    description: "All defined seral states must produce accounts"
+    fail_on_violation: true
+  - check: topology_block_join
+    description: "All stands must join to blocks/topology"
+    fail_on_violation: false
+
+evidence_output: runtime/evidence/
