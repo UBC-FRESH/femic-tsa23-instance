@@ -1,12 +1,12 @@
 # TSA23 Instance Roadmap
 
-## Phase 0: Bootstrap (P108 — P108.2–P108.4)
+## Phase 0: Bootstrap (P108 — P108.2–P108.5)
 
 - [x] Create `UBC-FRESH/femic-tsa23-instance` public repository (parent #302, child #298)
 - [x] Add parent submodule under `external/femic-tsa23-instance` (child #298)
 - [x] Bootstrap instance governance, structure, and package scaffold (child #299)
-- [ ] Plan TSA23 source workflow and first build phases (child #300)
-- [ ] Write delegated result report and open P108 PR (child #301)
+- [x] Plan TSA23 source workflow and first build phases (child #300)
+- [x] Write delegated result report and open P108 PR (child #301)
 
 ## Phase 1: Source/Corpus Discovery and Materialization (P109 — tentative)
 
