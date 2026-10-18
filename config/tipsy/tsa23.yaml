@@ -8,9 +8,9 @@ metadata:
     notes: Table 21 regeneration assumptions by analysis unit; Table 22 genetic worth (Fdi/Sx/Pli); OAF
       Section 6.2.3.
   author: agent-provisional
-  notes: Per-(leading-species, SI-level) rules from TSR 2012 Tables 21-22. FEMIC SI levels L/M/H map to
-    TSR poor/medium/good; the TSR 'very good' class is not represented in the current 3-level stratification.
-    Proportions remain a provisional treated/untreated split.
+  notes: Per-(leading-species, SI-level) rules from TSR 2012 Tables 21-22. FEMIC SI L/M/H map to TSR poor/medium/good.
+    The treated lane strips broadleaf (FEMIC _finalize_species_mix) and reallocates to the top conifer;
+    GW_x are pre-aligned to the post-finalize species order.
 species_code_overrides:
   SX: SW
 defaults:
@@ -71,18 +71,16 @@ rules:
       Regen_Delay: 2
       Density: 1244
       Util_DBH_cm: 12.5
-      SPP_1: AT
-      PCT_1: 50
-      SPP_2: PLI
-      PCT_2: 37
-      SPP_3: FDI
-      PCT_3: 7
-      SPP_4: SX
-      PCT_4: 5
-      GW_2: 0.2
-      GW_age_2: 12
-      GW_4: 2.0
-      GW_age_4: 12
+      SPP_1: PLI
+      PCT_1: 87
+      GW_1: 0.2
+      GW_age_1: 12
+      SPP_2: FDI
+      PCT_2: 7
+      SPP_3: SX
+      PCT_3: 5
+      GW_3: 2.0
+      GW_age_3: 12
 - id: tsa23_deciduous_medium
   when:
     leading_species_in:
@@ -125,18 +123,16 @@ rules:
       Regen_Delay: 2
       Density: 1244
       Util_DBH_cm: 12.5
-      SPP_1: AT
-      PCT_1: 50
-      SPP_2: PLI
-      PCT_2: 37
-      SPP_3: FDI
-      PCT_3: 7
-      SPP_4: SX
-      PCT_4: 5
-      GW_2: 0.2
-      GW_age_2: 12
-      GW_4: 2.0
-      GW_age_4: 12
+      SPP_1: PLI
+      PCT_1: 87
+      GW_1: 0.2
+      GW_age_1: 12
+      SPP_2: FDI
+      PCT_2: 7
+      SPP_3: SX
+      PCT_3: 5
+      GW_3: 2.0
+      GW_age_3: 12
 - id: tsa23_deciduous_good
   when:
     leading_species_in:
@@ -181,20 +177,18 @@ rules:
       Regen_Delay: 2
       Density: 1097
       Util_DBH_cm: 12.5
-      SPP_1: AT
-      PCT_1: 60
-      SPP_2: PLI
-      PCT_2: 22
-      SPP_3: SX
-      PCT_3: 10
-      SPP_4: FDI
-      PCT_4: 7
-      SPP_5: BL
-      PCT_5: 2
-      GW_2: 0.6
+      SPP_1: PLI
+      PCT_1: 82
+      GW_1: 0.6
+      GW_age_1: 12
+      SPP_2: SX
+      PCT_2: 10
+      GW_2: 1.1
       GW_age_2: 12
-      GW_3: 1.1
-      GW_age_3: 12
+      SPP_3: FDI
+      PCT_3: 7
+      SPP_4: BL
+      PCT_4: 2
 - id: tsa23_douglas_fir_poor
   when:
     leading_species_in:
@@ -225,19 +219,17 @@ rules:
       Density: 1029
       Util_DBH_cm: 17.5
       SPP_1: PLI
-      PCT_1: 63
-      SPP_2: FDI
-      PCT_2: 24
-      SPP_3: AT
-      PCT_3: 9
-      SPP_4: SX
-      PCT_4: 4
-      SPP_5: BL
-      PCT_5: 1
+      PCT_1: 72
       GW_1: 0.1
       GW_age_1: 12
-      GW_4: 0.5
-      GW_age_4: 12
+      SPP_2: FDI
+      PCT_2: 24
+      SPP_3: SX
+      PCT_3: 4
+      GW_3: 0.5
+      GW_age_3: 12
+      SPP_4: BL
+      PCT_4: 1
 - id: tsa23_douglas_fir_medium
   when:
     leading_species_in:
@@ -268,19 +260,17 @@ rules:
       Density: 1029
       Util_DBH_cm: 17.5
       SPP_1: PLI
-      PCT_1: 63
-      SPP_2: FDI
-      PCT_2: 24
-      SPP_3: AT
-      PCT_3: 9
-      SPP_4: SX
-      PCT_4: 4
-      SPP_5: BL
-      PCT_5: 1
+      PCT_1: 72
       GW_1: 0.1
       GW_age_1: 12
-      GW_4: 0.5
-      GW_age_4: 12
+      SPP_2: FDI
+      PCT_2: 24
+      SPP_3: SX
+      PCT_3: 4
+      GW_3: 0.5
+      GW_age_3: 12
+      SPP_4: BL
+      PCT_4: 1
 - id: tsa23_douglas_fir_good
   when:
     leading_species_in:
@@ -311,21 +301,19 @@ rules:
       Density: 1066
       Util_DBH_cm: 17.5
       SPP_1: PLI
-      PCT_1: 57
-      SPP_2: FDI
-      PCT_2: 25
-      SPP_3: AT
-      PCT_3: 14
-      SPP_4: SX
-      PCT_4: 2
-      SPP_5: BL
-      PCT_5: 1
+      PCT_1: 71
       GW_1: 0.1
       GW_age_1: 12
+      SPP_2: FDI
+      PCT_2: 25
       GW_2: 0.1
       GW_age_2: 12
-      GW_4: 0.3
-      GW_age_4: 12
+      SPP_3: SX
+      PCT_3: 2
+      GW_3: 0.3
+      GW_age_3: 12
+      SPP_4: BL
+      PCT_4: 1
 - id: tsa23_balsam_poor
   when:
     leading_species_in:
@@ -352,26 +340,24 @@ rules:
       PCT_2: 26
       SPP_3: SX
       PCT_3: 11
-      SPP_4: FDI
-      PCT_4: 3
-      SPP_5: AT
-      PCT_5: 4
+      SPP_4: AT
+      PCT_4: 4
+      SPP_5: FDI
+      PCT_5: 3
     f:
       Regen_Delay: 2
       Density: 1065
       Util_DBH_cm: 17.5
       SPP_1: BL
-      PCT_1: 56
+      PCT_1: 60
       SPP_2: PLI
       PCT_2: 26
       SPP_3: SX
       PCT_3: 11
-      SPP_4: FDI
-      PCT_4: 3
-      SPP_5: AT
-      PCT_5: 4
       GW_3: 0.8
       GW_age_3: 12
+      SPP_4: FDI
+      PCT_4: 3
 - id: tsa23_balsam_medium
   when:
     leading_species_in:
@@ -398,26 +384,24 @@ rules:
       PCT_2: 26
       SPP_3: SX
       PCT_3: 11
-      SPP_4: FDI
-      PCT_4: 3
-      SPP_5: AT
-      PCT_5: 4
+      SPP_4: AT
+      PCT_4: 4
+      SPP_5: FDI
+      PCT_5: 3
     f:
       Regen_Delay: 2
       Density: 1065
       Util_DBH_cm: 17.5
       SPP_1: BL
-      PCT_1: 56
+      PCT_1: 60
       SPP_2: PLI
       PCT_2: 26
       SPP_3: SX
       PCT_3: 11
-      SPP_4: FDI
-      PCT_4: 3
-      SPP_5: AT
-      PCT_5: 4
       GW_3: 0.8
       GW_age_3: 12
+      SPP_4: FDI
+      PCT_4: 3
 - id: tsa23_balsam_good
   when:
     leading_species_in:
@@ -453,19 +437,17 @@ rules:
       Density: 1040
       Util_DBH_cm: 17.5
       SPP_1: PLI
-      PCT_1: 55
+      PCT_1: 68
       SPP_2: FDI
       PCT_2: 29
-      SPP_3: AT
-      PCT_3: 13
-      SPP_4: SX
-      PCT_4: 2
-      SPP_5: BL
-      PCT_5: 1
       GW_2: 0.1
       GW_age_2: 12
-      GW_4: 0.3
-      GW_age_4: 12
+      SPP_3: SX
+      PCT_3: 2
+      GW_3: 0.3
+      GW_age_3: 12
+      SPP_4: BL
+      PCT_4: 1
 - id: tsa23_pine_poor
   when:
     leading_species_in:
@@ -500,21 +482,19 @@ rules:
       Density: 1076
       Util_DBH_cm: 12.5
       SPP_1: PLI
-      PCT_1: 75
-      SPP_2: FDI
-      PCT_2: 8
-      SPP_3: AT
-      PCT_3: 8
-      SPP_4: SX
-      PCT_4: 6
-      SPP_5: BL
-      PCT_5: 2
+      PCT_1: 83
       GW_1: 0.1
       GW_age_1: 12
+      SPP_2: FDI
+      PCT_2: 8
       GW_2: 0.1
       GW_age_2: 12
-      GW_4: 0.6
-      GW_age_4: 12
+      SPP_3: SX
+      PCT_3: 6
+      GW_3: 0.6
+      GW_age_3: 12
+      SPP_4: BL
+      PCT_4: 2
 - id: tsa23_pine_medium
   when:
     leading_species_in:
@@ -549,21 +529,19 @@ rules:
       Density: 1076
       Util_DBH_cm: 12.5
       SPP_1: PLI
-      PCT_1: 75
-      SPP_2: FDI
-      PCT_2: 8
-      SPP_3: AT
-      PCT_3: 8
-      SPP_4: SX
-      PCT_4: 6
-      SPP_5: BL
-      PCT_5: 2
+      PCT_1: 83
       GW_1: 0.1
       GW_age_1: 12
+      SPP_2: FDI
+      PCT_2: 8
       GW_2: 0.1
       GW_age_2: 12
-      GW_4: 0.6
-      GW_age_4: 12
+      SPP_3: SX
+      PCT_3: 6
+      GW_3: 0.6
+      GW_age_3: 12
+      SPP_4: BL
+      PCT_4: 2
 - id: tsa23_pine_good
   when:
     leading_species_in:
@@ -598,21 +576,19 @@ rules:
       Density: 1072
       Util_DBH_cm: 12.5
       SPP_1: PLI
-      PCT_1: 75
-      SPP_2: AT
-      PCT_2: 9
-      SPP_3: FDI
-      PCT_3: 9
-      SPP_4: SX
-      PCT_4: 6
-      SPP_5: BL
-      PCT_5: 2
+      PCT_1: 84
       GW_1: 0.1
       GW_age_1: 12
-      GW_3: 0.2
+      SPP_2: FDI
+      PCT_2: 9
+      GW_2: 0.2
+      GW_age_2: 12
+      SPP_3: SX
+      PCT_3: 6
+      GW_3: 0.6
       GW_age_3: 12
-      GW_4: 0.6
-      GW_age_4: 12
+      SPP_4: BL
+      PCT_4: 2
 - id: tsa23_spruce_poor
   when:
     leading_species_in:
@@ -646,15 +622,13 @@ rules:
       Density: 1314
       Util_DBH_cm: 17.5
       SPP_1: SX
-      PCT_1: 52
+      PCT_1: 54
+      GW_1: 0.2
+      GW_age_1: 12
       SPP_2: PLI
       PCT_2: 37
       SPP_3: BL
       PCT_3: 8
-      SPP_4: AT
-      PCT_4: 2
-      GW_1: 0.2
-      GW_age_1: 12
 - id: tsa23_spruce_medium
   when:
     leading_species_in:
@@ -690,19 +664,17 @@ rules:
       Density: 1668
       Util_DBH_cm: 17.5
       SPP_1: PLI
-      PCT_1: 71
-      SPP_2: SX
-      PCT_2: 20
-      SPP_3: AT
-      PCT_3: 4
-      SPP_4: BL
-      PCT_4: 3
-      SPP_5: FDI
-      PCT_5: 1
+      PCT_1: 75
       GW_1: 0.1
       GW_age_1: 12
+      SPP_2: SX
+      PCT_2: 20
       GW_2: 1.0
       GW_age_2: 12
+      SPP_3: BL
+      PCT_3: 3
+      SPP_4: FDI
+      PCT_4: 1
 - id: tsa23_spruce_good
   when:
     leading_species_in:
@@ -738,21 +710,19 @@ rules:
       Density: 1101
       Util_DBH_cm: 17.5
       SPP_1: PLI
-      PCT_1: 58
-      SPP_2: SX
-      PCT_2: 20
-      SPP_3: AT
-      PCT_3: 14
-      SPP_4: BL
-      PCT_4: 5
-      SPP_5: FDI
-      PCT_5: 3
+      PCT_1: 72
       GW_1: 0.2
       GW_age_1: 12
+      SPP_2: SX
+      PCT_2: 20
       GW_2: 1.7
       GW_age_2: 12
-      GW_5: 0.3
-      GW_age_5: 12
+      SPP_3: BL
+      PCT_3: 5
+      SPP_4: FDI
+      PCT_4: 3
+      GW_4: 0.3
+      GW_age_4: 12
 - id: tsa23_catch_all
   when: {}
   assign:
@@ -778,5 +748,3 @@ rules:
       PCT_2: 20
       SPP_3: FDI
       PCT_3: 15
-      SPP_4: AT
-      PCT_4: 5
