@@ -1,0 +1,5 @@
+# TSA23 VDYP fit policy overrides (100 Mile House TSA).
+# Start empty; add per-stratum/SI skip1 tuning here after the first VDYP pass
+# if the fit diagnostics show poor curve fits.
+version: 1
+tsa_overrides: {}

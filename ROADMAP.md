@@ -8,15 +8,33 @@
 - [x] Plan TSA23 source workflow and first build phases (child #300)
 - [x] Write delegated result report and open P108 PR (child #301)
 
-## Phase 1: Source/Corpus Discovery and Materialization (P109 — tentative)
+## Phase 1: Source/Corpus Discovery and Materialization
 
-Define the initial TSA23 source-data workflow without executing heavy workflows.
+Parent issue: #1
+Branch: `feature/p109-source-discovery-materialization`
+Status: pr-open
 
-- [ ] Audit available TSA23 TSR references and BC Data Catalogue layers
-- [ ] Map materialization targets (VRI, SiteProd, boundaries, THLB/THNS)
-- [ ] Define DataLad/public-data mirror strategy for required layers
-- [ ] Create instance rebuild spec draft (`config/rebuild.yaml`)
-- [ ] Materialize first-pass source layers locally
+Goal: materialize the TSA23 source layers and instance configuration, and prove
+the instance builds end-to-end (TSR -> sources -> FEMIC build -> Patchworks
+export -> WS4 build/simulate).
+
+- [x] P109.1 TSR fetch, candidate-fact review, and reviewed overlay (#2)
+  - [x] `femic tsr fetch --tsa 23` (18/18 PDFs cached)
+  - [x] `femic tsr facts-report --tsa 23` review of source-layer/THLB candidates
+  - [x] `config/tsr/overlay.yaml` with 17 adopted source layers (`proposed`)
+- [x] P109.2 Source-layer materialization (VRI/SiteProd/TSA boundary) (#3)
+  - [x] Arbutus `arbutus-s3` special remote enabled
+  - [x] VRI 2024/2025, SiteProd, and TSA boundary materialized
+- [x] P109.3 Instance configuration and provisional TIPSY rules (#4)
+  - [x] `config/run_profile.tsa23.yaml`, `config/seral.tsa23.yaml`, `config/vdyp_fit_policy.yaml`
+  - [x] `config/rebuild.spec.yaml` (canonical), `config/tipsy/tsa23.yaml` (provisional)
+- [x] P109.4 First end-to-end build and WS4 validation (#5)
+  - [x] `femic run --tsa 23` (45 AUs; VDYP curves under Wine)
+  - [x] `femic export patchworks --tsa 23` (`forestmodel.xml` + `fragments.shp`)
+  - [x] `ws4 build` + `ws4 simulate` (100-year run)
+
+Deferred to a later phase: the BatchTIPSY handoff (managed/treated curves), the
+wildfire fuel-treatment optimization layer, and per-AU TIPSY refinement.
 
 ## Phase 2: TSR/THLB Interpretation (P110 — tentative)
 

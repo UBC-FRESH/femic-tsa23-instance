@@ -26,3 +26,32 @@
   FEMIC issues #300 and #301 were verified closed.
 - Extended the Phase 0 range from P108.2-P108.4 to P108.2-P108.5 so the
   instance roadmap matches the parent P108 bootstrap completion state.
+
+## 2026-10-18 — P109 Source discovery and first materialization
+
+- TSR discovery: `femic tsr fetch --tsa 23` cached 18/18 TSA23 TSR PDFs;
+  `femic tsr facts-report --tsa 23` reviewed source-layer and THLB candidates
+  (17 likely-useful source layers, all from the TSR 2012 Data Package).
+  `femic tsr overlay-init` produced `config/tsr/overlay.yaml` with 17 adopted
+  source layers (`status: proposed`).
+- Source materialization: enabled the Arbutus `arbutus-s3` DataLad remote and
+  materialized VRI 2024/2025, SiteProd, and the TSA boundary. VRI 2025 is the
+  FEMIC-selected vintage; species composition lives in `SPECIES_CD_1..6` /
+  `SPECIES_PCT_1..6` for treed polygons (`BCLCS_LEVEL_2 = 'T'`).
+- Instance configuration: added `config/run_profile.tsa23.yaml`,
+  `config/seral.tsa23.yaml`, `config/vdyp_fit_policy.yaml`, the canonical
+  `config/rebuild.spec.yaml`, and provisional `config/tipsy/tsa23.yaml`
+  (TSR 2012 Table 21 regeneration assumptions; OAF conventions).
+- End-to-end build: `femic run --tsa 23` completed (45 AUs; VDYP7 7.16k under
+  Wine). `femic export patchworks --tsa 23` wrote `forestmodel.xml` and
+  `fragments.shp` (45 AUs, 102,128 fragments, 136 curves). `ws4 build` and a
+  100-year `ws4 simulate` completed on the exported model (168,405 blocks;
+  1,037,011 m3 harvested in year 0).
+- Known gaps: the managed/treated curve lane is empty pending the BatchTIPSY
+  handoff (`missing TIPSY output file ... writing empty yield table`).
+- FEMIC defects found during the build (to be filed upstream): `pandas<3` pin,
+  `plots/` directory not created before `savefig`, `assign_siteprod_from_raster`
+  fails on an empty frame, and `--debug-rows` subsets the province-wide VRI
+  before TSA/treed filtering.
+- Formalized Phase 1 as parent issue #1 with child issues #2-#5 on branch
+  `feature/p109-source-discovery-materialization`.

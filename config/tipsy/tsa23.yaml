@@ -1,0 +1,250 @@
+# TSA23 (100 Mile House TSA) TIPSY establishment/future rules.
+#
+# PROVISIONAL: derived from the 100 Mile House TSA TSR Data Package, January 2012
+# (TSR_2012/Data_Package/23tsdp12.pdf), Sections 6.2/6.4/6.5:
+#   - Table 21 "Regeneration assumptions by analysis unit" (SI, regen delay,
+#     species composition, initial density, planted/"regular spacing" option).
+#   - Section 6.2.3 OAF conventions: OAF1 -15% (0.85), OAF2 -5% (0.95);
+#     young MPB-impacted pine (>70% pine, age 20-60) extra OAF1 -20% (not yet modelled).
+#   - Section 6.4.1 second-generation SIBEC site index uplift for managed stands.
+#   - Section 6.5.1.1 / Table 22 genetic worth of select seed.
+#
+# `e` = establishment / untreated-origin table (natural regeneration).
+# `f` = future / treated-origin table (planted, select seed).
+# Proportions are provisional treated/untreated area splits pending review.
+#
+# Unresolved placeholders (intentionally deferred):
+#   - Per-AU (11..54) composition/density/delay from Table 21 is collapsed here to
+#     one representative mix per leading-species group ("good"/"medium" classes).
+#   - Genetic worth (Table 22, per-AU for Fdi/Sx/Pli) is left null pending a
+#     clean parse; wire GW_x/GW_age_x in the next pass.
+#   - MPB young-pine OAF1 reduction (age 20-60, >70% pine) is not yet modelled.
+
+schema_version: 1
+tsa_code: "23"
+
+metadata:
+  source_tsr:
+    - title: "100 Mile House TSA TSR Data Package"
+      year: 2012
+      url: "http://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf"
+      notes: "Table 21 regeneration assumptions; Table 22 genetic worth; OAF Section 6.2.3."
+  author: "agent-provisional"
+  notes: >-
+    Provisional config to unblock the TSA23 build. Final calibration should be
+    TSR/RESULTS/SPAR opening-level and reviewed by the maintainer.
+
+species_code_overrides:
+  SX: SW
+
+defaults:
+  e:
+    Regen_Method: "N"
+    Proportion: 0.30
+    OAF2: 0.95
+    FIZ: "I"
+    SI_c1: 1.0
+    SI_c2: 0.0
+  f:
+    Regen_Method: "P"
+    Proportion: 0.70
+    OAF2: 0.95
+    FIZ: "I"
+    SI_c1: 1.0
+    SI_c2: 2.0   # provisional second-generation SIBEC uplift for managed stands
+
+rules:
+  # --- Pine-leading AUs (TSR 41-44; representative "good") ---
+  - id: "tsa23_pine"
+    when:
+      leading_species_in: ["P", "PA", "PJ", "PL", "PLC", "PLI", "PM", "PF", "PY"]
+    assign:
+      e:
+        Regen_Delay: 2
+        Density: 1072
+        Util_DBH_cm: 12.5
+        SPP_1: "PLI"
+        PCT_1: 75
+        SPP_2: "FDI"
+        PCT_2: 9
+        SPP_3: "AT"
+        PCT_3: 8
+        SPP_4: "SW"
+        PCT_4: 6
+        SPP_5: "BL"
+        PCT_5: 2
+      f:
+        Regen_Delay: 2
+        Density: 1072
+        Util_DBH_cm: 12.5
+        SPP_1: "PLI"
+        PCT_1: 75
+        SPP_2: "FDI"
+        PCT_2: 9
+        SPP_3: "AT"
+        PCT_3: 8
+        SPP_4: "SW"
+        PCT_4: 6
+        SPP_5: "BL"
+        PCT_5: 2
+
+  # --- Douglas-fir-leading AUs (TSR 21-24; representative "poor/medium") ---
+  - id: "tsa23_douglas_fir"
+    when:
+      leading_species_in: ["F", "FD", "FDC", "FDI", "FDX"]
+    assign:
+      e:
+        Regen_Delay: 1
+        Density: 1029
+        Util_DBH_cm: 17.5
+        SPP_1: "PLI"
+        PCT_1: 63
+        SPP_2: "FDI"
+        PCT_2: 24
+        SPP_3: "AT"
+        PCT_3: 9
+        SPP_4: "SW"
+        PCT_4: 4
+        SPP_5: "BL"
+        PCT_5: 1
+      f:
+        Regen_Delay: 1
+        Density: 1029
+        Util_DBH_cm: 17.5
+        SPP_1: "PLI"
+        PCT_1: 63
+        SPP_2: "FDI"
+        PCT_2: 24
+        SPP_3: "AT"
+        PCT_3: 9
+        SPP_4: "SW"
+        PCT_4: 4
+        SPP_5: "BL"
+        PCT_5: 1
+
+  # --- Spruce-leading AUs (TSR 51-54; representative "good") ---
+  - id: "tsa23_spruce"
+    when:
+      leading_species_in: ["S", "SB", "SE", "SN", "SS", "SW", "SX", "SXE", "SXL", "SXW"]
+    assign:
+      e:
+        Regen_Delay: 2
+        Density: 1101
+        Util_DBH_cm: 17.5
+        SPP_1: "PLI"
+        PCT_1: 58
+        SPP_2: "SW"
+        PCT_2: 20
+        SPP_3: "AT"
+        PCT_3: 14
+        SPP_4: "BL"
+        PCT_4: 5
+        SPP_5: "FDI"
+        PCT_5: 3
+      f:
+        Regen_Delay: 2
+        Density: 1101
+        Util_DBH_cm: 17.5
+        SPP_1: "PLI"
+        PCT_1: 58
+        SPP_2: "SW"
+        PCT_2: 20
+        SPP_3: "AT"
+        PCT_3: 14
+        SPP_4: "BL"
+        PCT_4: 5
+        SPP_5: "FDI"
+        PCT_5: 3
+
+  # --- Balsam / cedar / hemlock-leading AUs (TSR 31-34; representative "poor/medium") ---
+  - id: "tsa23_balsam"
+    when:
+      leading_species_in: ["B", "BA", "BB", "BL", "BG", "BM", "CW", "HM", "HW", "YC"]
+    assign:
+      e:
+        Regen_Delay: 2
+        Density: 1065
+        Util_DBH_cm: 17.5
+        SPP_1: "BL"
+        PCT_1: 56
+        SPP_2: "PLI"
+        PCT_2: 26
+        SPP_3: "SW"
+        PCT_3: 11
+        SPP_4: "FDI"
+        PCT_4: 3
+        SPP_5: "AT"
+        PCT_5: 4
+      f:
+        Regen_Delay: 2
+        Density: 1065
+        Util_DBH_cm: 17.5
+        SPP_1: "BL"
+        PCT_1: 56
+        SPP_2: "PLI"
+        PCT_2: 26
+        SPP_3: "SW"
+        PCT_3: 11
+        SPP_4: "FDI"
+        PCT_4: 3
+        SPP_5: "AT"
+        PCT_5: 4
+
+  # --- Deciduous / broadleaf-leading AUs (TSR 11-14; representative "poor/medium") ---
+  - id: "tsa23_deciduous"
+    when:
+      leading_species_in: ["A", "AC", "ACB", "ACT", "AP", "AT", "AX", "D", "DR", "E", "EA", "EP", "MB", "MV", "QA", "QG", "U", "W", "WB", "WS"]
+    assign:
+      e:
+        Regen_Delay: 2
+        Density: 1244
+        Util_DBH_cm: 12.5
+        SPP_1: "AT"
+        PCT_1: 50
+        SPP_2: "PLI"
+        PCT_2: 37
+        SPP_3: "FDI"
+        PCT_3: 7
+        SPP_4: "SW"
+        PCT_4: 5
+      f:
+        Regen_Delay: 2
+        Density: 1244
+        Util_DBH_cm: 12.5
+        SPP_1: "AT"
+        PCT_1: 50
+        SPP_2: "PLI"
+        PCT_2: 37
+        SPP_3: "FDI"
+        PCT_3: 7
+        SPP_4: "SW"
+        PCT_4: 5
+
+  # --- Catch-all (must be last): generic interior conifer mix ---
+  - id: "tsa23_catch_all"
+    when: {}
+    assign:
+      e:
+        Regen_Delay: 2
+        Density: 1100
+        Util_DBH_cm: 17.5
+        SPP_1: "PLI"
+        PCT_1: 60
+        SPP_2: "SW"
+        PCT_2: 20
+        SPP_3: "FDI"
+        PCT_3: 15
+        SPP_4: "AT"
+        PCT_4: 5
+      f:
+        Regen_Delay: 2
+        Density: 1100
+        Util_DBH_cm: 17.5
+        SPP_1: "PLI"
+        PCT_1: 60
+        SPP_2: "SW"
+        PCT_2: 20
+        SPP_3: "FDI"
+        PCT_3: 15
+        SPP_4: "AT"
+        PCT_4: 5
