@@ -40,8 +40,11 @@
   `SPECIES_PCT_1..6` for treed polygons (`BCLCS_LEVEL_2 = 'T'`).
 - Instance configuration: added `config/run_profile.tsa23.yaml`,
   `config/seral.tsa23.yaml`, `config/vdyp_fit_policy.yaml`, the canonical
-  `config/rebuild.spec.yaml`, and provisional `config/tipsy/tsa23.yaml`
-  (TSR 2012 Table 21 regeneration assumptions; OAF conventions).
+  `config/rebuild.spec.yaml`, and `config/tipsy/tsa23.yaml`. The TIPSY rules are
+  per-(leading-species, SI-level) from TSR 2012 Table 21 (regeneration
+  assumptions) and Table 22 (genetic worth of non-pine seedlings, columns
+  Fdi/Sx/Pli), with FEMIC's L/M/H mapped to TSR poor/medium/good; OAF follows
+  Section 6.2.3 (OAF1 auto-derived, OAF2 0.95).
 - End-to-end build: `femic run --tsa 23` completed (45 AUs; VDYP7 7.16k under
   Wine). `femic export patchworks --tsa 23` wrote `forestmodel.xml` and
   `fragments.shp` (45 AUs, 102,128 fragments, 136 curves). `ws4 build` and a
