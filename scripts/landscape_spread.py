@@ -177,7 +177,10 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--scenario", default="p90")
     parser.add_argument("--age", type=int, default=60)
     parser.add_argument("--treat-fraction", type=float, default=0.0, dest="treat_fraction")
-    parser.add_argument("--treat-pattern", default="random", choices=["random"], dest="treat_pattern")
+    parser.add_argument(
+        "--treat-pattern", default="random", choices=["random", "clumped"], dest="treat_pattern"
+    )
+    parser.add_argument("--clusters", type=int, default=20)
     parser.add_argument("--ignitions", type=int, default=200)
     parser.add_argument("--duration-min", type=float, default=480.0, dest="duration_min")
     parser.add_argument("--seed", type=int, default=1)
@@ -189,20 +192,55 @@ def main() -> None:
     """Entry point."""
     args = _build_parser().parse_args()
     blocks = _block_fuel_types(args.blocks, args.fuel_types, args.scenario, args.age)
+    adj = _adjacency(args.topology)
     if args.treat_fraction > 0.0:
         rng = np.random.default_rng(args.seed)
-        eligible = blocks[
-            (~blocks["treated"]) & blocks["fuel_type"].isin(["C2", "C3", "C7"])
-        ]
-        count = int(len(eligible) * min(1.0, args.treat_fraction))
-        chosen = rng.choice(eligible["block_id"].to_numpy(), size=count, replace=False)
+        eligible_ids = set(
+            blocks.loc[
+                (~blocks["treated"]) & blocks["fuel_type"].isin(["C2", "C3", "C7"]), "block_id"
+            ].to_numpy()
+        )
+        area_by_block = blocks.set_index("block_id")["area_ha"].to_dict()
+        eligible_area = sum(area_by_block.get(b, 0.0) for b in eligible_ids)
+        target_area = min(1.0, args.treat_fraction) * eligible_area
+        chosen: set[int] = set()
+        treated_area = 0.0
+        if args.treat_pattern == "clumped":
+            seeds = rng.choice(list(eligible_ids), size=args.clusters, replace=False)
+            for seed in seeds:
+                queue = [int(seed)]
+                cluster: set[int] = set()
+                while queue:
+                    node = queue.pop(0)
+                    if node in cluster or node not in eligible_ids:
+                        continue
+                    cluster.add(node)
+                    for neighbour, _d in adj.get(node, []):
+                        if neighbour in eligible_ids and neighbour not in cluster:
+                            queue.append(neighbour)
+                for node in sorted(cluster):
+                    if treated_area >= target_area:
+                        break
+                    if node not in chosen:
+                        chosen.add(node)
+                        treated_area += area_by_block.get(node, 0.0)
+                if treated_area >= target_area:
+                    break
+        else:
+            ids = list(eligible_ids)
+            rng.shuffle(ids)
+            for node in ids:
+                if treated_area >= target_area:
+                    break
+                chosen.add(int(node))
+                treated_area += area_by_block.get(node, 0.0)
         blocks.loc[blocks["block_id"].isin(chosen), "treated"] = True
         blocks["ros_eff"] = np.where(
             blocks["treated"],
             blocks["ros_m_per_min"] * TREATMENT_ROS_FACTOR,
             blocks["ros_m_per_min"],
         )
-    adj = _adjacency(args.topology)
+        print(f"treated pattern={args.treat_pattern} blocks={len(chosen)}")
     result = simulate(
         blocks=blocks,
         adj=adj,
