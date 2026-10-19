@@ -77,6 +77,31 @@ between stripes) and only **slows** fire. Continuous-band vs striped comparison,
   stop, so fire routes around gaps and crosses (slower).
 - The arrangement signal is clearest in the **tail** (p90), not the mean.
 
+### E2c — Soft vs hard breaks: the ranking flips
+
+Same patterns, 20% treated, p90; treated blocks either slow fire (ROS x0.3) or
+are impassable (ROS x0.0).
+
+| pattern | ROS x0.3 (slow) | ROS x0.0 (impassable) |
+| --- | --- | --- |
+| random | 20,298 | 16,690 |
+| clumped | 19,870 | **15,742** (-5.7%) |
+| barrier (perp. wind) | **19,640** | 16,118 (-3.4%) |
+
+p90 at x0.0: random 32,735; clumped 31,626; barrier 31,609 (clumped and barrier
+tied, both ~3.4% below random).
+
+**Findings:**
+- A true (impassable) break roughly **doubles** the arrangement effect
+  (clumped -5.7% vs -2.1% at x0.3). Part of the earlier small effect was the
+  soft treatment, not the landscape.
+- The **ranking flips**: with soft breaks, orientation (barrier) wins; with hard
+  breaks, distribution (clumped) wins and orientation's edge disappears. So
+  "which pattern is best" depends on the treatment's actual effect on spread.
+- Implication for the bridge: the account(s) must carry **distribution** and,
+  for soft treatments, **orientation**; a single size-only or connectivity-only
+  metric will not cover both regimes.
+
 ---
 
 ## E3 — Bridge test: does WS4 see the fire benefit?
