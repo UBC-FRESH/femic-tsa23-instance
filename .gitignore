@@ -112,3 +112,5 @@ reference/Patchworks/
 *.pyc
 mypy_cache/
 .pytest_cache/
+
+data/*.input_sha256
