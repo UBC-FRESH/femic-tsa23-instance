@@ -3,7 +3,8 @@
 Status: draft
 Phase: Paper 2 (landscape fuel-treatment modelling)
 Date: 2026-10-19
-Companions: `planning/fuel_treatment_layer.md`, `planning/paper2_fire_behaviour_bridge.md`
+Companions: `planning/fuel_treatment_layer.md`, `planning/paper2_fire_behaviour_bridge.md`,
+`planning/paper2_evidence_log.md` (all numbers, commands, caveats)
 
 ## Purpose
 
