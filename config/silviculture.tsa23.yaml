@@ -103,5 +103,15 @@ commercial_thinning:
   basal_area_to_volume_ratio: 1.0
   final_felling_gap_factor: 0.0
   label: FT
+  origins:
+  - natural
+  - planted
+  state_by_origin:
+    natural:
+      from_state: baseline
+      to_state: baseline_ft
+    planted:
+      from_state: cc_pl
+      to_state: cc_pl_ft
 btc_indicator_banks:
 - log-grades

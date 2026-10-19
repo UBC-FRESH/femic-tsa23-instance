@@ -30,6 +30,36 @@ semantics, following the MKRF and K3Z CT implementations
   accounts (FEMIC PR for the configurable label: `UBC-FRESH/femic#327`).
 - WS4 compiles the model with `CC` and `FT` treatments.
 
+## Eligibility and operability (Paper 1)
+
+Per `Jamie-Iversen-MASc-Paper-1` (the stand-level fuel-treatment decision support
+flowchart), a stand is **not** fuel-treatable when any of the following holds:
+
+- Inadequate fuel (BCLCS): <5% vegetation coverage (non-vegetated), <10% crown
+  cover of any species/size (non-treed), or wetland.
+- Extremely low risk: broadleaf species composition >75%, or average stand
+  height <3 m.
+- BEC not conducive to fire: alpine tundra (AT), bunchgrass (BG), and specific
+  wet/cold subzones of BWBS, CWH, ESSF, ICH, and SBS.
+
+Remaining stands are treatable, with the prescription (and intensity) set by
+fire-weather zone, BEC, leading species, stand structure, and fuel-management
+goals. In the proposal, the prescription ranges map to treatment intensities.
+
+TSA23 application:
+
+- BEC zones present are IDF, SBS, SBPS, MS, ESSF, ICH; AT/BG are absent, so no
+  zone-level exclusion applies. (Wet/cold ESSF subzone exclusion is a refinement.)
+- The broadleaf >75% exclusion maps to the **IDF_AT** analysis units, which are
+  excluded from FT eligibility (FT is enabled on the 42 conifer AUs).
+- Height and BCLCS exclusions are stand-level attributes not carried at the AU
+  level; they are a later refinement (stand-level eligibility filter).
+- **Origin is not an eligibility criterion**: FT applies to first-growth
+  (natural) and planted stands alike. Implemented via
+  `commercial_thinning.origins: [natural, planted]` with per-origin states
+  (`UBC-FRESH/femic` multi-origin CT change), verified to emit FT on both the
+  `baseline` (natural) and `cc_pl` (planted) tracks.
+
 ## Economics (PI parameters)
 
 - **Treatment cost: $20,000/ha.** Charged per treated hectare when FT is applied.
