@@ -208,7 +208,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--treat-pattern",
         default="random",
-        choices=["random", "clumped", "barrier"],
+        choices=["random", "clumped", "barrier", "band"],
         dest="treat_pattern",
     )
     parser.add_argument("--clusters", type=int, default=20)
@@ -239,7 +239,25 @@ def main() -> None:
         target_area = min(1.0, args.treat_fraction) * eligible_area
         chosen: set[int] = set()
         treated_area = 0.0
-        if args.treat_pattern == "barrier":
+        if args.treat_pattern == "band":
+            # A single continuous band perpendicular to the wind (no gaps).
+            wx = np.sin(np.radians(args.wind_dir))
+            wy = np.cos(np.radians(args.wind_dir))
+            coords = blocks.set_index("block_id")[["x", "y"]]
+            proj = coords["x"] * wx + coords["y"] * wy
+            eligible_frame = blocks.loc[blocks["block_id"].isin(eligible_ids), ["block_id"]]
+            proj_eligible = proj.reindex(eligible_frame["block_id"]).dropna()
+            centre = float(proj_eligible.median())
+            ordered = [
+                int(b)
+                for b in (proj_eligible - centre).abs().sort_values().index
+            ]
+            for node in ordered:
+                if treated_area >= target_area:
+                    break
+                chosen.add(node)
+                treated_area += area_by_block.get(node, 0.0)
+        elif args.treat_pattern == "barrier":
             # Stripes perpendicular to the wind: treat alternate stripes.
             wx = np.sin(np.radians(args.wind_dir))
             wy = np.cos(np.radians(args.wind_dir))

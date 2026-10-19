@@ -113,5 +113,10 @@ commercial_thinning:
     planted:
       from_state: cc_pl
       to_state: cc_pl_ft
+  ages:
+  - 30
+  - 40
+  - 50
+  - 60
 btc_indicator_banks:
 - log-grades
