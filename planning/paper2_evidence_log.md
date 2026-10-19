@@ -179,6 +179,24 @@ Within a scenario:
   scenario (or apply it only under severe weather with sufficient treatment), not
   as a fixed linear term.
 
+**Reproducible oracle bundle** (`scripts/export_bridge_footprint.py`): the three
+schedules are laid out inside a fixed 1,877-block / 20,018.95 ha footprint, and the
+bundle exports that footprint topology (`src_block,dst_block,distance_m,bearing_deg`),
+block representative points, per-block base hazard, the three schedules, and
+`oracle.json`. Verified: every footprint block is flammable at period 0
+(`feature.FuelHazard` = 1.0); a scheduled FB block reads 0.05 and acts as a barrier
+under the WS4 membership convention (member when value > threshold).
+
+| pattern | treated blocks | directed_largest_reach | directed_mean_reach | undirected largest_component | mean burned (ha) |
+| --- | --- | --- | --- | --- | --- |
+| barrier | 291 | 471 | 107.3 | 1,060 | 4,833 |
+| clumped | 356 | 765 | 178.5 | 984 | 5,250 |
+| random | 359 | 913 | 253.2 | 1,466 | 6,088 |
+
+The undirected component ranks clumped < barrier < random and fails; directed reach
+ranks barrier < clumped < random and agrees with the fire model. `directed_edge_cut`
+(191 / 134 / 933) is not monotone and is diagnostic only.
+
 ---
 
 ## E3 — Bridge test: does WS4 see the fire benefit?
