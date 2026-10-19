@@ -102,6 +102,30 @@ tied, both ~3.4% below random).
   for soft treatments, **orientation**; a single size-only or connectivity-only
   metric will not cover both regimes.
 
+### E2d — The model's own hazard (FT 0.4 / SF 0.2 / FB 0.05)
+
+Same patterns, 20% treated, p90, with the spread multiplier taken from the model's
+`feature.FuelHazard` (not a hand-set flag):
+
+| treatment | random | clumped | barrier | p90 random | p90 barrier |
+| --- | --- | --- | --- | --- | --- |
+| FT (0.4) | 21,096 | 20,669 | **20,583** | 41,527 | 40,355 |
+| SF (0.2) | 19,406 | 18,897 | **18,581** | 38,028 | 35,428 |
+| FB (0.05) | 17,309 | 16,582 | **16,549** | 34,111 | 31,743 |
+
+**Findings:**
+- Arrangement helps for every treatment (barrier <= clumped < random), and the
+  effect **grows with treatment strength**: barrier vs random is -2.4% (FT),
+  -4.3% (SF), -4.4% (FB) on the mean, and -2.8% / -6.8% / -6.9% on the p90.
+- At the model's **near-null** FB (0.05), barrier still edges clumped on the mean
+  (-0.2%) and clearly wins on the p90 (-2.8%). The earlier E2c **flip** (clumped
+  best) only appears at a **true impassable stop (0.0)** — i.e. a near-null
+  treatment still lets fire cross slowly, so orientation keeps an edge. A
+  genuinely cleared break is what changes which pattern wins.
+- Implication: the bridge account must represent both **distribution** and
+  **orientation**, and the weight/interpretation depends on how close to
+  impassable the treatment really is.
+
 ---
 
 ## E3 — Bridge test: does WS4 see the fire benefit?
