@@ -36,7 +36,10 @@ import geopandas as gpd
 import numpy as np
 import pandas as pd
 
-TREATMENT_ROS_FACTOR = 0.6  # provisional: reduced crown-fire spread on thinned blocks
+TREATMENT_ROS_FACTOR = 0.6  # provisional fallback spread multiplier on treated blocks
+# Spread multipliers from the model's fuel-hazard curves (feature.FuelHazard):
+# 1.0 baseline, 0.4 thinning (FT), 0.2 surface fuel (SF), 0.05 fuel break (FB).
+TREATMENT_HAZARD = {"ft": 0.4, "sf": 0.2, "fb": 0.05}
 
 
 def _block_fuel_types(blocks: Path, fuel_types: Path, scenario: str, age: int) -> pd.DataFrame:
@@ -217,6 +220,10 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--duration-min", type=float, default=480.0, dest="duration_min")
     parser.add_argument("--wind-dir", type=float, default=225.0, dest="wind_dir")
     parser.add_argument("--treat-ros-factor", type=float, default=0.6, dest="treat_ros_factor")
+    parser.add_argument(
+        "--treatment", choices=sorted(TREATMENT_HAZARD), default=None,
+        help="Use the model's hazard multiplier for this treatment (ft/sf/fb).",
+    )
     parser.add_argument("--seed", type=int, default=1)
     parser.add_argument("--out", type=Path, required=True)
     return parser
@@ -226,6 +233,9 @@ def main() -> None:
     """Entry point."""
     args = _build_parser().parse_args()
     blocks = _block_fuel_types(args.blocks, args.fuel_types, args.scenario, args.age)
+    treat_factor = (
+        TREATMENT_HAZARD[args.treatment] if args.treatment else args.treat_ros_factor
+    )
     adj = _adjacency(args.topology)
     if args.treat_fraction > 0.0:
         rng = np.random.default_rng(args.seed)
@@ -307,7 +317,7 @@ def main() -> None:
         blocks.loc[blocks["block_id"].isin(chosen), "treated"] = True
         blocks["ros_eff"] = np.where(
             blocks["treated"],
-            blocks["ros_m_per_min"] * args.treat_ros_factor,
+            blocks["ros_m_per_min"] * treat_factor,
             blocks["ros_m_per_min"],
         )
         print(f"treated pattern={args.treat_pattern} blocks={len(chosen)}")
