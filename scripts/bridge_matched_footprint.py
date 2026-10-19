@@ -279,6 +279,7 @@ def run(
         results["patterns"][pattern] = {
             "treated_ha": float(sum(area[b] for b in treated)),
             "treated_blocks": len(treated),
+            "treated_block_ids": sorted(int(b) for b in treated),
             "mean_burned_ha": float(np.mean(burned)),
             "p90_burned_ha": float(np.quantile(burned, 0.9)),
             **_connectivity(footprint, treated, adj, centroids, wind_deg),
@@ -321,7 +322,17 @@ def main() -> None:
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=2))
-    frame = pd.DataFrame(result["patterns"]).T
+    # Write the exact treated-block schedules for the WS4 agent's oracle.
+    schedule_dir = args.out.with_name(args.out.stem + "_schedules")
+    schedule_dir.mkdir(parents=True, exist_ok=True)
+    for pattern, payload in result["patterns"].items():
+        pd.DataFrame(
+            {"block_id": payload["treated_block_ids"], "treatment": "FB", "period": 0}
+        ).to_csv(schedule_dir / f"{pattern}_sched.csv", index=False)
+    frame = pd.DataFrame(
+        {k: {m: v for m, v in d.items() if m != "treated_block_ids"}
+         for k, d in result["patterns"].items()}
+    ).T
     print(frame.to_string())
     fire_rank = list(frame.sort_values("mean_burned_ha").index)
     print("\nfire rank (best first):", fire_rank)

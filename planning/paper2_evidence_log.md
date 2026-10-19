@@ -151,6 +151,34 @@ fire outcome with connectivity metrics of the treated/untreated partition
   not undirected connectivity and not patch size. This is the concrete spec for
   the WS4 account, and it survives the footprint confound.
 
+### E6 — Response surface: when does directed reach predict the outcome?
+
+Sweep of the matched-footprint test: 3 weather scenarios x 3 treat fractions
+(10/20/30%) x 3 patterns, FB (0.05), 40 ignitions, 480 min
+(`runtime/fire/response_surface.csv`).
+
+Pooled across all 27 points, `burned ~ directed reach` gives **R2 = 0.08**
+(undirected 0.10) — **weather dominates**, so a single pooled fit is meaningless.
+Within a scenario:
+
+| scenario | R2 (directed reach) | burned range (ha) | best pattern by fraction |
+| --- | --- | --- | --- |
+| p90 | **0.906** | 3,634-8,549 | 0.1 random (marginal), 0.2/0.3 **barrier** |
+| extreme | **0.656** | 6,478-15,647 | 0.1 barrier, 0.2 **clumped**, 0.3 barrier |
+| median | 0.164 | 90-144 | random (differences negligible in absolute terms) |
+
+**Findings:**
+- **Directed reach predicts well when fire is severe and treatment substantial**
+  (p90 R2 0.91; extreme 0.66).
+- At **median** weather the fire is small (90-144 ha) and arrangement barely
+  matters; random can be marginally better by intercepting more ignitions, but
+  the absolute effect is negligible.
+- At a **sparse 10% treatment**, arrangement is marginal even at p90.
+- The best pattern is **scenario-dependent** (barrier vs clumped flips), so the
+  bridge account must be **scenario-conditioned**: weight it by the fire-weather
+  scenario (or apply it only under severe weather with sufficient treatment), not
+  as a fixed linear term.
+
 ---
 
 ## E3 — Bridge test: does WS4 see the fire benefit?
