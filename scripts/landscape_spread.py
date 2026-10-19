@@ -293,6 +293,9 @@ def main() -> None:
             blocks["ros_m_per_min"],
         )
         print(f"treated pattern={args.treat_pattern} blocks={len(chosen)}")
+        blocks_path = args.out.with_name(args.out.stem + "_blocks.csv")
+        blocks_path.parent.mkdir(parents=True, exist_ok=True)
+        pd.DataFrame({"block_id": sorted(chosen)}).to_csv(blocks_path, index=False)
     result = simulate(
         blocks=blocks,
         adj=adj,
