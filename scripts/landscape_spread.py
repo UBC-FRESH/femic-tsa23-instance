@@ -59,12 +59,15 @@ def _block_fuel_types(blocks: Path, fuel_types: Path, scenario: str, age: int) -
         One row per block.
     """
     gdf = gpd.read_file(blocks)
+    centroid = gdf.geometry.representative_point()
     frame = pd.DataFrame(
         {
             "block_id": gdf["BLOCK"].astype("int64"),
             "au_id": gdf["AU"].astype("int64"),
             "silv_state": gdf["SILV_STATE"].astype("string"),
             "area_ha": pd.to_numeric(gdf["AREA_HA"], errors="coerce").fillna(0.0),
+            "x": centroid.x.to_numpy(),
+            "y": centroid.y.to_numpy(),
         }
     )
     curves = pd.read_csv(fuel_types)
@@ -98,16 +101,33 @@ def _adjacency(topology: Path) -> dict[int, list[tuple[int, float]]]:
     return adj
 
 
+def _directional_factor(bearing_deg: float, wind_deg: float) -> float:
+    """Return a spread-rate factor from a bearing relative to the wind.
+
+    Head fire (bearing aligned with the wind) spreads fastest; back fire
+    slowest. A simple ellipse approximation: 1.0 head, ~0.6 flank, 0.2 back.
+    """
+    angle = np.radians(bearing_deg - wind_deg)
+    return 0.2 + 0.8 * ((1.0 + np.cos(angle)) / 2.0)
+
+
+def _bearing_deg(x0: float, y0: float, x1: float, y1: float) -> float:
+    """Return the compass bearing (degrees) from (x0,y0) to (x1,y1)."""
+    return float(np.degrees(np.arctan2(x1 - x0, y1 - y0)) % 360.0)
+
+
 def _travel_times(
     adj: dict[int, list[tuple[int, float]]],
     traversal_min: dict[int, float],
+    centroids: dict[int, tuple[float, float]],
+    wind_deg: float,
     source: int,
 ) -> dict[int, float]:
     """Return minimum fire arrival time (minutes) from a source block.
 
-    Fire crosses from a block to an adjacent block at the target block's
-    traversal time (its characteristic length over its rate of spread), so
-    touching blocks are not crossed instantaneously.
+    Fire crosses to an adjacent block at that block's traversal time (its
+    characteristic length over its rate of spread), scaled by a directional
+    factor from the spread bearing relative to the wind.
     """
     times: dict[int, float] = {source: 0.0}
     heap: list[tuple[float, int]] = [(0.0, source)]
@@ -115,11 +135,14 @@ def _travel_times(
         time, node = heapq.heappop(heap)
         if time > times.get(node, float("inf")):
             continue
+        x0, y0 = centroids.get(node, (0.0, 0.0))
         for neighbour, _distance in adj.get(node, []):
             step = traversal_min.get(neighbour, float("inf"))
             if not np.isfinite(step):
                 continue
-            new_time = time + step
+            x1, y1 = centroids.get(neighbour, (x0, y0))
+            factor = _directional_factor(_bearing_deg(x0, y0, x1, y1), wind_deg)
+            new_time = time + step / max(factor, 1e-6)
             if new_time < times.get(neighbour, float("inf")):
                 times[neighbour] = new_time
                 heapq.heappush(heap, (new_time, neighbour))
@@ -133,12 +156,17 @@ def simulate(
     ignitions: int,
     duration_min: float,
     seed: int,
+    wind_deg: float,
 ) -> dict[str, object]:
     """Run the Monte Carlo spread and return landscape outcome statistics."""
     rng = np.random.default_rng(seed)
     block_ids = blocks["block_id"].to_numpy()
     area = blocks.set_index("block_id")["area_ha"].to_dict()
     ros = blocks.set_index("block_id")["ros_eff"].to_dict()
+    centroids = {
+        int(b): (float(x), float(y))
+        for b, x, y in zip(block_ids, blocks["x"], blocks["y"])
+    }
     # Traversal time: characteristic block length (m) over rate of spread (m/min).
     traversal_min = {
         int(b): (np.sqrt(max(a, 0.0) * 10000.0) / r) if r > 0.0 else float("inf")
@@ -149,7 +177,7 @@ def simulate(
     burn_count = {int(b): 0 for b in block_ids}
     area_burned: list[float] = []
     for source in ignited:
-        times = _travel_times(adj, traversal_min, int(source))
+        times = _travel_times(adj, traversal_min, centroids, wind_deg, int(source))
         reached = [b for b, t in times.items() if t <= duration_min]
         for b in reached:
             burn_count[int(b)] = burn_count.get(int(b), 0) + 1
@@ -183,6 +211,8 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--clusters", type=int, default=20)
     parser.add_argument("--ignitions", type=int, default=200)
     parser.add_argument("--duration-min", type=float, default=480.0, dest="duration_min")
+    parser.add_argument("--wind-dir", type=float, default=225.0, dest="wind_dir")
+    parser.add_argument("--treat-ros-factor", type=float, default=0.6, dest="treat_ros_factor")
     parser.add_argument("--seed", type=int, default=1)
     parser.add_argument("--out", type=Path, required=True)
     return parser
@@ -237,7 +267,7 @@ def main() -> None:
         blocks.loc[blocks["block_id"].isin(chosen), "treated"] = True
         blocks["ros_eff"] = np.where(
             blocks["treated"],
-            blocks["ros_m_per_min"] * TREATMENT_ROS_FACTOR,
+            blocks["ros_m_per_min"] * args.treat_ros_factor,
             blocks["ros_m_per_min"],
         )
         print(f"treated pattern={args.treat_pattern} blocks={len(chosen)}")
@@ -247,6 +277,7 @@ def main() -> None:
         ignitions=args.ignitions,
         duration_min=args.duration_min,
         seed=args.seed,
+        wind_deg=args.wind_dir,
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     summary = {k: v for k, v in result.items() if k != "burn_probability"}
