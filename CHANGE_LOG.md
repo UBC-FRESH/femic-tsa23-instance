@@ -50,8 +50,14 @@
   `fragments.shp` (45 AUs, 102,128 fragments, 136 curves). `ws4 build` and a
   100-year `ws4 simulate` completed on the exported model (168,405 blocks;
   1,037,011 m3 harvested in year 0).
-- Known gaps: the managed/treated curve lane is empty pending the BatchTIPSY
-  handoff (`missing TIPSY output file ... writing empty yield table`).
+- Managed lane: BatchTIPSY (BTC) was executed on this Linux host under Wine.
+  A `xvfb-run wine TIPSYbtc.exe` wrapper was set as `FEMIC_BATCHTIPSY_EXE`
+  (wine-mono installed into the prefix), and `femic tipsy run-btc
+  data/03_input-tsa23.csv --mode TSR` produced `data/04_output-tsa23.csv`
+  (exit 0). `femic tsa post-tipsy --tsa 23` then rebuilt the bundle with
+  treated/managed curves (45 AUs, 3,150 curves, 18,041 curve points). Re-export
+  and a WS4 build + 100-year simulate ran green; year-0 harvest rose from
+  1,037,011 m3 (untreated only) to 1,314,252 m3 with managed curves included.
 - FEMIC defects found during the build (to be filed upstream): `pandas<3` pin,
   `plots/` directory not created before `savefig`, `assign_siteprod_from_raster`
   fails on an empty frame, and `--debug-rows` subsets the province-wide VRI
