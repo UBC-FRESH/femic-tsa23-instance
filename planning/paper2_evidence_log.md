@@ -126,6 +126,31 @@ Same patterns, 20% treated, p90, with the spread multiplier taken from the model
   **orientation**, and the weight/interpretation depends on how close to
   impassable the treatment really is.
 
+### E2e — Matched-footprint bridge test (the decisive one)
+
+The earlier patterns were area-matched but not **footprint-matched**: they occupy
+different geographic extents, so a difference could be *where*, not *how*. This
+test fixes a contiguous **20,000 ha footprint**, treats **20%** of it with FB
+(hazard 0.05), ignites **40** fires inside it, p90, wind 225°, and compares the
+fire outcome with connectivity metrics of the treated/untreated partition
+(`scripts/bridge_matched_footprint.py`).
+
+| pattern | mean burned (ha) | largest_component | directed_largest_reach | directed_mean_reach |
+| --- | --- | --- | --- | --- |
+| **barrier** | **4,833** (best) | 1,060 | **471** | **107** |
+| clumped | 5,250 | **984** | 765 | 178 |
+| random | 6,088 (worst) | 1,466 | 913 | 253 |
+
+**Findings:**
+- Fire rank: **barrier < clumped < random**.
+- **Directed** reach (`directed_largest_reach`, `directed_mean_reach`) reproduces
+  it exactly (**agree = True**).
+- **Undirected** `largest_component` does **not** (clumped first), and a raw
+  `aligned_edge_cut` does not (clumped lowest).
+- So the account the bridge needs is a **directed, downwind reachability** metric —
+  not undirected connectivity and not patch size. This is the concrete spec for
+  the WS4 account, and it survives the footprint confound.
+
 ---
 
 ## E3 — Bridge test: does WS4 see the fire benefit?
