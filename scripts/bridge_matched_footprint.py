@@ -219,13 +219,14 @@ def run(
     footprint_ha: float,
     treat_fraction: float,
     treatment: str,
+    scenario: str,
     ignitions: int,
     duration_min: float,
     wind_deg: float,
     seed: int,
 ) -> dict[str, object]:
     """Run the matched-footprint comparison."""
-    blocks = _block_fuel_types(blocks_path, fuel_types, "p90", 60)
+    blocks = _block_fuel_types(blocks_path, fuel_types, scenario, 60)
     adj = _adjacency(topology)
     area = blocks.set_index("block_id")["area_ha"].to_dict()
     centroids = {
@@ -293,6 +294,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--footprint-ha", type=float, default=20000.0, dest="footprint_ha")
     parser.add_argument("--treat-fraction", type=float, default=0.2, dest="treat_fraction")
     parser.add_argument("--treatment", choices=sorted(TREATMENT_HAZARD), default="fb")
+    parser.add_argument("--scenario", default="p90")
     parser.add_argument("--ignitions", type=int, default=40)
     parser.add_argument("--duration-min", type=float, default=480.0, dest="duration_min")
     parser.add_argument("--wind-dir", type=float, default=225.0, dest="wind_dir")
@@ -311,6 +313,7 @@ def main() -> None:
         footprint_ha=args.footprint_ha,
         treat_fraction=args.treat_fraction,
         treatment=args.treatment,
+        scenario=args.scenario,
         ignitions=args.ignitions,
         duration_min=args.duration_min,
         wind_deg=args.wind_dir,
