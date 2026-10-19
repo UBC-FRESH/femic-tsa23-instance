@@ -73,6 +73,23 @@ This is the measured ceiling that defines the WS4 extension.
 **E4 — the decision.** With the connectivity account, does scheduling against it
 change placement/timing versus area+cost alone? *Status: pending the account.*
 
+## Treatment coverage (E5)
+
+The proposal names eight treatment types; the WS4 prototype implements **thinning
+only** (`FT`, three intensities). The E2c result shows the spatial benefit depends
+on the treatment's effect on spread, so the treatment space must be widened to the
+**three mechanisms**: crown (thinning), surface (burning/mastication), and break
+(clearcut + disposal). Design: `planning/treatment_design_fb_and_surface.md`.
+
+- [ ] **FB** — a distinct clearcut **+ full fuel disposal** treatment with a
+      near-null hazard for N years, then recovery (not a fourth thinning intensity;
+      a clearcut alone leaves slash and is not a break).
+- [ ] **SF** — surface-fuel reduction as a distinct post-thinning treatment with an
+      age-window operability (sequential, not a bundled combo).
+- [ ] A per-track **hazard feature** the spread model consumes (replacing the flat
+      `--treat-ros-factor` stand-in).
+- [ ] Re-run **E2c/E3** with FB as the real hard break.
+
 ## Contributions (grounded in the literature)
 
 The field — Yemshanov et al. (network fuel-break optimization; critical-edge
