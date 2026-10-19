@@ -206,9 +206,13 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--age", type=int, default=60)
     parser.add_argument("--treat-fraction", type=float, default=0.0, dest="treat_fraction")
     parser.add_argument(
-        "--treat-pattern", default="random", choices=["random", "clumped"], dest="treat_pattern"
+        "--treat-pattern",
+        default="random",
+        choices=["random", "clumped", "barrier"],
+        dest="treat_pattern",
     )
     parser.add_argument("--clusters", type=int, default=20)
+    parser.add_argument("--stripes", type=int, default=10)
     parser.add_argument("--ignitions", type=int, default=200)
     parser.add_argument("--duration-min", type=float, default=480.0, dest="duration_min")
     parser.add_argument("--wind-dir", type=float, default=225.0, dest="wind_dir")
@@ -235,7 +239,25 @@ def main() -> None:
         target_area = min(1.0, args.treat_fraction) * eligible_area
         chosen: set[int] = set()
         treated_area = 0.0
-        if args.treat_pattern == "clumped":
+        if args.treat_pattern == "barrier":
+            # Stripes perpendicular to the wind: treat alternate stripes.
+            wx = np.sin(np.radians(args.wind_dir))
+            wy = np.cos(np.radians(args.wind_dir))
+            coords = blocks.set_index("block_id")[["x", "y"]]
+            proj = coords["x"] * wx + coords["y"] * wy
+            lo, hi = float(proj.min()), float(proj.max())
+            stripe = ((proj - lo) / max(hi - lo, 1e-9) * args.stripes).astype(int)
+            ordered = [
+                int(b)
+                for b in blocks.loc[blocks["block_id"].isin(eligible_ids), "block_id"]
+                if int(stripe.get(b, 0)) % 2 == 0
+            ]
+            for node in ordered:
+                if treated_area >= target_area:
+                    break
+                chosen.add(node)
+                treated_area += area_by_block.get(node, 0.0)
+        elif args.treat_pattern == "clumped":
             seeds = rng.choice(list(eligible_ids), size=args.clusters, replace=False)
             for seed in seeds:
                 queue = [int(seed)]
