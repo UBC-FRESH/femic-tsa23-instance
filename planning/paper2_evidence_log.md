@@ -321,4 +321,48 @@ writes both orientations, each with its own bearing (12,592 rows), so the simple
 directed reading and the undirected-adjacency reading agree. Caught by WS4 in
 `femic-tsa23-instance#13`.
 
+**E9 — sensitivity screen: the arrangement ranking is weather-conditional, not universal.**
+108 cells (`scripts/sensitivity_screen.py`, `runtime/fire/sensitivity_screen.csv`):
+fixed 1,877-block / 20,019 ha footprint, three patterns, 40 ignitions, wind 225,
+density {0.05, 0.10, 0.15, 0.20} x weather {median, p90, extreme} x treated ROS
+multiplier {0.05, 0.30, 1.00} x 3 seeds. Footprint fixed across all cells.
+
+*Control.* At multiplier 1.00 the patterns are identical to the last decimal (0.0%
+spread, barrier never best) — the harness shows no phantom signal.
+
+*Effect size scales with density* (spread across the three patterns, p90, mean of
+scenarios and seeds):
+
+| density | multiplier 0.05 | multiplier 0.30 |
+| --- | ---: | ---: |
+| 0.05 | 6.1% | 4.7% |
+| 0.10 | 15.3% | 6.0% |
+| 0.15 | 29.9% | 12.9% |
+| 0.20 | 35.6% | 12.7% |
+
+*Weather decides which pattern wins.* Barrier excess over the best pattern (median
+over seeds; 0 means the barrier is best):
+
+| density / multiplier | median | p90 | extreme |
+| --- | ---: | ---: | ---: |
+| 0.15 / 0.05 | **+16.9%** | 0.0% | 0.0% |
+| 0.20 / 0.05 | **+21.3%** | 0.0% | 0.0% |
+| 0.15 / 0.30 | **+12.6%** | +2.7% | 0.0% |
+| 0.20 / 0.30 | **+12.4%** | 0.0% | +0.3% |
+
+At **median** weather the barrier is the *worst* arrangement at every density above
+5%, by 12-26% relative. At **p90 and extreme** it is best or tied. Across all 108 cells
+the single most common ordering is random < clumped < barrier (49 cells on the mean,
+52 on p90), so "barrier is best" is only true in the severe-weather half of the grid.
+
+*Absolute stakes matter for reading those percentages.* Median burned area per
+ignition: ~120 ha at median weather, 7,100-9,700 ha at p90, 14,850-17,150 ha at
+extreme. The 12-26% penalty at median is therefore a few tens of hectares, while the
+zero-penalty result at p90 concerns thousands. Evaluate on the weather that carries
+the area.
+
+Consequence: E2e/E6/E7 are all weather-specific. Any statement of the form
+"arrangement X is better" must name the weather scenario.
+
+
 
