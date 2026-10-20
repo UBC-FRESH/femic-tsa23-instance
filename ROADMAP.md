@@ -88,8 +88,8 @@ wildfire fuel-treatment optimization layer, and per-AU TIPSY refinement.
 ## Phase 9: Sphinx Docs Site and Publication (P117)
 
 Parent issue: #15
-Branch: `feature/p117-sphinx-docs` (merged into `feature/fuel-treatment-layer`)
-Status: active
+Branch: merged to `main` (PR #17)
+Status: complete
 Plan: `planning/sphinx_docs_plan.md`
 
 Goal: build and publish the instance documentation with the
@@ -103,11 +103,11 @@ to GitHub Pages — so the site is the project's RTFM surface and agents cite it
 - [x] P117.3 Enable Pages (source: GitHub Actions) and verify a deploy —
       `https://ubc-fresh.github.io/femic-tsa23-instance/` served from the feature
       branch on a widened environment policy, then the policy was restored to `main`
-- [ ] P117.4 Content pass: the API pages are generated; the operator pages still need
-      the P115 depth (area accounting, THLB/AU, seral guides)
+- [ ] P117.4 Content pass: deferred to P115. The API pages are generated; the operator
+      pages still need the P115 depth (area accounting, THLB/AU, seral guides)
 - [x] P117.5 Public-safety pass on the published pages
 
-Note: the site is live and builds from the branch. The phase closes when this branch
-reaches `main`; the `github-pages` environment only allows `main`, so that is the
-remaining step.
+Note: the site deploys from `main` — workflow run 39459197168 built and published it
+after the merge to `main` (PR #17). The documentation infrastructure is complete; the
+editorial depth is P115's, which is why P117.4 is deferred rather than done.
 
