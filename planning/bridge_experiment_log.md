@@ -281,6 +281,50 @@ per pattern *after* advancing it for the footprint.
 **Qualification.** All of E2-E2d are p90-weather results. E9/E10 show the ordering
 reverses at median weather, so they are correct as stated and wrong if generalised.
 
+## X10 — Dataset recompile without duplicate product rows (`#12`)
+
+**Question.** Does the FT dataset still multiply `product.Treated.managed.FT` after WS4's
+builder fix (`8f0f6d4`), and do the derived datasets inherit the defect?
+
+**Commands** (WS4 `main` at `c9efec6`; the economics and derived scripts import `ws4`,
+so run them with the WS4 interpreter).
+
+```bash
+ws4 build --xml output/patchworks_ft/forestmodel.xml \
+  --fragments output/patchworks_ft/fragments/fragments.shp \
+  --out runtime/ws4/compiled_ft_v2
+
+python scripts/apply_fuel_treatment_economics.py \
+  --dataset runtime/ws4/compiled_ft_v2 --out runtime/ws4/compiled_ft_econ_v2
+
+python scripts/add_fuel_break_treatment.py \
+  --dataset runtime/ws4/compiled_ft_econ_v2 --out runtime/ws4/compiled_fb_v2
+python scripts/complete_hazard_feature.py \
+  --dataset runtime/ws4/compiled_fb_v2 --out runtime/ws4/compiled_fb_haz_v2
+python scripts/add_surface_fuel_treatment.py \
+  --dataset runtime/ws4/compiled_fb_haz_v2 --out runtime/ws4/compiled_sf_v2
+```
+
+**Runtimes.** build 12 m 51 s; economics 2 s; FB, hazard and SF each seconds.
+
+**Verification.** Count redundant `(track_id, treatment, label, curve_id)` rows in every
+dataset (all must be 0), then simulate `ft_cap.csv` at year 0 and compare
+`product.Treated.managed.FT` with `product.FuelTreatmentCost / 20,000`.
+
+**Result.** Every dataset reports 0 redundant rows. `product.Treated.managed.FT` =
+9,983.3605 ha = `product.FuelTreatmentCost / 20,000` (ratio 1.0000; was 4.0000). The
+loader warning is gone. `feature.FuelHazard` is identical to the pre-recompile dataset
+(158,437 tracks, max delta 0.0), so the oracle and the masks remain valid.
+
+**Second defect found.** The FB/SF scripts copied a destination track's products and
+retagged the treatment, collapsing rows that differed only by treatment onto one key
+(28,609 duplicates in FB). Fixed with the builder's drop rule; both scripts now print
+the count.
+
+**Housekeeping.** Old datasets moved to
+`runtime/ws4/_superseded_dup_product_rows/` (gitignored), and the `_v2` directories were
+promoted to the canonical names so existing paths in scripts and runbooks stay correct.
+
 ## Corrections log
 
 Each entry is a case where an earlier recorded result was wrong or under-specified.
