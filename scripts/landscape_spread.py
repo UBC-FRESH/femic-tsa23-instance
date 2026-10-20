@@ -152,6 +152,83 @@ def _travel_times(
     return times
 
 
+def simulate_fast(
+    *,
+    blocks: pd.DataFrame,
+    adj: dict[int, list[tuple[int, float]]],
+    ignitions: int,
+    duration_min: float,
+    seed: int,
+    wind_deg: float,
+) -> dict[str, object]:
+    """Run the Monte Carlo spread with a sparse multi-source Dijkstra.
+
+    Same model as :func:`simulate`, evaluated as one shortest-path call over a
+    directed weighted graph: the weight of ``u -> v`` is ``v``'s traversal time
+    divided by the directional factor of the ``u -> v`` bearing. All ignitions are
+    solved together, which is what makes a sweep cheap enough to explore.
+
+    The reference implementation stays in :func:`simulate` for equivalence checks.
+    """
+    from scipy.sparse import csr_matrix
+    from scipy.sparse.csgraph import dijkstra
+
+    rng = np.random.default_rng(seed)
+    block_ids = blocks["block_id"].to_numpy()
+    index = {int(b): i for i, b in enumerate(block_ids)}
+    area = blocks["area_ha"].to_numpy(dtype=float)
+    ros = blocks["ros_eff"].to_numpy(dtype=float)
+    centroids = {
+        int(b): (float(x), float(y))
+        for b, x, y in zip(block_ids, blocks["x"], blocks["y"])
+    }
+    traversal = np.where(
+        ros > 0.0,
+        np.sqrt(np.maximum(area, 0.0) * 10000.0) / np.where(ros > 0.0, ros, 1.0),
+        np.inf,
+    )
+
+    rows: list[int] = []
+    cols: list[int] = []
+    data: list[float] = []
+    for src, neighbours in adj.items():
+        i = index.get(int(src))
+        if i is None:
+            continue
+        x0, y0 = centroids[int(src)]
+        for dst, _distance in neighbours:
+            j = index.get(int(dst))
+            if j is None or not np.isfinite(traversal[j]):
+                continue
+            x1, y1 = centroids[int(dst)]
+            factor = _directional_factor(_bearing_deg(x0, y0, x1, y1), wind_deg)
+            rows.append(i)
+            cols.append(j)
+            data.append(float(traversal[j] / max(factor, 1e-6)))
+
+    graph = csr_matrix((data, (rows, cols)), shape=(len(block_ids), len(block_ids)))
+    ignited = rng.choice(block_ids, size=min(ignitions, len(block_ids)), replace=False)
+    sources = np.array([index[int(b)] for b in ignited], dtype=int)
+    times = dijkstra(graph, directed=True, indices=sources)
+    if times.ndim == 1:
+        times = times.reshape(1, -1)
+    reached = times <= duration_min
+    area_burned = reached.astype(float) @ area
+    burn_count = reached.sum(axis=0)
+    burn_prob = burn_count / max(len(sources), 1)
+
+    return {
+        "ignitions": int(len(sources)),
+        "duration_min": duration_min,
+        "total_area_ha": float(area.sum()),
+        "mean_area_burned_ha": float(np.mean(area_burned)),
+        "p90_area_burned_ha": float(np.quantile(area_burned, 0.9)),
+        "treated_area_ha": float(area[blocks["treated"].to_numpy(dtype=bool)].sum()),
+        "mean_burn_probability": float(np.mean(burn_prob)),
+        "burn_probability": {str(int(b)): float(c) for b, c in zip(block_ids, burn_prob)},
+    }
+
+
 def simulate(
     *,
     blocks: pd.DataFrame,
@@ -225,6 +302,12 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Use the model's hazard multiplier for this treatment (ft/sf/fb).",
     )
     parser.add_argument("--seed", type=int, default=1)
+    parser.add_argument(
+        "--method",
+        choices=("fast", "reference"),
+        default="fast",
+        help="fast uses a sparse multi-source Dijkstra; reference is the per-ignition loop",
+    )
     parser.add_argument("--out", type=Path, required=True)
     return parser
 
@@ -324,7 +407,7 @@ def main() -> None:
         blocks_path = args.out.with_name(args.out.stem + "_blocks.csv")
         blocks_path.parent.mkdir(parents=True, exist_ok=True)
         pd.DataFrame({"block_id": sorted(chosen)}).to_csv(blocks_path, index=False)
-    result = simulate(
+    result = (simulate_fast if args.method == "fast" else simulate)(
         blocks=blocks,
         adj=adj,
         ignitions=args.ignitions,

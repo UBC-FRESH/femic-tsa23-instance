@@ -126,6 +126,21 @@ Same patterns, 20% treated, p90, with the spread multiplier taken from the model
   **orientation**, and the weight/interpretation depends on how close to
   impassable the treatment really is.
 
+**Verification (2026-10-20).** E2, E2b, E2c and E2d were re-run through the same CLI
+path (`scripts/landscape_spread.py`, 50 ignitions, p90, wind 225°, seed 1) as a
+repeatable check: `scripts/verify_legacy_evidence.py` compares 19 recorded cells against
+a 1.0 ha tolerance. **All 19 reproduce** (mean and p90), so these entries are verified
+rather than merely inherited.
+
+They predate the shared-ignition fix and are **not** affected by it: the block table and
+the seed are fixed while the pattern varies, so every pattern sees the same ignition
+draw. The confound was specific to the newer matched-footprint harness, which rebuilt
+the RNG per pattern.
+
+They are, however, **p90-weather-specific**. E9 and E10 show the ordering reverses at
+median weather, so the E2/E2d statements must not be generalised without naming the
+scenario.
+
 ### E2e — Matched-footprint bridge test (the decisive one)
 
 The earlier patterns were area-matched but not **footprint-matched**: they occupy
@@ -272,8 +287,18 @@ Original-target handoff run (seeded, for comparison): FT account 39,999.8 (floor
 - FBP fuel typing is rule-based from VRI shares; it should be validated against
   the BC provincial FBP fuel-type raster.
 - Weather is ERA5 daily proxies at three points, not station observations.
-- The arrangement effect is small (~2-4%); E2b says why, and E4 must test whether
-  it changes the decision.
+- The **size and sign of the arrangement effect depend on the weather scenario**: at
+  median-to-p80 the barrier is 8-38% *worse* than the best pattern; at p85 and above it
+  is best or tied (E9, E10). Any statement of the form "arrangement X is better" must
+  name its weather. The old "small, ~2-4%" summary applied to a single p90 seed and is
+  superseded.
+
+## Detailed methods
+
+`planning/bridge_experiment_log.md` records, per experiment, the design, inputs, exact
+command, outputs, runtime, and the corrections log. Use it to regenerate any table;
+`runtime/` is gitignored, so no result is committed and every one is reproducible only
+through that file.
 
 **E7 corrects E2e and E6.** The single-seed matched-footprint test drew a fresh
 ignition set for each pattern, so "pattern" and "which blocks burned" moved together.
@@ -301,6 +326,133 @@ Re-run with one ignition set shared by all three patterns on the same footprint
 - The E6 response surface inherits the same confound; its within-scenario R2 should be
   re-measured with a shared ignition set before it is quoted.
 
+**Treatment factors actually used (do not conflate them).** `TREATMENT_HAZARD["fb"] = 0.05`,
+so the matched-footprint runs above apply a **20x slowdown** to treated blocks, not the
+0.3 used by the published landscape bridge. The 0.3 figure belongs to the 177k-ha and
+54k-ha mask runs. The 20% local result therefore already sits close to a hard stop: even
+at a 20x slowdown, only the tail responds stably.
+
+
 **Do not build the Paper 2 bridge on a mean-burned ranking at 40 ignitions.** Either
 raise the ignition count or use the tail statistic.
 
+**E8 — the oracle bundle's topology was ambiguous, and is fixed.** The first export
+wrote one row per undirected pair with a single `bearing_deg`. Read as a directed edge
+list — which is what the file looks like — it silently drops every edge stored in the
+upwind orientation and returns **47 / 47 / 37 blocks** (means 4.92 / 5.04 / 3.89)
+instead of **471 / 765 / 913** (107.33 / 178.49 / 253.20). Both figures were reproduced
+on the same data; the difference is entirely the file's ambiguity. The export now
+writes both orientations, each with its own bearing (12,592 rows), so the simple
+directed reading and the undirected-adjacency reading agree. Caught by WS4 in
+`femic-tsa23-instance#13`.
+
+**E9 — sensitivity screen: the arrangement ranking is weather-conditional, not universal.**
+108 cells (`scripts/sensitivity_screen.py`, `runtime/fire/sensitivity_screen.csv`):
+fixed 1,877-block / 20,019 ha footprint, three patterns, 40 ignitions, wind 225,
+density {0.05, 0.10, 0.15, 0.20} x weather {median, p90, extreme} x treated ROS
+multiplier {0.05, 0.30, 1.00} x 3 seeds. Footprint fixed across all cells.
+
+*Control.* At multiplier 1.00 the patterns are identical to the last decimal (0.0%
+spread, barrier never best) — the harness shows no phantom signal.
+
+*Effect size scales with density* (spread across the three patterns, p90, mean of
+scenarios and seeds):
+
+| density | multiplier 0.05 | multiplier 0.30 |
+| --- | ---: | ---: |
+| 0.05 | 6.1% | 4.7% |
+| 0.10 | 15.3% | 6.0% |
+| 0.15 | 29.9% | 12.9% |
+| 0.20 | 35.6% | 12.7% |
+
+*Weather decides which pattern wins.* Barrier excess over the best pattern (median
+over seeds; 0 means the barrier is best):
+
+| density / multiplier | median | p90 | extreme |
+| --- | ---: | ---: | ---: |
+| 0.15 / 0.05 | **+16.9%** | 0.0% | 0.0% |
+| 0.20 / 0.05 | **+21.3%** | 0.0% | 0.0% |
+| 0.15 / 0.30 | **+12.6%** | +2.7% | 0.0% |
+| 0.20 / 0.30 | **+12.4%** | 0.0% | +0.3% |
+
+At **median** weather the barrier is the *worst* arrangement at every density above
+5%, by 12-26% relative. At **p90 and extreme** it is best or tied. Across all 108 cells
+the single most common ordering is random < clumped < barrier (49 cells on the mean,
+52 on p90), so "barrier is best" is only true in the severe-weather half of the grid.
+
+*Absolute stakes matter for reading those percentages.* Median burned area per
+ignition: ~120 ha at median weather, 7,100-9,700 ha at p90, 14,850-17,150 ha at
+extreme. The 12-26% penalty at median is therefore a few tens of hectares, while the
+zero-penalty result at p90 concerns thousands. Evaluate on the weather that carries
+the area.
+
+Consequence: E2e/E6/E7 are all weather-specific. Any statement of the form
+"arrangement X is better" must name the weather scenario.
+
+
+
+
+**E10 — the crossover: coverage wins below p80, the barrier wins above p85.**
+60 cells (`scripts/sensitivity_screen.py`, `runtime/fire/weather_crossover.csv`): the
+fire-season ladder from E9's scenario builder (quantiles 0.50-0.98, FWI 16.8-57.6),
+density 0.15 and 0.20, treated multiplier 0.05, three seeds, fixed footprint and
+shared ignitions. The original three scenarios reproduce byte-identically, so the
+ladder is an extension, not a rebuild.
+
+Barrier excess over the best pattern (%), p90 burned, median over seeds:
+
+| scenario (FWI) | density 0.15 | density 0.20 | p90 burned (ha) |
+| --- | ---: | ---: | ---: |
+| median (16.8) | +16.9 | +21.3 | 231 |
+| p60 (21.8) | +18.7 | +34.3 | 803 |
+| p65 (24.7) | **+33.0** | **+38.3** | 1,349 |
+| p70 (27.8) | +20.6 | +30.2 | 2,101 |
+| p75 (31.0) | +14.0 | +14.3 | 3,117 |
+| p80 (34.5) | +8.2 | 0.0 | 4,694 |
+| p85 (38.4) | 0.0 | 0.0 | 7,791 |
+| p90 (42.8) | 0.0 | 0.0 | 9,988 |
+| p95 (49.9) | 0.0 | 0.0 | 14,680 |
+| extreme (57.6) | 0.0 | 0.0 | 17,268 |
+
+Mean burned shows the same crossover at p80 (+5.9% at p75, 0.0 at p80 and above).
+
+Two regimes, with a sharp transition between p80 and p85 (FWI 34.5 -> 38.4):
+
+- **Coverage regime (<= p80).** Scattering treatment beats a barrier, and the penalty
+  peaks at **p65** (+33 to +38%), not at the median: at median the fire is too small for
+  arrangement to matter (231 ha p90), while at p65 it is large enough to matter.
+- **Barrier regime (>= p85).** The barrier is best or tied at every density tested, where
+  the p90 fire is 7,800-17,300 ha.
+
+The practical reading: arrangement is worth optimizing only if the landscape is managed
+for the p85-and-above tail; below that, treat for coverage. That is a decision statement
+the student can test, not a claim about the paper.
+
+**E11 — the FT dataset recompile, and a second duplication defect in our own scripts.**
+Rebuilt with WS4 `main` at `c9efec6` (builder fix `8f0f6d4`):
+
+| dataset | before | after |
+| --- | ---: | ---: |
+| `products.parquet` rows (FT base) | 4,947,045 | 3,431,580 |
+| redundant `(track, treatment, label, curve_id)` rows | 1,515,465 | 0 |
+| keys with more than one curve (legitimate per-AU components) | 85,532 | 85,532 |
+
+**Acceptance.** On `ft_cap.csv` at year 0: `product.Treated.managed.FT` =
+**9,983.3605 ha**, `product.FuelTreatmentCost / 20,000` = **9,983.3605 ha**, ratio
+**1.0000** (was 4.0000, FT = 39,933.4419). The old dataset also emitted the loader
+warning naming 1,515,465 redundant rows; the recompiled one is silent.
+
+**Second defect, ours.** Rebuilding the derived datasets exposed a duplication bug in
+`add_fuel_break_treatment.py` and `add_surface_fuel_treatment.py`: they copy a
+destination track's products and retag the treatment, so rows that differed only by
+treatment (FT vs CC) collapse onto one FB key. That added **28,609** duplicate rows to
+the FB dataset. Fixed with the builder's rule — drop exact duplicate keys, keep
+different curves — and both scripts now print the count. FB reports 28,609 dropped; SF
+reports 0 on clean input.
+
+**The bridge is unaffected.** `feature.FuelHazard` is identical between the old and the
+recompiled `compiled_fb_haz` (158,437 tracks compared, max delta 0.0; 15,179 FB tracks at
+0.05, 143,258 at 1.0), so the oracle bundle, the masks and the E7-E10 results stand
+unchanged.
+
+Old datasets are archived under `runtime/ws4/_superseded_dup_product_rows/` (gitignored).

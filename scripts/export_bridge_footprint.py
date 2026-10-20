@@ -151,11 +151,21 @@ def main() -> None:
     args.out.mkdir(parents=True, exist_ok=True)
     topo = pd.read_csv(args.topology)
     topo = topo[topo["src_block"].isin(footprint) & topo["dst_block"].isin(footprint)].copy()
-    topo["bearing_deg"] = [
-        _bearing_deg(centroids[int(s)][0], centroids[int(s)][1], centroids[int(d)][0], centroids[int(d)][1])
-        for s, d in zip(topo["src_block"], topo["dst_block"])
-    ]
-    topo.to_csv(args.out / "topology_footprint.csv", index=False)
+    # Emit an explicitly DIRECTED edge list: both orientations, each with its own
+    # bearing. The source topology stores each undirected pair once, so a file with
+    # one row per pair looks directed and loses every upwind-stored edge when it is
+    # read that way (measured: 47/47/37 blocks instead of 471/765/913).
+    directed: list[tuple[int, int, float, float]] = []
+    for src, dst, dist in zip(topo["src_block"], topo["dst_block"], topo["distance_m"]):
+        s, d = int(src), int(dst)
+        forward = _bearing_deg(
+            centroids[s][0], centroids[s][1], centroids[d][0], centroids[d][1]
+        )
+        directed.append((s, d, float(dist), forward))
+        directed.append((d, s, float(dist), (forward + 180.0) % 360.0))
+    pd.DataFrame(
+        directed, columns=["src_block", "dst_block", "distance_m", "bearing_deg"]
+    ).to_csv(args.out / "topology_footprint.csv", index=False)
     pd.DataFrame(
         {"block_id": sorted(footprint), "x": [centroids[b][0] for b in sorted(footprint)],
          "y": [centroids[b][1] for b in sorted(footprint)]}

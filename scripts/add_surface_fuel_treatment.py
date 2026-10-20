@@ -121,6 +121,15 @@ def add_surface_fuel(
         }
     )
     new_products = pd.concat([new_products, cost_rows], ignore_index=True)
+    # Several source tracks can carry the same product under different treatments;
+    # retagging them to one treatment collapses those rows onto the same WS4 key.
+    # Keep one row per exact key (the builder's rule), but keep different curves,
+    # which are the per-AU components and are a sum.
+    before = len(new_products)
+    new_products = new_products.drop_duplicates(
+        ["track_id", "treatment", "label", "curve_id"], keep="first"
+    )
+    print(f"SF: dropped {before - len(new_products)} duplicated product rows")
 
     # SF follows thinning: operable on the FT destination for `window_years`.
     new_treatments = ft.copy()
