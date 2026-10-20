@@ -1,0 +1,20 @@
+# Resume profile for a shipped derived-data instance.
+#
+# The VDYP caches produced by the original build are present as `*-tsa23` artifacts, so a
+# resume run can complete the preflight without a fresh VDYP pass. A fresh (non-resume)
+# rebuild still needs Wine on PATH; see docs/rebuild-contract.rst.
+selection:
+  tsa:
+    - "23"
+  strata: []
+
+modes:
+  resume: true
+  dry_run: false
+  verbose: true
+  skip_checks: false
+  debug_rows: null
+
+run:
+  run_id: "tsa23"
+  log_dir: "vdyp_io/profile_logs"

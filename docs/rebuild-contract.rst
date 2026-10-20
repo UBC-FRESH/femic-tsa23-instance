@@ -42,7 +42,37 @@ input                                        where it must come from
 ``config/tsr/overlay.yaml``                  **is** in the repository — reviewed overlay
 ===========================================  ==========================================
 
-FEMIC finds the first four through ``FEMIC_EXTERNAL_DATA_ROOT``. Without it:
+Preflight with the shipped derived data
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The source layers are not in the clone, but they are in the lab's public-data corpus.
+Point FEMIC at the corpus's **``data``** directory — not the corpus root, which appends
+``bc/`` and still fails:
+
+.. code-block:: bash
+
+   export FEMIC_EXTERNAL_DATA_ROOT=/path/to/femic-public-data/data
+
+This instance is a *derived-data* instance: the VDYP caches from the original build are
+present as ``data/vdyp_*-tsa23.*``. The preflight looks for the unscoped base names, so
+create the aliases once (dry run by default):
+
+.. code-block:: bash
+
+   python scripts/link_vdyp_caches.py --instance-root . --apply
+
+Then a resume preflight passes without a fresh VDYP pass:
+
+.. code-block:: bash
+
+   femic prep validate-case --instance-root . \
+     --run-config config/run_profile.tsa23.resume.yaml
+
+Observed 2026-10-20: ``Case preflight passed ... targets=[23]``, with a Wine warning.
+A **fresh** (non-resume) rebuild still needs Wine on ``PATH`` for VDYP; that is the only
+toolchain dependency the resume profile avoids.
+
+Without ``FEMIC_EXTERNAL_DATA_ROOT``:
 
 .. code-block:: text
 
