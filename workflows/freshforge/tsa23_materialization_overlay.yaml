@@ -1,0 +1,31 @@
+instance:
+  root: external/femic-tsa23-instance
+  submodule_path: external/femic-tsa23-instance
+environment:
+  venv_path: .venv
+install:
+  extras:
+    - dev
+    - freshforge
+  requirements: []
+  editable_paths:
+    - external/femic-tsa23-instance
+  packages: []
+annex:
+  special_remote: arbutus-s3
+materialization:
+  # Only what is archived in the Arbutus vault. Publicly resolvable inputs (VRI, BEC,
+  # FADM_TSA, the TSR corpus) are NOT listed here: they are resolved by the commands in
+  # docs/data-sources.rst, not fetched from the vault.
+  required_paths:
+    - data/shp/tsa23.shp
+    - data/04_output-tsa23.csv
+    - data/tipsy_params_tsa23.xlsx
+    - data/ria_vri_vclr1p_checkpoint7.feather
+    - data/bc/siteprod
+audit:
+  required_paths:
+    - config
+    - data/shp/tsa23.shp
+report:
+  path: runtime/freshforge/tsa23_materialization_report.json

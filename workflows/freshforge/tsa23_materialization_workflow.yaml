@@ -1,0 +1,98 @@
+workflow:
+  id: tsa23_materialization
+  name: TSA23 FreshForge materialization workflow
+  description: >-
+    Prepare a thin parent checkout for the TSA23 instance: check the toolchain, install
+    the environment, initialize the instance submodule and its annex, enable the Arbutus
+    special remote, materialize the archived paths, audit availability, and write the
+    report. Publicly resolvable inputs are handled by the commands in docs/data-sources.rst
+    and are deliberately not materialized here.
+nodes:
+  - id: check_toolchain
+    provider: femic.materialization.check_toolchain
+    outputs:
+      toolchain: toolchain_ok
+    parameters:
+      overlay: workflows/freshforge/tsa23_materialization_overlay.yaml
+  - id: check_python_environment
+    provider: femic.materialization.check_python_environment
+    needs:
+      - check_toolchain
+    inputs:
+      toolchain: check_toolchain.toolchain
+    outputs:
+      python_environment: python_environment_ok
+    parameters:
+      overlay: workflows/freshforge/tsa23_materialization_overlay.yaml
+  - id: install_packages
+    provider: femic.materialization.install_packages
+    needs:
+      - check_python_environment
+    inputs:
+      python_environment: check_python_environment.python_environment
+    outputs:
+      packages: packages_installed
+    parameters:
+      overlay: workflows/freshforge/tsa23_materialization_overlay.yaml
+  - id: init_submodules
+    provider: femic.materialization.init_submodules
+    needs:
+      - install_packages
+    inputs:
+      packages: install_packages.packages
+    outputs:
+      submodules: submodules_initialized
+    parameters:
+      overlay: workflows/freshforge/tsa23_materialization_overlay.yaml
+  - id: init_annex
+    provider: femic.materialization.init_annex
+    needs:
+      - init_submodules
+    inputs:
+      submodules: init_submodules.submodules
+    outputs:
+      annex_repository: annex_initialized
+    parameters:
+      overlay: workflows/freshforge/tsa23_materialization_overlay.yaml
+  - id: enable_special_remote
+    provider: femic.materialization.enable_special_remote
+    needs:
+      - init_annex
+    inputs:
+      annex_repository: init_annex.annex_repository
+    outputs:
+      special_remote: arbutus_s3_enabled
+    parameters:
+      overlay: workflows/freshforge/tsa23_materialization_overlay.yaml
+  - id: materialize_paths
+    provider: femic.materialization.materialize_paths
+    needs:
+      - enable_special_remote
+    inputs:
+      special_remote: enable_special_remote.special_remote
+    outputs:
+      materialized_paths: tsa23_materialized_paths
+    parameters:
+      overlay: workflows/freshforge/tsa23_materialization_overlay.yaml
+  - id: audit_annex_availability
+    provider: femic.materialization.audit_annex_availability
+    needs:
+      - materialize_paths
+    inputs:
+      materialized_paths: materialize_paths.materialized_paths
+    outputs:
+      annex_audit: annex_availability_audited
+    parameters:
+      overlay: workflows/freshforge/tsa23_materialization_overlay.yaml
+  - id: write_materialization_report
+    provider: femic.materialization.write_materialization_report
+    needs:
+      - audit_annex_availability
+    inputs:
+      annex_audit: audit_annex_availability.annex_audit
+    outputs:
+      materialization_report: runtime/freshforge/tsa23_materialization_report.json
+    parameters:
+      overlay: workflows/freshforge/tsa23_materialization_overlay.yaml
+    artifacts:
+      report: runtime/freshforge/tsa23_materialization_report.json

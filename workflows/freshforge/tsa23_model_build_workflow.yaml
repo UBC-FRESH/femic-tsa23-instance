@@ -1,0 +1,82 @@
+workflow:
+  id: tsa23_model_build
+  name: TSA23 FEMIC model-build workflow
+  description: >-
+    Declarative graph for the TSA23 rebuild from materialized inputs to the Patchworks
+    package that WS4 consumes. Stops at export_patchworks because that is where the
+    analysis path forks: WS4 builds from forestmodel.xml and the fragments, while
+    Patchworks Matrix Builder is a separate reference-parity lane that needs a licensed
+    Windows install and is not wired here.
+nodes:
+  - id: validate_case
+    provider: femic.validate_case
+    outputs:
+      case_validation: case_validation_ok
+    parameters:
+      instance_root: .
+      run_config: config/run_profile.tsa23.yaml
+  - id: geospatial_preflight
+    provider: femic.geospatial_preflight
+    needs:
+      - validate_case
+    inputs:
+      case_validation: validate_case.case_validation
+    outputs:
+      geospatial_runtime: geospatial_runtime_ok
+    parameters:
+      instance_root: .
+  - id: compile_upstream
+    provider: femic.compile_upstream
+    needs:
+      - geospatial_preflight
+    inputs:
+      geospatial_runtime: geospatial_preflight.geospatial_runtime
+    outputs:
+      btc_handoff: data/03_input-tsa23.csv
+    parameters:
+      instance_root: .
+      run_config: config/run_profile.tsa23.yaml
+      run_id: tsa23
+    artifacts:
+      run_manifest: data/run_manifest.json
+  - id: btc_post_tipsy
+    provider: femic.btc_post_tipsy
+    needs:
+      - compile_upstream
+    inputs:
+      btc_handoff: compile_upstream.btc_handoff
+    outputs:
+      model_input_bundle: data/model_input_bundle
+    parameters:
+      instance_root: .
+      run_config: config/run_profile.tsa23.yaml
+      tsa: "23"
+      run_id: tsa23
+    artifacts:
+      btc_manifest: data/04_output-tsa23.csv
+      post_tipsy_manifest: data/model_input_bundle
+  - id: export_patchworks
+    provider: femic.export_patchworks
+    needs:
+      - btc_post_tipsy
+    inputs:
+      model_input_bundle: btc_post_tipsy.model_input_bundle
+    outputs:
+      patchworks_package: output/patchworks
+    parameters:
+      instance_root: .
+      run_config: config/run_profile.tsa23.yaml
+      tsa: "23"
+    artifacts:
+      forestmodel_xml: output/patchworks/forestmodel.xml
+      fragments: output/patchworks/fragments/fragments.shp
+
+# Alternate lane, not part of this graph: use femic.accepted_btc_handoff instead of
+# compile_upstream + btc_post_tipsy when replaying an accepted handoff, and
+# femic.patchworks_preflight + femic.matrix_build after export_patchworks when a
+# licensed Patchworks install is available for reference parity.
+#
+# Downstream of this graph, outside FreshForge:
+#   ws4 build --xml output/patchworks/forestmodel.xml \
+#             --fragments output/patchworks/fragments/fragments.shp \
+#             --out runtime/ws4/compiled

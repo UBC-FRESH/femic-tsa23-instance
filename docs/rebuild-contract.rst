@@ -53,6 +53,30 @@ FEMIC finds the first four through ``FEMIC_EXTERNAL_DATA_ROOT``. Without it:
 
 That is the current state of this checkout, and it is why issues `#3` and `#4` are open.
 
+Declared graphs
+~~~~~~~~~~~~~~~
+
+The rebuild is declared, not improvised. Two FreshForge graphs and one overlay carry it:
+
+.. code-block:: text
+
+   workflows/freshforge/tsa23_materialization_overlay.yaml
+   workflows/freshforge/tsa23_materialization_workflow.yaml
+   workflows/freshforge/tsa23_model_build_workflow.yaml
+
+``femic.materialization`` nodes check the toolchain, install the environment, initialize
+the submodule and its annex, enable ``arbutus-s3``, materialize the archived paths, audit
+availability, and write a report. ``femic`` nodes then run validate-case through
+``export_patchworks``. Both graphs validate and plan without touching the tree:
+
+.. code-block:: bash
+
+   freshforge validate workflows/freshforge/tsa23_model_build_workflow.yaml
+   freshforge plan     workflows/freshforge/tsa23_model_build_workflow.yaml
+
+The materialization overlay lists only what is **archived**. Publicly resolvable inputs
+are not in it; their commands live in :doc:`data-sources`.
+
 What a rebuild does, in order
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
