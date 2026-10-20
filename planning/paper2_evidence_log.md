@@ -366,3 +366,39 @@ Consequence: E2e/E6/E7 are all weather-specific. Any statement of the form
 
 
 
+
+**E10 — the crossover: coverage wins below p80, the barrier wins above p85.**
+60 cells (`scripts/sensitivity_screen.py`, `runtime/fire/weather_crossover.csv`): the
+fire-season ladder from E9's scenario builder (quantiles 0.50-0.98, FWI 16.8-57.6),
+density 0.15 and 0.20, treated multiplier 0.05, three seeds, fixed footprint and
+shared ignitions. The original three scenarios reproduce byte-identically, so the
+ladder is an extension, not a rebuild.
+
+Barrier excess over the best pattern (%), p90 burned, median over seeds:
+
+| scenario (FWI) | density 0.15 | density 0.20 | p90 burned (ha) |
+| --- | ---: | ---: | ---: |
+| median (16.8) | +16.9 | +21.3 | 231 |
+| p60 (21.8) | +18.7 | +34.3 | 803 |
+| p65 (24.7) | **+33.0** | **+38.3** | 1,349 |
+| p70 (27.8) | +20.6 | +30.2 | 2,101 |
+| p75 (31.0) | +14.0 | +14.3 | 3,117 |
+| p80 (34.5) | +8.2 | 0.0 | 4,694 |
+| p85 (38.4) | 0.0 | 0.0 | 7,791 |
+| p90 (42.8) | 0.0 | 0.0 | 9,988 |
+| p95 (49.9) | 0.0 | 0.0 | 14,680 |
+| extreme (57.6) | 0.0 | 0.0 | 17,268 |
+
+Mean burned shows the same crossover at p80 (+5.9% at p75, 0.0 at p80 and above).
+
+Two regimes, with a sharp transition between p80 and p85 (FWI 34.5 -> 38.4):
+
+- **Coverage regime (<= p80).** Scattering treatment beats a barrier, and the penalty
+  peaks at **p65** (+33 to +38%), not at the median: at median the fire is too small for
+  arrangement to matter (231 ha p90), while at p65 it is large enough to matter.
+- **Barrier regime (>= p85).** The barrier is best or tied at every density tested, where
+  the p90 fire is 7,800-17,300 ha.
+
+The practical reading: arrangement is worth optimizing only if the landscape is managed
+for the p85-and-above tail; below that, treat for coverage. That is a decision statement
+the student can test, not a claim about the paper.
