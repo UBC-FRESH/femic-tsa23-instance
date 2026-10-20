@@ -30,6 +30,15 @@ Install
 are rebuilt artifacts, not source. A fresh clone can import the scripts but cannot run
 an analysis until the data are in place.
 
+The repository is also a **DataLad dataset**: the archived inputs under ``data/`` are
+git-annex pointers, so a plain clone leaves them as symlinks to content that is not
+there. Two ways to get the content:
+
+- install ``git-annex`` and let the materialization workflow fetch it from the Arbutus
+  special remote (``workflows/freshforge/tsa23_materialization_workflow.yaml``); or
+- skip annex entirely and unpack the release bundle below, which needs no special remote.
+
+
 Data
 ----
 
