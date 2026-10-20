@@ -84,3 +84,35 @@ wildfire fuel-treatment optimization layer, and per-AU TIPSY refinement.
 - [ ] Define FreshForge workflow graphs for TSA23 rebuild automation
 - [ ] Document checkpoint/resume strategy
 - [ ] Validate automated full rebuild from source layers to Patchworks output
+
+## Phase 9: Sphinx Docs Site and Publication (P117)
+
+Parent issue: #15
+Branch: `feature/p117-sphinx-docs`
+Status: planned
+Plan: `planning/sphinx_docs_plan.md`
+
+Goal: build and publish the instance documentation with the
+`UBC-FRESH/ubc-fresh-dev-workflow` docs workflow — `sphinx-build -W` in CI, deployed
+to GitHub Pages — so the site is the project's RTFM surface and agents cite it.
+
+- [ ] P117.1 Align the build with the template: `docs/requirements.txt`, `conf.py`,
+      `index.rst`, `api/`, `llms.txt`
+- [ ] P117.2 Add `.github/workflows/docs.yml`: build with `-W`, upload the Pages
+      artifact, deploy from `main`
+- [ ] P117.3 Enable Pages (source: GitHub Actions) and verify the first deploy
+- [ ] P117.4 Content pass: keep the operator pages, add API pages for the scripts,
+      link public-safe runbooks and planning notes
+- [ ] P117.5 Public-safety pass on everything the site publishes
+
+Acceptance criteria:
+
+- `sphinx-build -b html docs _build/html -W` succeeds from a clean checkout with only
+  `docs/requirements.txt` installed.
+- The Pages URL serves the site and `llms.txt` is reachable.
+- The API reference renders real docstrings, not a placeholder page.
+- The workflow is the only build path; the dashboard/CI state is green on `main`.
+
+Note: this is the site infrastructure. The Phase 7 (P115) content programme fills it;
+P117 is complete when the surface builds and publishes, not when it is exhaustive.
+
