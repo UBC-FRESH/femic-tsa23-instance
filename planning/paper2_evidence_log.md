@@ -272,8 +272,18 @@ Original-target handoff run (seeded, for comparison): FT account 39,999.8 (floor
 - FBP fuel typing is rule-based from VRI shares; it should be validated against
   the BC provincial FBP fuel-type raster.
 - Weather is ERA5 daily proxies at three points, not station observations.
-- The arrangement effect is small (~2-4%); E2b says why, and E4 must test whether
-  it changes the decision.
+- The **size and sign of the arrangement effect depend on the weather scenario**: at
+  median-to-p80 the barrier is 8-38% *worse* than the best pattern; at p85 and above it
+  is best or tied (E9, E10). Any statement of the form "arrangement X is better" must
+  name its weather. The old "small, ~2-4%" summary applied to a single p90 seed and is
+  superseded.
+
+## Detailed methods
+
+`planning/bridge_experiment_log.md` records, per experiment, the design, inputs, exact
+command, outputs, runtime, and the corrections log. Use it to regenerate any table;
+`runtime/` is gitignored, so no result is committed and every one is reproducible only
+through that file.
 
 **E7 corrects E2e and E6.** The single-seed matched-footprint test drew a fresh
 ignition set for each pattern, so "pattern" and "which blocks burned" moved together.
