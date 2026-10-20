@@ -1,8 +1,22 @@
-# TSA23 FEMIC instance dependencies
-# Pin versions from parent femic where applicable.
-# Add TSA23-specific dependencies below as needed.
+# Analysis dependencies for the TSA23 instance.
+#
+# These are the packages the scripts in scripts/ import. The recorded results were
+# produced with numpy 2.5, pandas 2.3, geopandas 1.2, scipy 1.18 and cffdrs 0.3.0
+# (the git commit pinned below).
+#
+# WS4 is a separate repository (https://github.com/UBC-FRESH/ws4) with its own
+# environment. Scripts that build or verify WS4 datasets must run with that
+# environment, not this one; see docs/quickstart.rst.
+numpy>=1.26
+pandas>=2.0,<3   # 2.3.3 produced the recorded results; 3.x untested beyond the smoke check
+geopandas>=0.14
+shapely>=2.0
+pyproj>=3.6
+pyogrio>=0.7
+scipy>=1.11
+PyYAML>=6.0
+matplotlib>=3.7
 
-# Primary dependency: local install of parent femic package
-# Editable install from submodule requires special handling;
-# typically use: pip install -e ../femic  # when in external/femic-tsa23-instance
--e ../../  # placeholder; adjust based on actual submodule position
+# Not on PyPI: install the CFFDRS implementation from source, pinned to the commit
+# the recorded fire-behaviour results were produced with.
+cffdrs @ git+https://github.com/cffdrs/cffdrs_py.git@7d8931e64fca7c5a0d0f34a14d258215a3b9506d

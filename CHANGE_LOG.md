@@ -1,5 +1,19 @@
 # Change Log
 
+## 2026-10-20 — Working instance, corrected datasets, published docs
+
+- `requirements.txt` replaced the submodule placeholder with the real analysis stack;
+  `cffdrs` is pinned to a git commit because it is not on PyPI.
+- `docs/quickstart.rst` rewritten for the standalone repository: clone, venv, data
+  bundle, verification, first analysis. The submodule/PowerShell path was stale.
+- `runbooks/data-bundle.md` records what a working checkout needs and how to ship it
+  (72 MB compressed, 175 MB unpacked).
+- WS4 datasets recompiled without duplicate product rows; the FB/SF builders no longer
+  collapse rows that differ only by treatment.
+- Sphinx site published at https://ubc-fresh.github.io/femic-tsa23-instance/, built by
+  the lab template's Pages workflow.
+
+
 ## 2026-07-05 — P108 Bootstrap
 
 - Created `UBC-FRESH/femic-tsa23-instance` public repository.
