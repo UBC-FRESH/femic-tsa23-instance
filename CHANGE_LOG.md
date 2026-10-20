@@ -10,6 +10,9 @@
   (72 MB compressed, 175 MB unpacked).
 - WS4 datasets recompiled without duplicate product rows; the FB/SF builders no longer
   collapse rows that differ only by treatment.
+- `docs/rebuild-contract.rst` now separates the two meanings of "build": the released
+data bundle (what a clone can do) and the from-source rebuild (which needs the external
+BC layers plus Wine and Patchworks, and cannot run from this tree).
 - Sphinx site published at https://ubc-fresh.github.io/femic-tsa23-instance/, built by
   the lab template's Pages workflow.
 

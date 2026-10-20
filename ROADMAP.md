@@ -12,7 +12,7 @@
 
 Parent issue: #1
 Branch: `feature/p109-source-discovery-materialization`
-Status: pr-open
+Status: active
 
 Goal: materialize the TSA23 source layers and instance configuration, and prove
 the instance builds end-to-end (TSR -> sources -> FEMIC build -> Patchworks
@@ -32,6 +32,12 @@ export -> WS4 build/simulate).
   - [x] `femic run --tsa 23` (45 AUs; VDYP curves under Wine)
   - [x] `femic export patchworks --tsa 23` (`forestmodel.xml` + `fragments.shp`)
   - [x] `ws4 build` + `ws4 simulate` (100-year run)
+
+Note (2026-10-20): P109.2 and P109.3 were completed at build time, but the source layers
+are **not** materialized in the current tree — `femic prep validate-case` fails without
+`FEMIC_EXTERNAL_DATA_ROOT`. They are reopened as `#3` and `#4` until the layers are
+restored or the derived-data-only position is adopted in `docs/rebuild-contract.rst`.
+P109.1 and P109.4 were re-verified and closed on 2026-10-20.
 
 Deferred to a later phase: the BatchTIPSY handoff (managed/treated curves), the
 wildfire fuel-treatment optimization layer, and per-AU TIPSY refinement.
