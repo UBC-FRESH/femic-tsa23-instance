@@ -532,3 +532,28 @@ Known limitation: FBP's slash/timber ratio is weather-dependent (5.5x at median 
 for S-1, 1.4x at extreme), while the model applies a constant multiplier. If the
 sensitivity shows the ranking moving, the answer is a weather-conditioned hazard, not a
 better constant.
+
+**E15 — the spread model can now read `feature.FuelHazard`, and the slash state does not
+change the ranking.** `landscape_spread.load_block_hazard` returns the area-weighted
+hazard per block at its current age; `run_matched_footprint.py --hazard-dataset` uses it
+instead of a flat 1.0.
+
+**Equivalence gate.** With the pre-slash dataset (every block 1.0), the barrier mask
+reproduces the published run exactly: **19,640.448328143004**, p90 37,637.13355349601.
+The refactor is therefore not silently changing the model.
+
+**With the slash state active** (current `compiled_fb_haz`, `cc_pl` = 2.0 for 3 years):
+
+| pattern | mean burned (ha) | p90 (ha) |
+| --- | ---: | ---: |
+| barrier | 31,241.1 | 54,512.2 |
+| clumped | 31,738.5 | 58,879.5 |
+| random | 32,625.2 | 60,152.4 |
+
+Ranking **barrier < clumped < random** on both statistics — unchanged. The magnitudes rise
+about 59%, and the arrangement effect grows from 3.2% to 4.2% (barrier vs random), i.e.
+the slash state amplifies the arrangement signal rather than reversing it.
+
+**Scope of the change.** The hazard-fed path is opt-in. The default remains the
+`TREATMENT_HAZARD` constants, so E2, E7, E9 and E10 stand exactly as recorded; E15 is a
+variant that shows what the recorded results were missing.

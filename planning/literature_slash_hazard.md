@@ -88,8 +88,15 @@ Implemented in `scripts/complete_hazard_feature.py` (`CC_SLASH_MULTIPLIER`,
 - **The bridge oracle is unchanged**: 471 / 765 / 913 blocks, verified by re-running
   `export_bridge_footprint.py` after the rebuild. The account uses hazard only for
   membership (`> 0.5`), and the spike only raises a value that was already above the
-  threshold. The fire model uses `TREATMENT_HAZARD` constants, not the feature, so the
-  matched-footprint runs are untouched.
+  threshold.
+- **The spread model can now read it.** `load_block_hazard` plus
+  `run_matched_footprint.py --hazard-dataset` replaces the flat multiplier with the
+  per-block feature. The equivalence gate reproduces the published barrier run exactly
+  (19,640.448328143004) when the dataset is the pre-slash one.
+- **With the slash state active the ranking is unchanged** — barrier < clumped < random on
+  mean and p90 — but burned area rises ~59% and the arrangement effect grows from 3.2% to
+  4.2%. Details in E15. The hazard-fed path is opt-in; the default is still the constants,
+  so the recorded E2/E7/E9/E10 numbers stand as they were.
 
 ### Sensitivity still to run
 

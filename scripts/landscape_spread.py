@@ -93,6 +93,55 @@ def _block_fuel_types(blocks: Path, fuel_types: Path, scenario: str, age: int) -
     return frame
 
 
+def load_block_hazard(dataset: Path, block_ids: set[int] | None = None) -> dict[int, float]:
+    """Return the per-block ``feature.FuelHazard`` value at the block's current age.
+
+    This is the dataset-fed counterpart to the flat ``TREATMENT_HAZARD`` constants. The
+    value is the area-weighted mean over the block's fragment rows, matching how WS4's
+    ``Simulator.block_criteria`` treats a product or feature criterion.
+
+    Parameters
+    ----------
+    dataset : Path
+        A compiled WS4 dataset directory.
+    block_ids : set of int, optional
+        Restrict the result to these blocks.
+
+    Returns
+    -------
+    dict of int to float
+        Block id to hazard multiplier. Blocks without a hazard feature fall back to 1.0.
+    """
+    blocks = pd.read_parquet(dataset / "blocks.parquet")
+    features = pd.read_parquet(dataset / "features.parquet")
+    curves = pd.read_parquet(dataset / "curves.parquet")
+    hazard = features[features["label"] == "feature.FuelHazard"][["track_id", "curve_id"]]
+    merged = blocks.merge(hazard, on="track_id", how="left")
+    if block_ids is not None:
+        merged = merged[merged["block_id"].isin(block_ids)]
+    values = curves.set_index(["curve_id", "x"])["y"].to_dict()
+    rows: list[dict[str, float]] = []
+    for row in merged.itertuples(index=False):
+        curve_id = getattr(row, "curve_id", None)
+        if pd.isna(curve_id):
+            value = 1.0
+        else:
+            value = values.get((curve_id, float(row.offset)))
+            if value is None:
+                value = values.get((curve_id, 0.0), 1.0)
+        rows.append({"block_id": int(row.block_id), "area_ha": float(row.area_ha), "hazard": float(value)})
+    frame = pd.DataFrame(rows)
+    if frame.empty:
+        return {}
+    weighted = frame.groupby("block_id").apply(
+        lambda g: float((g["hazard"] * g["area_ha"]).sum() / g["area_ha"].sum())
+        if g["area_ha"].sum() > 0
+        else float(g["hazard"].mean()),
+        include_groups=False,
+    )
+    return {int(block): float(value) for block, value in weighted.items()}
+
+
 def _adjacency(topology: Path) -> dict[int, list[tuple[int, float]]]:
     """Return an undirected adjacency map from the topology CSV."""
     topo = pd.read_csv(topology)

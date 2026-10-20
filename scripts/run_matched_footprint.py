@@ -27,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from landscape_spread import (  # noqa: E402
     _adjacency,
     _block_fuel_types,
+    load_block_hazard,
     simulate,
     simulate_fast,
 )
@@ -45,6 +46,13 @@ def main() -> None:
     parser.add_argument("--duration-min", type=float, default=480.0, dest="duration_min")
     parser.add_argument("--wind-dir", type=float, default=225.0, dest="wind_dir")
     parser.add_argument("--treat-ros-factor", type=float, default=0.3, dest="treat_ros_factor")
+    parser.add_argument(
+        "--hazard-dataset",
+        type=Path,
+        default=None,
+        dest="hazard_dataset",
+        help="use each block's feature.FuelHazard from this compiled dataset instead of 1.0",
+    )
     parser.add_argument("--seed", type=int, default=1)
     parser.add_argument(
         "--method",
@@ -63,9 +71,12 @@ def main() -> None:
 
     frame = frame.copy()
     frame["treated"] = frame["block_id"].isin(mask)
-    frame["ros_eff"] = frame["ros_m_per_min"] * frame["treated"].map(
-        {True: args.treat_ros_factor, False: 1.0}
-    )
+    if args.hazard_dataset is not None:
+        hazard = load_block_hazard(args.hazard_dataset)
+        base = frame["block_id"].map(hazard).fillna(1.0).astype(float)
+    else:
+        base = pd.Series(1.0, index=frame.index)
+    frame["ros_eff"] = frame["ros_m_per_min"] * base.where(~frame["treated"], args.treat_ros_factor)
 
     adj = _adjacency(args.topology)
     result = (simulate_fast if args.method == "fast" else simulate)(
