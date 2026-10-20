@@ -130,12 +130,36 @@ artifact for a thesis.
 4. Writes `runtime/literature/{seeds,nodes,edges}.csv`, `graph.json`, and `summary.md`
    (top works by in-degree, OpenAlex topic mix, publication years).
 
-### Status
+### Status and the design change
 
-The script is written and compiles, but the first full run hit **HTTP 429** from OpenAlex;
-257 lookups at ~8 requests/second exceeded the unauthenticated pool. Pacing is now 1.1 s
-per request with explicit 429 backoff, which should take roughly five minutes. A
-`mailto` is already sent in the polite pool.
+The first design resolved titles through OpenAlex directly and died on **HTTP 429**: the
+free-text search endpoint rate-limits hard from a shared host. The resolver now goes
+**Crossref first** (`query.bibliographic`, generous limits, no key) and then fetches
+`referenced_works` from OpenAlex **by DOI**, one cheap lookup per work.
+
+### What the smoke test revealed, and it matters
+
+Eight entries, two resolved. The six failures are not a matching bug:
+
+| entry | why it fails |
+| --- | --- |
+| 100 Mile House TSA TSR Data Package | BC government data package |
+| FireSmart: Protecting your Community from Wildfire | programme guide |
+| 2022 Fuel Management Prescription Guidance | BC guidance |
+| 2024 Fuel Management Practices Guide | BC guidance |
+| Forest Inventory | textbook/reference |
+| Wildland Urban Interface Risk Class Maps | provincial mapping product |
+
+Crossref and OpenAlex index journal literature. **A large share of this thesis's evidence
+base is grey literature** — provincial guides, data packages, mapping products — and a
+citation graph built on those sources will systematically miss it. That grey literature
+is arguably the operative evidence for a policy thesis, so it needs its own track rather
+than being treated as a gap to fill with more searching.
+
+Resolution rate on the full set is therefore expected to be modest (35 entries carry
+DOIs outright; a further share will match through Crossref). The graph maps the
+peer-reviewed core; it does not map the grey literature, and should not be presented as
+if it does.
 
 To run:
 
