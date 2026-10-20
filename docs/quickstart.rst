@@ -35,7 +35,8 @@ Data
 
 Two options, in order of preference.
 
-*Use the runtime bundle.* It contains exactly the inputs the analyses read — the
+*Use the runtime bundle* (ask the lab for `tsa23-runtime-bundle.tar.gz`; it is not
+committed because it is 72 MB). It contains exactly the inputs the analyses read — the
 fragment inventory, the block topology, the FBP stand curves, the fire-weather
 scenarios, the bridge schedules, and the compiled WS4 datasets — unpacked at the
 repository root:

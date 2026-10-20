@@ -24,8 +24,7 @@ Size: 72 MB compressed, about 175 MB unpacked.
 From the instance root, after a successful rebuild:
 
 ```bash
-mkdir -p /srv/shared-data/gep/femic-tsa23-bundles
-tar -czf /srv/shared-data/gep/femic-tsa23-bundles/tsa23-runtime-bundle.tar.gz \
+tar -czf tsa23-runtime-bundle.tar.gz \
   output/patchworks_ft/fragments \
   runtime/ws4/topology_tsa23.csv \
   runtime/fire/fbp_stand_curves.csv \
@@ -48,7 +47,7 @@ git clone https://github.com/UBC-FRESH/femic-tsa23-instance.git
 cd femic-tsa23-instance
 python3 -m venv .venv && . .venv/bin/activate
 python -m pip install -r requirements.txt
-tar -xzf /path/to/tsa23-runtime-bundle.tar.gz
+tar -xzf tsa23-runtime-bundle.tar.gz
 python scripts/check_spread_equivalence.py \
   --cases runtime/fire/bridge_barrier_blocks.csv --ignitions 20
 ```
