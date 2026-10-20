@@ -40,6 +40,16 @@ tar -czf tsa23-runtime-bundle.tar.gz \
   runtime/fuel_ft_proto
 ```
 
+## Published copy
+
+`data-2026-10-20` on the repository's releases page:
+
+```
+https://github.com/UBC-FRESH/femic-tsa23-instance/releases/download/data-2026-10-20/tsa23-runtime-bundle.tar.gz
+```
+
+`sha256: 3966a3ef51f213c3e17c3e4f1ebdabd1dc75c5ff94054825684fe10a3f0befc7`
+
 ## Use it
 
 ```bash
@@ -47,6 +57,8 @@ git clone https://github.com/UBC-FRESH/femic-tsa23-instance.git
 cd femic-tsa23-instance
 python3 -m venv .venv && . .venv/bin/activate
 python -m pip install -r requirements.txt
+gh release download data-2026-10-20 --pattern 'tsa23-runtime-bundle.tar.gz*'
+sha256sum -c tsa23-runtime-bundle.tar.gz.sha256
 tar -xzf tsa23-runtime-bundle.tar.gz
 python scripts/check_spread_equivalence.py \
   --cases runtime/fire/bridge_barrier_blocks.csv --ignitions 20

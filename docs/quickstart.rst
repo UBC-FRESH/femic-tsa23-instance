@@ -35,15 +35,19 @@ Data
 
 Two options, in order of preference.
 
-*Use the runtime bundle* (ask the lab for `tsa23-runtime-bundle.tar.gz`; it is not
-committed because it is 72 MB). It contains exactly the inputs the analyses read — the
+*Use the runtime bundle.* It contains exactly the inputs the analyses read — the
 fragment inventory, the block topology, the FBP stand curves, the fire-weather
-scenarios, the bridge schedules, and the compiled WS4 datasets — unpacked at the
-repository root:
+scenarios, the bridge schedules, and the compiled WS4 datasets. It is a release asset,
+not a tracked file, because it is 72 MB:
 
 .. code-block:: bash
 
+   curl -LO https://github.com/UBC-FRESH/femic-tsa23-instance/releases/download/data-2026-10-20/tsa23-runtime-bundle.tar.gz
+   curl -LO https://github.com/UBC-FRESH/femic-tsa23-instance/releases/download/data-2026-10-20/tsa23-runtime-bundle.tar.gz.sha256
+   sha256sum -c tsa23-runtime-bundle.tar.gz.sha256
    tar -xzf tsa23-runtime-bundle.tar.gz
+
+Or, with the GitHub CLI, ``gh release download data-2026-10-20``.
 
 *Rebuild from source.* Follow ``config/rebuild.yaml`` and the runbooks in ``runbooks/``.
 This is the reproducible path, but it needs VDYP and BatchTIPSY (under Wine on Linux),
