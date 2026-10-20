@@ -1,0 +1,128 @@
+schema_version: 1
+tsa:
+  tsa_id: tsa_23
+  tsa_code: '23'
+  tsa_name: 100 Mile House
+canonical_summary:
+  candidate_fact_count: 663
+  document_count: 18
+  fact_family_counts:
+    au_definition_candidate: 133
+    source_layer_candidate: 21
+    thlb_reference: 346
+    tipsy_input_candidate: 163
+  candidate_facts_path: metadata/tsr/tsa_candidate_facts.json
+  documents_path: metadata/tsr/tsa_documents.json
+  registry_path: metadata/tsr/tsa_registry.json
+adopted:
+  source_layers:
+  - name: BEC_BIOGEOCLIMATIC_POLY
+    role: biogeoclimatic
+    source_cycle: 2012
+    provenance_id: TSR_2012/Data_Package/23tsdp12.pdf#page=8
+    source_url: https://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf
+    status: proposed
+  - name: FTEN_CUT_BLOCK_POLY_SVW
+    role: harvest_history
+    source_cycle: 2012
+    provenance_id: TSR_2012/Data_Package/23tsdp12.pdf#page=8
+    source_url: https://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf
+    status: proposed
+  - name: FTEN_RECREATION_LINES_SVW
+    role: recreation
+    source_cycle: 2012
+    provenance_id: TSR_2012/Data_Package/23tsdp12.pdf#page=8
+    source_url: https://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf
+    status: proposed
+  - name: FTEN_RECREATION_POLY_SVW
+    role: recreation
+    source_cycle: 2012
+    provenance_id: TSR_2012/Data_Package/23tsdp12.pdf#page=8
+    source_url: https://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf
+    status: proposed
+  - name: PROT_CURRENT_FIRE_POLYS_SP
+    role: fire_history
+    source_cycle: 2012
+    provenance_id: TSR_2012/Data_Package/23tsdp12.pdf#page=8
+    source_url: https://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf
+    status: proposed
+  - name: PROT_HISTORICAL_FIRE_POLYS_SP
+    role: fire_history
+    source_cycle: 2012
+    provenance_id: TSR_2012/Data_Package/23tsdp12.pdf#page=8
+    source_url: https://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf
+    status: proposed
+  - name: RMP_LANDSCAPE_UNIT_SVW
+    role: land_use_constraint
+    source_cycle: 2012
+    provenance_id: TSR_2012/Data_Package/23tsdp12.pdf#page=8
+    source_url: https://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf
+    status: proposed
+  - name: RMP_OGMA_LEGAL_CURRENT_SVW
+    role: land_use_constraint
+    source_cycle: 2012
+    provenance_id: TSR_2012/Data_Package/23tsdp12.pdf#page=8
+    source_url: https://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf
+    status: proposed
+  - name: RMP_OGMA_NON_LEGAL_CURRENT_SVW
+    role: land_use_constraint
+    source_cycle: 2012
+    provenance_id: TSR_2012/Data_Package/23tsdp12.pdf#page=8
+    source_url: https://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf
+    status: proposed
+  - name: RMP_PLAN_LEGAL_POLY
+    role: land_use_constraint
+    source_cycle: 2012
+    provenance_id: TSR_2012/Data_Package/23tsdp12.pdf#page=8
+    source_url: https://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf
+    status: proposed
+  - name: RMP_PLAN_NON_LEGAL_POLY_SVW
+    role: land_use_constraint
+    source_cycle: 2012
+    provenance_id: TSR_2012/Data_Package/23tsdp12.pdf#page=8
+    source_url: https://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf
+    status: proposed
+  - name: RMP_STRGC_LAND_RSRCE_PLAN_SVW
+    role: land_use_constraint
+    source_cycle: 2012
+    provenance_id: TSR_2012/Data_Package/23tsdp12.pdf#page=8
+    source_url: https://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf
+    status: proposed
+  - name: TA_PARK_ECORES_PA_SVW
+    role: protected_area
+    source_cycle: 2012
+    provenance_id: TSR_2012/Data_Package/23tsdp12.pdf#page=8
+    source_url: https://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf
+    status: proposed
+  - name: TRIM_CONTOUR_LINES
+    role: terrain
+    source_cycle: 2012
+    provenance_id: TSR_2012/Data_Package/23tsdp12.pdf#page=8
+    source_url: https://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf
+    status: proposed
+  - name: VEG_COMP_LYR_R1_POLY
+    role: vegetation_inventory
+    source_cycle: 2012
+    provenance_id: TSR_2012/Data_Package/23tsdp12.pdf#page=8
+    source_url: https://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf
+    status: proposed
+  - name: WCP_UNGULATE_WINTER_RANGE_SP
+    role: wildlife_constraint
+    source_cycle: 2012
+    provenance_id: TSR_2012/Data_Package/23tsdp12.pdf#page=8
+    source_url: https://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf
+    status: proposed
+  - name: WCP_WILDLIFE_HABITAT_AREA_POLY
+    role: wildlife_constraint
+    source_cycle: 2012
+    provenance_id: TSR_2012/Data_Package/23tsdp12.pdf#page=8
+    source_url: https://www.for.gov.bc.ca/ftp/HTS/external/!publish/Timber_Supply_Review/TSA/100_Mile_House_23/TSR_2012/Data_Package/23tsdp12.pdf
+    status: proposed
+  au_definitions: []
+  thlb_references: []
+  tipsy_inputs: []
+  notes:
+  - note: Draft adopted source layers proposed from TSR_2012 data package (23tsdp12.pdf
+      p.8). Pending maintainer sign-off.
+    prepared_by: agent
+    review_csv: runtime/tsr23_fact_review.csv

@@ -1,0 +1,24 @@
+# TSA23 FEMIC Instance
+
+> Agent-facing index for the TSA23 instance. Read the linked pages before you change the project.
+
+## Start here
+
+- [Home](index.html): the documentation home for the project.
+- [Overview](overview.html): what the instance is and how it is laid out.
+- [Quickstart](quickstart.html): build and run it from a clean checkout.
+- [Rebuild contract](rebuild-contract.html): the canonical rebuild sequence.
+- [Troubleshooting](troubleshooting.html): known failures and their causes.
+
+## Reference
+
+- [API reference](api/index.html): every public function, with its parameters, types, and return values.
+- [TSR guidance](tsr-guidance.html): reading and reviewing the TSR candidate facts.
+- [Seral interpretation](seral-interpretation.html): the seral-stage rules used in the model.
+
+## Beyond this site
+
+- `AGENTS.md` and `ROADMAP.md` in the repository are the governing instructions and the plan of record.
+- `planning/paper2_evidence_log.md` holds the measured evidence behind every reported number.
+- `planning/bridge_experiment_log.md` holds the exact command for each experiment.
+- `runbooks/` holds the operator procedures.

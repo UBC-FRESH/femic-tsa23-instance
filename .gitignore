@@ -70,10 +70,22 @@ Thumbs.db
 # FEMIC runtime artifacts
 runtime/
 tmp/
+vdyp_io/
+tipsy_io/
+plots/
+output/
+releases/
+data/bc/
+data/downloads/
+data/shp/
+data/model_input_bundle/
 data/*.feather
 data/*.pkl
 data/*.parquet
-vdyp_io/*.log
+data/03_input-*.csv
+data/04_output-*.csv
+data/tipsy_*.csv
+data/tipsy_*.xlsx
 metadata/tsr/cached/
 
 # Virtual environment
@@ -100,3 +112,5 @@ reference/Patchworks/
 *.pyc
 mypy_cache/
 .pytest_cache/
+
+data/*.input_sha256

@@ -5,6 +5,7 @@ This directory contains operator-run guides for TSA23-specific workflows.
 ## Available Runbooks
 
 - **rebuild-overview.md** — Canonical rebuild contract walkthrough
+- **bridge-experiments.md** — Run and vary the landscape fire bridge experiment
 - **source-layer-materialization.md** — Materialize and validate source layers
 - **vdyp-troubleshooting.md** — VDYP diagnostic workflow
 - **patchworks-preflight.md** — Patchworks runtime preflight checklist

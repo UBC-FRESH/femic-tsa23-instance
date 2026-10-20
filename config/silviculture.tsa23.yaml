@@ -1,0 +1,122 @@
+commercial_thinning:
+  enabled: true
+  state_field: SILV_STATE
+  from_state: cc_pl
+  to_state: cc_pl_ct
+  objective: landscape fuel mitigation (reduce crown density / ladder fuels)
+  min_origin: planted
+  eligible_au_ids:
+  - 2301000
+  - 2302000
+  - 2303000
+  - 2301001
+  - 2302001
+  - 2303001
+  - 2301002
+  - 2302002
+  - 2303002
+  - 2301003
+  - 2302003
+  - 2303003
+  - 2301004
+  - 2302004
+  - 2303004
+  - 2301005
+  - 2302005
+  - 2303005
+  - 2301006
+  - 2302006
+  - 2303006
+  - 2301007
+  - 2302007
+  - 2303007
+  - 2301008
+  - 2302008
+  - 2303008
+  - 2301009
+  - 2302009
+  - 2303009
+  - 2301010
+  - 2302010
+  - 2303010
+  - 2301011
+  - 2302011
+  - 2303011
+  - 2301012
+  - 2302012
+  - 2303012
+  - 2301013
+  - 2302013
+  - 2303013
+  age_by_au:
+    2301000: 40
+    2302000: 40
+    2303000: 40
+    2301001: 40
+    2302001: 40
+    2303001: 40
+    2301002: 40
+    2302002: 40
+    2303002: 40
+    2301003: 40
+    2302003: 40
+    2303003: 40
+    2301004: 40
+    2302004: 40
+    2303004: 40
+    2301005: 40
+    2302005: 40
+    2303005: 40
+    2301006: 40
+    2302006: 40
+    2303006: 40
+    2301007: 40
+    2302007: 40
+    2303007: 40
+    2301008: 40
+    2302008: 40
+    2303008: 40
+    2301009: 40
+    2302009: 40
+    2303009: 40
+    2301010: 40
+    2302010: 40
+    2303010: 40
+    2301011: 40
+    2302011: 40
+    2303011: 40
+    2301012: 40
+    2302012: 40
+    2303012: 40
+    2301013: 40
+    2302013: 40
+    2303013: 40
+  intensity_variants:
+    low:
+      basal_area_removal_fraction: 0.35
+    medium:
+      basal_area_removal_fraction: 0.45
+    high:
+      basal_area_removal_fraction: 0.55
+  default_intensity: medium
+  basal_area_removal_fraction: 0.45
+  basal_area_to_volume_ratio: 1.0
+  final_felling_gap_factor: 0.0
+  label: FT
+  origins:
+  - natural
+  - planted
+  state_by_origin:
+    natural:
+      from_state: baseline
+      to_state: baseline_ft
+    planted:
+      from_state: cc_pl
+      to_state: cc_pl_ft
+  ages:
+  - 30
+  - 40
+  - 50
+  - 60
+btc_indicator_banks:
+- log-grades

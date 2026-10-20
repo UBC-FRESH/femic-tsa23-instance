@@ -8,15 +8,33 @@
 - [x] Plan TSA23 source workflow and first build phases (child #300)
 - [x] Write delegated result report and open P108 PR (child #301)
 
-## Phase 1: Source/Corpus Discovery and Materialization (P109 — tentative)
+## Phase 1: Source/Corpus Discovery and Materialization
 
-Define the initial TSA23 source-data workflow without executing heavy workflows.
+Parent issue: #1
+Branch: `feature/p109-source-discovery-materialization`
+Status: pr-open
 
-- [ ] Audit available TSA23 TSR references and BC Data Catalogue layers
-- [ ] Map materialization targets (VRI, SiteProd, boundaries, THLB/THNS)
-- [ ] Define DataLad/public-data mirror strategy for required layers
-- [ ] Create instance rebuild spec draft (`config/rebuild.yaml`)
-- [ ] Materialize first-pass source layers locally
+Goal: materialize the TSA23 source layers and instance configuration, and prove
+the instance builds end-to-end (TSR -> sources -> FEMIC build -> Patchworks
+export -> WS4 build/simulate).
+
+- [x] P109.1 TSR fetch, candidate-fact review, and reviewed overlay (#2)
+  - [x] `femic tsr fetch --tsa 23` (18/18 PDFs cached)
+  - [x] `femic tsr facts-report --tsa 23` review of source-layer/THLB candidates
+  - [x] `config/tsr/overlay.yaml` with 17 adopted source layers (`proposed`)
+- [x] P109.2 Source-layer materialization (VRI/SiteProd/TSA boundary) (#3)
+  - [x] Arbutus `arbutus-s3` special remote enabled
+  - [x] VRI 2024/2025, SiteProd, and TSA boundary materialized
+- [x] P109.3 Instance configuration and provisional TIPSY rules (#4)
+  - [x] `config/run_profile.tsa23.yaml`, `config/seral.tsa23.yaml`, `config/vdyp_fit_policy.yaml`
+  - [x] `config/rebuild.spec.yaml` (canonical), `config/tipsy/tsa23.yaml` (provisional)
+- [x] P109.4 First end-to-end build and WS4 validation (#5)
+  - [x] `femic run --tsa 23` (45 AUs; VDYP curves under Wine)
+  - [x] `femic export patchworks --tsa 23` (`forestmodel.xml` + `fragments.shp`)
+  - [x] `ws4 build` + `ws4 simulate` (100-year run)
+
+Deferred to a later phase: the BatchTIPSY handoff (managed/treated curves), the
+wildfire fuel-treatment optimization layer, and per-AU TIPSY refinement.
 
 ## Phase 2: TSR/THLB Interpretation (P110 — tentative)
 
@@ -66,3 +84,30 @@ Define the initial TSA23 source-data workflow without executing heavy workflows.
 - [ ] Define FreshForge workflow graphs for TSA23 rebuild automation
 - [ ] Document checkpoint/resume strategy
 - [ ] Validate automated full rebuild from source layers to Patchworks output
+
+## Phase 9: Sphinx Docs Site and Publication (P117)
+
+Parent issue: #15
+Branch: `feature/p117-sphinx-docs` (merged into `feature/fuel-treatment-layer`)
+Status: active
+Plan: `planning/sphinx_docs_plan.md`
+
+Goal: build and publish the instance documentation with the
+`UBC-FRESH/ubc-fresh-dev-workflow` docs workflow — `sphinx-build -W` in CI, deployed
+to GitHub Pages — so the site is the project's RTFM surface and agents cite it.
+
+- [x] P117.1 Align the build with the template: `docs/requirements.txt`, `conf.py`,
+      `index.rst`, `api/`, `llms.txt`
+- [x] P117.2 Add `.github/workflows/docs.yml`: build with `-W`, upload the Pages
+      artifact, deploy from `main`
+- [x] P117.3 Enable Pages (source: GitHub Actions) and verify a deploy —
+      `https://ubc-fresh.github.io/femic-tsa23-instance/` served from the feature
+      branch on a widened environment policy, then the policy was restored to `main`
+- [ ] P117.4 Content pass: the API pages are generated; the operator pages still need
+      the P115 depth (area accounting, THLB/AU, seral guides)
+- [x] P117.5 Public-safety pass on the published pages
+
+Note: the site is live and builds from the branch. The phase closes when this branch
+reaches `main`; the `github-pages` environment only allows `main`, so that is the
+remaining step.
+
