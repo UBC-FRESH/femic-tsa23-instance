@@ -139,6 +139,15 @@ def add_fuel_break(
         ]
     )
     new_products = pd.concat([new_products, cost_rows], ignore_index=True)
+    # Several source tracks can carry the same product under different treatments;
+    # retagging them to one treatment collapses those rows onto the same WS4 key.
+    # Keep one row per exact key (the builder's rule), but keep different curves,
+    # which are the per-AU components and are a sum.
+    before = len(new_products)
+    new_products = new_products.drop_duplicates(
+        ["track_id", "treatment", "label", "curve_id"], keep="first"
+    )
+    print(f"FB: dropped {before - len(new_products)} duplicated product rows")
 
     # New treatments: mirror CC, retarget to the FB destination.
     new_treatments = cc.copy()

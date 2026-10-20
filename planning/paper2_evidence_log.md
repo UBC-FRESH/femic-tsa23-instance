@@ -427,3 +427,32 @@ Two regimes, with a sharp transition between p80 and p85 (FWI 34.5 -> 38.4):
 The practical reading: arrangement is worth optimizing only if the landscape is managed
 for the p85-and-above tail; below that, treat for coverage. That is a decision statement
 the student can test, not a claim about the paper.
+
+**E11 — the FT dataset recompile, and a second duplication defect in our own scripts.**
+Rebuilt with WS4 `main` at `c9efec6` (builder fix `8f0f6d4`):
+
+| dataset | before | after |
+| --- | ---: | ---: |
+| `products.parquet` rows (FT base) | 4,947,045 | 3,431,580 |
+| redundant `(track, treatment, label, curve_id)` rows | 1,515,465 | 0 |
+| keys with more than one curve (legitimate per-AU components) | 85,532 | 85,532 |
+
+**Acceptance.** On `ft_cap.csv` at year 0: `product.Treated.managed.FT` =
+**9,983.3605 ha**, `product.FuelTreatmentCost / 20,000` = **9,983.3605 ha**, ratio
+**1.0000** (was 4.0000, FT = 39,933.4419). The old dataset also emitted the loader
+warning naming 1,515,465 redundant rows; the recompiled one is silent.
+
+**Second defect, ours.** Rebuilding the derived datasets exposed a duplication bug in
+`add_fuel_break_treatment.py` and `add_surface_fuel_treatment.py`: they copy a
+destination track's products and retag the treatment, so rows that differed only by
+treatment (FT vs CC) collapse onto one FB key. That added **28,609** duplicate rows to
+the FB dataset. Fixed with the builder's rule — drop exact duplicate keys, keep
+different curves — and both scripts now print the count. FB reports 28,609 dropped; SF
+reports 0 on clean input.
+
+**The bridge is unaffected.** `feature.FuelHazard` is identical between the old and the
+recompiled `compiled_fb_haz` (158,437 tracks compared, max delta 0.0; 15,179 FB tracks at
+0.05, 143,258 at 1.0), so the oracle bundle, the masks and the E7-E10 results stand
+unchanged.
+
+Old datasets are archived under `runtime/ws4/_superseded_dup_product_rows/` (gitignored).
