@@ -262,7 +262,7 @@ Original-target handoff run (seeded, for comparison): FT account 39,999.8 (floor
 | Bridge test | `scripts/ws4_bridge_test.py` |
 | Study targets (corrected) | `runtime/fuel_ft_proto/study_targets_v2.yaml` |
 | Study runs | `runtime/ws4/ft_v2_unseeded/`, `runtime/ws4/ft_v2_seeded/` |
-| WS4 findings/prompts | `/srv/shared-data/gep/ws4/ws4/tmp/` |
+| WS4 findings/prompts | `/srv/shared-data/gep/ws4/tmp/` (dead drop) |
 
 ## Caveats (do not quote the numbers without these)
 
@@ -274,3 +274,33 @@ Original-target handoff run (seeded, for comparison): FT account 39,999.8 (floor
 - Weather is ERA5 daily proxies at three points, not station observations.
 - The arrangement effect is small (~2-4%); E2b says why, and E4 must test whether
   it changes the decision.
+
+**E7 corrects E2e and E6.** The single-seed matched-footprint test drew a fresh
+ignition set for each pattern, so "pattern" and "which blocks burned" moved together.
+Re-run with one ignition set shared by all three patterns on the same footprint
+(`scripts/bridge_matched_footprint.py --footprint-seed 1 --seed N`, five seeds,
+`runtime/fire/p16_seed_sweep.csv`):
+
+| seed | barrier mean | clumped mean | random mean | barrier p90 | clumped p90 | random p90 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | 5,116 | 4,732 | 7,050 | 7,227 | 9,181 | 12,446 |
+| 2 | 4,632 | 7,076 | 6,844 | 7,025 | 14,014 | 11,820 |
+| 3 | 4,561 | 5,837 | 5,218 | 6,709 | 12,219 | 9,505 |
+| 4 | 5,272 | 4,766 | 6,818 | 7,532 | 10,747 | 11,976 |
+| 5 | 5,506 | 5,881 | 6,857 | 7,564 | 12,514 | 11,431 |
+
+- The **mean ranking is not stable**: barrier first in 3/5 seeds; clumped best in seeds
+  1 and 4; in seeds 2 and 3 clumped is worse than random on mean and p90.
+- The **barrier is best on p90 in 5/5 seeds**, by 30-45%. That is the stable result.
+- Directed largest reach puts the barrier first 5/5 but matches the mean ordering only
+  3/5, and the mean is the unstable target, so **E2e's "directed reach reproduces the
+  fire rank" is not supported as stated**. Treat it as a single-seed coincidence
+  produced by the ignition confound.
+- The 90-degree undirected compartment reproduces the p90 ordering 5/5; the 60-degree
+  cone 3/5 (consistent with WS4 P15's cone-width caveat).
+- The E6 response surface inherits the same confound; its within-scenario R2 should be
+  re-measured with a shared ignition set before it is quoted.
+
+**Do not build the Paper 2 bridge on a mean-burned ranking at 40 ignitions.** Either
+raise the ignition count or use the tail statistic.
+

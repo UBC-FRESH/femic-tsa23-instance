@@ -158,12 +158,51 @@ def _downwind(
     return delta <= 90.0
 
 
+def _within_cone(
+    u: int, v: int, centroids: dict[int, tuple[float, float]], wind_deg: float, tolerance: float
+) -> bool:
+    """Return True when the edge lies within ``tolerance`` degrees of the wind."""
+    x0, y0 = centroids[u]
+    x1, y1 = centroids[v]
+    bearing = _bearing_deg(x0, y0, x1, y1)
+    delta = abs(((bearing - wind_deg + 180.0) % 360.0) - 180.0)
+    return delta <= tolerance
+
+
+def _cone_components(
+    nodes: set[int],
+    adj: dict[int, list[tuple[int, float]]],
+    centroids: dict[int, tuple[float, float]],
+    wind_deg: float,
+    tolerance: float,
+) -> list[set[int]]:
+    """Undirected components of ``nodes`` over edges inside the spread cone."""
+    remaining = set(nodes)
+    components: list[set[int]] = []
+    while remaining:
+        start = remaining.pop()
+        component = {start}
+        queue = deque([start])
+        while queue:
+            node = queue.popleft()
+            for neighbour, _d in adj.get(node, []):
+                if neighbour in remaining and _within_cone(
+                    node, neighbour, centroids, wind_deg, tolerance
+                ):
+                    remaining.discard(neighbour)
+                    component.add(neighbour)
+                    queue.append(neighbour)
+        components.append(component)
+    return components
+
+
 def _connectivity(
     footprint: set[int],
     treated: set[int],
     adj: dict[int, list[tuple[int, float]]],
     centroids: dict[int, tuple[float, float]],
     wind_deg: float,
+    area: dict[int, float],
 ) -> dict[str, float]:
     """Connectivity metrics of the untreated part of a footprint (undirected + directed)."""
     untreated = footprint - treated
@@ -199,7 +238,7 @@ def _connectivity(
         for neighbour, _d in adj.get(node, [])
         if neighbour in untreated and _downwind(node, neighbour, centroids, wind_deg)
     )
-    return {
+    metrics: dict[str, float] = {
         "untreated_blocks": len(untreated),
         "largest_component": float(max(sizes) if sizes else 0),
         "mean_component": float(np.mean(sizes) if sizes else 0.0),
@@ -209,6 +248,18 @@ def _connectivity(
         "directed_mean_reach": directed_mean,
         "aligned_edge_cut": float(aligned_cut),
     }
+    # P15-style spread account: undirected compartments over within-cone edges.
+    total_area = sum(area[b] for b in untreated)
+    for tolerance in (60.0, 90.0):
+        parts = _cone_components(untreated, adj, centroids, wind_deg, tolerance)
+        part_areas = [sum(area[b] for b in part) for part in parts]
+        metrics[f"cone{int(tolerance)}_largest_component_ha"] = (
+            float(max(part_areas)) if part_areas else 0.0
+        )
+        metrics[f"cone{int(tolerance)}_percolation_ha"] = (
+            float(sum(a * a for a in part_areas) / total_area) if total_area > 0 else 0.0
+        )
+    return metrics
 
 
 def run(
@@ -224,8 +275,14 @@ def run(
     duration_min: float,
     wind_deg: float,
     seed: int,
+    footprint_seed: int | None = None,
 ) -> dict[str, object]:
-    """Run the matched-footprint comparison."""
+    """Run the matched-footprint comparison.
+
+    ``footprint_seed`` fixes the footprint; ``seed`` varies the pattern layout and
+    the ignition draws. Passing the same ``footprint_seed`` with different ``seed``
+    values compares the patterns on one footprint, which is what a seed sweep needs.
+    """
     blocks = _block_fuel_types(blocks_path, fuel_types, scenario, 60)
     adj = _adjacency(topology)
     area = blocks.set_index("block_id")["area_ha"].to_dict()
@@ -238,12 +295,13 @@ def run(
             (~blocks["treated"]) & blocks["fuel_type"].isin(["C2", "C3", "C7"]), "block_id"
         ].to_numpy()
     )
-    rng = np.random.default_rng(seed)
-    seed_block = int(rng.choice(sorted(eligible)))
+    footprint_rng = np.random.default_rng(footprint_seed if footprint_seed is not None else seed)
+    seed_block = int(footprint_rng.choice(sorted(eligible)))
     footprint = _footprint(adj, area, eligible, seed_block, footprint_ha)
     footprint_area = sum(area[b] for b in footprint)
     target_area = min(footprint_area, treat_fraction * footprint_area)
     factor = TREATMENT_HAZARD[treatment]
+    rng = np.random.default_rng(seed)
 
     results: dict[str, object] = {
         "footprint_ha": footprint_area,
@@ -251,6 +309,9 @@ def run(
         "treatment": treatment,
         "patterns": {},
     }
+    # One ignition set per seed, shared by all three patterns: a pattern comparison
+    # must not move the ignitions as well as the treatment.
+    started = rng.choice(sorted(footprint), size=min(ignitions, len(footprint)), replace=False)
     for pattern in ("random", "clumped", "barrier"):
         treated = _select_pattern(
             pattern=pattern,
@@ -271,7 +332,6 @@ def run(
             b: (np.sqrt(max(area[b], 0.0) * 10000.0) / r) if r > 0 else float("inf")
             for b, r in ros_eff.items()
         }
-        started = rng.choice(sorted(footprint), size=min(ignitions, len(footprint)), replace=False)
         burned: list[float] = []
         for source in started:
             times = _travel_times(adj, traversal, centroids, wind_deg, int(source))
@@ -282,7 +342,7 @@ def run(
             "treated_block_ids": sorted(int(b) for b in treated),
             "mean_burned_ha": float(np.mean(burned)),
             "p90_burned_ha": float(np.quantile(burned, 0.9)),
-            **_connectivity(footprint, treated, adj, centroids, wind_deg),
+            **_connectivity(footprint, treated, adj, centroids, wind_deg, area),
         }
     return results
 
@@ -300,6 +360,13 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--duration-min", type=float, default=480.0, dest="duration_min")
     parser.add_argument("--wind-dir", type=float, default=225.0, dest="wind_dir")
     parser.add_argument("--seed", type=int, default=1)
+    parser.add_argument(
+        "--footprint-seed",
+        type=int,
+        default=None,
+        dest="footprint_seed",
+        help="fix the footprint while --seed varies layouts and ignitions",
+    )
     parser.add_argument("--out", type=Path, required=True)
     return parser
 
@@ -319,6 +386,7 @@ def main() -> None:
         duration_min=args.duration_min,
         wind_deg=args.wind_dir,
         seed=args.seed,
+        footprint_seed=args.footprint_seed,
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=2))
