@@ -557,3 +557,29 @@ the slash state amplifies the arrangement signal rather than reversing it.
 **Scope of the change.** The hazard-fed path is opt-in. The default remains the
 `TREATMENT_HAZARD` constants, so E2, E7, E9 and E10 stand exactly as recorded; E15 is a
 variant that shows what the recorded results were missing.
+
+**E16 — the arrangement ranking is insensitive to the slash parameters.**
+`scripts/slash_sensitivity.py`, 4 multipliers {1.5, 2.0, 3.0, 5.0} x 3 decay windows
+{5, 10, 20} years x 3 patterns, 50 ignitions, the published landscape masks.
+
+| multiplier | decay 5 | decay 10 | decay 20 |
+| --- | --- | --- | --- |
+| 1.5 | barrier < clumped < random (3.6%) | same (3.9%) | same (3.9%) |
+| 2.0 | same (3.8%) | same (4.1%) | same (4.4%) |
+| 3.0 | same (3.9%) | same (4.4%) | same (4.7%) |
+| 5.0 | same (4.2%) | same (4.2%) | same (4.1%) |
+
+(percentages are the spread between the best and worst pattern)
+
+**The ranking holds in 12 of 12 combinations.** The arrangement effect stays between 3.6%
+and 4.7%, against 3.2% with no slash state at all. So the paper does not have to defend a
+particular slash multiplier to keep its arrangement conclusion: a 3.3x range in the
+contested parameter moves the effect by about one percentage point.
+
+**A harness bug was caught first, and it matters.** The initial run reported
+`random < clumped < barrier` with a 40% spread — the reverse of every other result. The
+cause was that `ros_eff` was reset once per parameter combination rather than once per
+pattern, so each pattern inherited the previous pattern's treated blocks; the last pattern
+read as fully treated. A 40% spread was the tell. After the fix the spread is 3.6-4.7%,
+consistent with E2 and E15. Recorded because a plausible-looking result with a wrong
+harness is the exact failure mode this log exists to prevent.

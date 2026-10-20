@@ -98,12 +98,22 @@ Implemented in `scripts/complete_hazard_feature.py` (`CC_SLASH_MULTIPLIER`,
   4.2%. Details in E15. The hazard-fed path is opt-in; the default is still the constants,
   so the recorded E2/E7/E9/E10 numbers stand as they were.
 
-### Sensitivity still to run
+### Sensitivity: run, and the answer is reassuring
 
-1. multiplier in {1.5, 2.0, 3.0, 5.0} — does the arrangement ranking change?
-2. decay in {2, 5, 10, 20} years — same question.
-3. `TREATMENT_HAZARD` is constant while FBP is weather-dependent. If the sensitivity
-   matters, the next step is a weather-conditioned hazard, not a better constant.
+`scripts/slash_sensitivity.py` varies the multiplier {1.5, 2.0, 3.0, 5.0} and the decay
+{5, 10, 20} years across the three patterns. **The ranking holds in all 12 combinations**
+(barrier < clumped < random), with the pattern spread between 3.6% and 4.7% — against 3.2%
+with no slash state. A 3.3x range in the contested parameter moves the effect by about one
+percentage point. E16.
+
+The first run of that script produced the opposite ranking with a 40% spread, which was a
+harness bug (the treated override leaked between patterns), not a result. It is recorded
+because the wrong answer looked plausible.
+
+What remains a limitation: `TREATMENT_HAZARD` is constant while FBP's slash-to-timber
+ratio is weather-dependent (5.5x at median, 1.4x at extreme). A weather-conditioned hazard
+is the honest next step if that matters; the sensitivity above says the arrangement
+conclusion does not depend on it.
 
 ## Part 2 — Mapping the literature space
 
