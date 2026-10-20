@@ -512,3 +512,23 @@ and the matched-footprint results stand.
 **The published bundle was stale and was republished** as `data-2026-10-20.1`
 (`sha256 58af953e...`), with `data-2026-10-20` marked superseded rather than silently
 overwritten.
+
+**E14 — the clearcut slash spike is now represented, as a parameterized scenario.**
+`feature.FuelHazard` previously read 1.0 for `cc_pl` (fresh clearcut), which made an
+untreated harvest look as safe as old forest and flattered every treatment comparison.
+
+Added: `cc_pl` = 2.0 for 3 years, decaying to 1.0 by year 10 — 20,530 tracks. Chosen
+inside the FBP slash range (S-2 ~2.3x at median weather, S-3 ~2.7x) and between BC's
+1-2 year abatement cycle and the ~13 year slash-loading evidence. Derivation, the FBP
+table, the duration evidence and a contrary national finding (harvested stands ~28%
+*lower* first-fire hazard) are in `planning/literature_slash_hazard.md`.
+
+**The bridge is unchanged**: the oracle still reproduces 471 / 765 / 913 after the
+rebuild, because the account uses hazard only for membership (> 0.5) and the spike only
+raises a value already above it. The fire model uses `TREATMENT_HAZARD` constants, not the
+feature.
+
+Known limitation: FBP's slash/timber ratio is weather-dependent (5.5x at median weather
+for S-1, 1.4x at extreme), while the model applies a constant multiplier. If the
+sensitivity shows the ranking moving, the answer is a weather-conditioned hazard, not a
+better constant.

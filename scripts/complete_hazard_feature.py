@@ -27,6 +27,16 @@ import pandas as pd
 STATE_RE = re.compile(r"SILV_STATE\(([^)]*)\)")
 
 
+# Clearcut slash spike. FBP slash fuel types give 1.4-5.5x the standing-timber rate of
+# spread depending on slash load and weather (S-2 ~2.3x at median weather, S-3 ~2.7x);
+# empirical persistence ranges from BC's 1-2 year abatement cycle to ~13 years of
+# elevated slash loading. A central 2.0x for three years, decaying to baseline by ten,
+# sits inside both ranges. Documented in planning/literature_slash_hazard.md.
+CC_SLASH_MULTIPLIER = 2.0
+CC_SLASH_FULL_YEARS = 3
+CC_SLASH_DECAY_YEARS = 10
+
+
 def _hazard_curve(state: str, near_null_years: int) -> list[tuple[float, float]]:
     """Return hazard curve points (x, y) for a silviculture state."""
     if state.startswith("fb_"):
@@ -36,6 +46,15 @@ def _hazard_curve(state: str, near_null_years: int) -> list[tuple[float, float]]
     # the hazard account ignored the treatment entirely.
     if state.startswith("cc_pl_ft"):
         return [(0.0, 0.4), (20.0, 0.4), (40.0, 1.0), (400.0, 1.0)]
+    if state == "cc_pl":
+        # Fresh clearcut, no treatment: slash raises the hazard, then it decays as the
+        # plantation establishes. Any *_ft or sf_* variant is handled above.
+        return [
+            (0.0, CC_SLASH_MULTIPLIER),
+            (float(CC_SLASH_FULL_YEARS), CC_SLASH_MULTIPLIER),
+            (float(CC_SLASH_DECAY_YEARS), 1.0),
+            (400.0, 1.0),
+        ]
     return [(0.0, 1.0), (400.0, 1.0)]
 
 
