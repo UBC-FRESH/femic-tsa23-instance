@@ -62,7 +62,7 @@ from a CSV, not from a pattern generator.
 | --- | --- | --- | --- |
 | treated fraction | `--treat-fraction` | 0.20 | share of the footprint treated; the main lever |
 | footprint size | `--footprint-ha` | 20000 | area of the fixed cluster the patterns sit in |
-| weather | `--scenario` | p90 | `median`, `p90`, `extreme`; smaller fires at median |
+| weather | `--scenario` | p90 | a fire-season quantile: `median`, `p60`-`p95`, `p90`, `extreme`. Regenerate the ladder with `scripts/fire_weather_scenarios.py --quantiles 0.5,0.6,...,0.98` then `scripts/fbp_stand_curves.py` |
 | treated ROS multiplier | `--treat-ros-factor` | 0.05 for `fb` | how much slower fire moves in treated blocks; 1.0 is a control |
 | ignitions | `--ignitions` | 40 | Monte Carlo sample; the mean is noisy at 40, the tail is not |
 | duration | `--duration-min` | 480 | burn window |

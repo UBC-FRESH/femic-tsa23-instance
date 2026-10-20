@@ -45,10 +45,18 @@ def main() -> None:
     parser.add_argument("--out", type=Path, default=Path("runtime/fire/sensitivity_screen.csv"))
     parser.add_argument("--footprint-ha", type=float, default=20000.0)
     parser.add_argument("--ignitions", type=int, default=40)
+    parser.add_argument("--densities", default="0.05,0.10,0.15,0.20")
+    parser.add_argument("--scenarios", default="median,p90,extreme")
+    parser.add_argument("--factors", default="0.05,0.30,1.00")
+    parser.add_argument("--seeds", default="1,2,3")
     args = parser.parse_args()
 
+    densities = tuple(float(x) for x in args.densities.split(",") if x.strip())
+    scenarios = tuple(x.strip() for x in args.scenarios.split(",") if x.strip())
+    factors = tuple(float(x) for x in args.factors.split(",") if x.strip())
+    seeds = tuple(int(x) for x in args.seeds.split(",") if x.strip())
     rows: list[dict[str, object]] = []
-    cells = list(itertools.product(DENSITIES, SCENARIOS, FACTORS, SEEDS))
+    cells = list(itertools.product(densities, scenarios, factors, seeds))
     for i, (density, scenario, factor, seed) in enumerate(cells, 1):
         result = run(
             blocks_path=args.blocks,

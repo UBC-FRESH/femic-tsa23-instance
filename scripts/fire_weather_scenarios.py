@@ -82,7 +82,19 @@ def _compute_fwi(frame: pd.DataFrame, lat: float) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def build_scenarios(*, start: str, end: str) -> pd.DataFrame:
+#: Quantiles that keep their established names; anything else becomes ``p<nn>``.
+QUANTILE_NAMES = {0.50: "median", 0.90: "p90", 0.98: "extreme"}
+
+
+def _scenario_name(quantile: float) -> str:
+    """Return the scenario label for a fire-season quantile."""
+    rounded = round(quantile, 2)
+    return QUANTILE_NAMES.get(rounded, f"p{int(round(rounded * 100))}")
+
+
+def build_scenarios(
+    *, start: str, end: str, quantiles: tuple[float, ...] = (0.5, 0.9, 0.98)
+) -> pd.DataFrame:
     """Fetch, compute, and summarize fire-weather scenarios for TSA23."""
     frames = [_compute_fwi(_fetch_point(lat, lon, start, end), lat) for lat, lon in TSA23_POINTS]
     allfwi = pd.concat(frames, ignore_index=True)
@@ -90,7 +102,8 @@ def build_scenarios(*, start: str, end: str) -> pd.DataFrame:
     fire_season = allfwi[allfwi["month"].between(5, 9)]
 
     scenarios: list[dict[str, object]] = []
-    for name, quantile in (("median", 0.5), ("p90", 0.9), ("extreme", 0.98)):
+    for quantile in quantiles:
+        name = _scenario_name(quantile)
         scenarios.append(
             {
                 "scenario": name,
@@ -109,13 +122,19 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--start", default="2015-05-01")
     parser.add_argument("--end", default="2024-09-30")
+    parser.add_argument(
+        "--quantiles",
+        default="0.5,0.9,0.98",
+        help="comma-separated fire-season quantiles; 0.5/0.9/0.98 keep their names",
+    )
     return parser
 
 
 def main() -> None:
     """Entry point."""
     args = _build_parser().parse_args()
-    scenarios = build_scenarios(start=args.start, end=args.end)
+    quantiles = tuple(float(q) for q in args.quantiles.split(",") if q.strip())
+    scenarios = build_scenarios(start=args.start, end=args.end, quantiles=quantiles)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     scenarios.to_csv(args.out, index=False)
     print(scenarios.to_string(index=False))
