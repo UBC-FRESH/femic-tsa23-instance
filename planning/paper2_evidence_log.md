@@ -304,3 +304,14 @@ Re-run with one ignition set shared by all three patterns on the same footprint
 **Do not build the Paper 2 bridge on a mean-burned ranking at 40 ignitions.** Either
 raise the ignition count or use the tail statistic.
 
+**E8 — the oracle bundle's topology was ambiguous, and is fixed.** The first export
+wrote one row per undirected pair with a single `bearing_deg`. Read as a directed edge
+list — which is what the file looks like — it silently drops every edge stored in the
+upwind orientation and returns **47 / 47 / 37 blocks** (means 4.92 / 5.04 / 3.89)
+instead of **471 / 765 / 913** (107.33 / 178.49 / 253.20). Both figures were reproduced
+on the same data; the difference is entirely the file's ambiguity. The export now
+writes both orientations, each with its own bearing (12,592 rows), so the simple
+directed reading and the undirected-adjacency reading agree. Caught by WS4 in
+`femic-tsa23-instance#13`.
+
+
