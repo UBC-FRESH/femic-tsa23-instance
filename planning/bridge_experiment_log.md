@@ -251,6 +251,36 @@ p85-and-above. Crossover between FWI 34.5 and 38.4.
 
 ---
 
+## X9 — Legacy verification of E2/E2b/E2c/E2d
+
+**Question.** Do the pre-correction landscape numbers still reproduce, and were they
+affected by the ignition confound that invalidated E2e?
+
+**Design.** Re-run the recorded cells through the same CLI path: 50 ignitions, p90,
+wind 225°, seed 1, densities 0.1 and 0.2, patterns random/clumped/barrier plus the
+continuous band, treated multipliers 0.0/0.05/0.2/0.3/0.4.
+
+**Command.**
+
+```bash
+$PY scripts/verify_legacy_evidence.py            # re-runs all 32 cells
+$PY scripts/verify_legacy_evidence.py --reuse    # compares against existing JSONs
+```
+
+**Outputs.** `runtime/fire/legacy_{density}_{pattern}_{factor}.json`,
+`runtime/fire/legacy_grid.csv`. Runtime ≈ 5 min for the full grid.
+
+**Result.** PASS — 19 recorded cells match within 1.0 ha on both mean and p90.
+
+**Why they were not affected.** `landscape_spread.py` builds one block table and picks
+the ignition draw from `(block_ids, seed)`. The pattern only changes `treated` and
+`ros_eff`, not the table or the seed, so every pattern sees the same ignitions. The
+confound was in `bridge_matched_footprint.py`, which created a fresh `default_rng(seed)`
+per pattern *after* advancing it for the footprint.
+
+**Qualification.** All of E2-E2d are p90-weather results. E9/E10 show the ordering
+reverses at median weather, so they are correct as stated and wrong if generalised.
+
 ## Corrections log
 
 Each entry is a case where an earlier recorded result was wrong or under-specified.
@@ -264,6 +294,7 @@ which numbers were superseded.
 | 2026-10-20 | **Wrong treatment multiplier attributed.** The 20% matched-footprint runs use `TREATMENT_HAZARD["fb"]` = 0.05 (20× slowdown), not the 0.3 of the landscape/mask runs. | The "no hard stop" caveat was overstated; 20% already behaves near a stop (E7 note). |
 | 2026-10-20 | **Stale effect-size caveat.** "The arrangement effect is small (~2-4%)" was true of the original single-seed bridge only. | Replaced by E9/E10: relative effects span +38% (barrier penalty at p65) to 0% depending on weather. |
 | 2026-10-20 | **Weather axis was three points.** Median/p90/extreme could not locate a crossover. | 10-quantile ladder added; original three scenarios byte-identical. |
+| 2026-10-20 | **Pre-correction entries checked, not assumed.** E2/E2b/E2c/E2d re-run through the CLI path (`verify_legacy_evidence.py`), 19 recorded cells at 1 ha tolerance. | They stand as recorded; unaffected by the ignition confound, but they are p90-weather results (E9/E10). |
 
 ## Regenerate everything, in order
 

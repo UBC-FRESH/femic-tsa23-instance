@@ -126,6 +126,21 @@ Same patterns, 20% treated, p90, with the spread multiplier taken from the model
   **orientation**, and the weight/interpretation depends on how close to
   impassable the treatment really is.
 
+**Verification (2026-10-20).** E2, E2b, E2c and E2d were re-run through the same CLI
+path (`scripts/landscape_spread.py`, 50 ignitions, p90, wind 225°, seed 1) as a
+repeatable check: `scripts/verify_legacy_evidence.py` compares 19 recorded cells against
+a 1.0 ha tolerance. **All 19 reproduce** (mean and p90), so these entries are verified
+rather than merely inherited.
+
+They predate the shared-ignition fix and are **not** affected by it: the block table and
+the seed are fixed while the pattern varies, so every pattern sees the same ignition
+draw. The confound was specific to the newer matched-footprint harness, which rebuilt
+the RNG per pattern.
+
+They are, however, **p90-weather-specific**. E9 and E10 show the ordering reverses at
+median weather, so the E2/E2d statements must not be generalised without naming the
+scenario.
+
 ### E2e — Matched-footprint bridge test (the decisive one)
 
 The earlier patterns were area-matched but not **footprint-matched**: they occupy
