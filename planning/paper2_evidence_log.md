@@ -456,3 +456,35 @@ recompiled `compiled_fb_haz` (158,437 tracks compared, max delta 0.0; 15,179 FB 
 unchanged.
 
 Old datasets are archived under `runtime/ws4/_superseded_dup_product_rows/` (gitignored).
+
+**E12 — WS4's spread-connectivity account reproduces the measured oracle exactly.**
+`scripts/verify_spread_account.py`, WS4 `main` at `c9efec6`, dataset
+`runtime/ws4/compiled_ft_econ` (recompiled, no duplicate product rows), bearing 225,
+tolerance 60, `search_distance=None`, each pattern's own `bridge_{pattern}_sched.csv`
+applied at period 0:
+
+| pattern | treated blocks | treated ha | largest (ha) | percolation (ha) |
+| --- | ---: | ---: | ---: | ---: |
+| barrier | 3,483 | 54,368.1 | 82,874.4 | 25,696.8 |
+| clumped | 3,557 | 55,836.6 | 105,020.4 | 32,250.4 |
+| random | 3,366 | 53,697.0 | 196,766.6 | 50,280.8 |
+
+Every value matches the WS4 side's table to the decimal, including the treated block
+counts. Run time 4 m 12 s.
+
+**Two harness bugs found while getting there, both mine:**
+
+1. The files in `bridge-masks-dedup/` are the *result* of applying each pattern's
+   schedule, not an input to it. Feeding a mask back as a schedule re-treats blocks that
+   are already treated, and the criterion falls below 0.5 for many of them (clumped read
+   1,844 treated blocks instead of 3,557).
+2. `Simulator.run()` mutates treatment state. Reusing one simulator across the three
+   patterns made each inherit the previous one's treatments; barrier was correct only
+   because it ran first. A fresh `Simulator.from_dataset()` per pattern fixes it.
+
+Both are recorded in `scripts/verify_spread_account.py` where they bit.
+
+**What this does and does not establish.** The account's *values* are verified against an
+independent implementation. Its *fire-response validity* is not: E7/P16.1 showed that at
+the footprint WS4 can actually treat, the fire ranking is inside seed noise. E12 is a
+correctness check on the metric, not a revival of the bridge claim.
