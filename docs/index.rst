@@ -17,6 +17,7 @@ behind each number lives in ``planning/``.
    overview
    quickstart
    rebuild-contract
+   data-sources
    tsr-guidance
    seral-interpretation
    troubleshooting

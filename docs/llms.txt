@@ -7,7 +7,8 @@
 - [Home](index.html): the documentation home for the project.
 - [Overview](overview.html): what the instance is and how it is laid out.
 - [Quickstart](quickstart.html): build and run it from a clean checkout.
-- [Rebuild contract](rebuild-contract.html): the canonical rebuild sequence.
+- [Rebuild contract](rebuild-contract.html): what a rebuild needs, and what a clone can do.
+- [Data sources](data-sources.html): every raw input, its resolve command, and what is archived.
 - [Troubleshooting](troubleshooting.html): known failures and their causes.
 
 ## Reference
