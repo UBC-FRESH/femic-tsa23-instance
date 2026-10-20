@@ -24,7 +24,12 @@ from pathlib import Path
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from landscape_spread import _adjacency, _block_fuel_types, simulate  # noqa: E402
+from landscape_spread import (  # noqa: E402
+    _adjacency,
+    _block_fuel_types,
+    simulate,
+    simulate_fast,
+)
 
 
 def main() -> None:
@@ -41,6 +46,12 @@ def main() -> None:
     parser.add_argument("--wind-dir", type=float, default=225.0, dest="wind_dir")
     parser.add_argument("--treat-ros-factor", type=float, default=0.3, dest="treat_ros_factor")
     parser.add_argument("--seed", type=int, default=1)
+    parser.add_argument(
+        "--method",
+        choices=("fast", "reference"),
+        default="fast",
+        help="fast uses a sparse multi-source Dijkstra; reference is the per-ignition loop",
+    )
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
 
@@ -57,7 +68,7 @@ def main() -> None:
     )
 
     adj = _adjacency(args.topology)
-    result = simulate(
+    result = (simulate_fast if args.method == "fast" else simulate)(
         blocks=frame,
         adj=adj,
         ignitions=args.ignitions,
