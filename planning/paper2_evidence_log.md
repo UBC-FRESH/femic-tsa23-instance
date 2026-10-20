@@ -301,6 +301,13 @@ Re-run with one ignition set shared by all three patterns on the same footprint
 - The E6 response surface inherits the same confound; its within-scenario R2 should be
   re-measured with a shared ignition set before it is quoted.
 
+**Treatment factors actually used (do not conflate them).** `TREATMENT_HAZARD["fb"] = 0.05`,
+so the matched-footprint runs above apply a **20x slowdown** to treated blocks, not the
+0.3 used by the published landscape bridge. The 0.3 figure belongs to the 177k-ha and
+54k-ha mask runs. The 20% local result therefore already sits close to a hard stop: even
+at a 20x slowdown, only the tail responds stably.
+
+
 **Do not build the Paper 2 bridge on a mean-burned ranking at 40 ignitions.** Either
 raise the ignition count or use the tail statistic.
 

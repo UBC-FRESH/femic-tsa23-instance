@@ -41,8 +41,7 @@ from landscape_spread import (  # noqa: E402
     _adjacency,
     _bearing_deg,
     _block_fuel_types,
-    _directional_factor,
-    _travel_times,
+    simulate_fast,
 )
 
 
@@ -276,6 +275,7 @@ def run(
     wind_deg: float,
     seed: int,
     footprint_seed: int | None = None,
+    treat_factor: float | None = None,
 ) -> dict[str, object]:
     """Run the matched-footprint comparison.
 
@@ -300,18 +300,20 @@ def run(
     footprint = _footprint(adj, area, eligible, seed_block, footprint_ha)
     footprint_area = sum(area[b] for b in footprint)
     target_area = min(footprint_area, treat_fraction * footprint_area)
-    factor = TREATMENT_HAZARD[treatment]
+    factor = TREATMENT_HAZARD[treatment] if treat_factor is None else treat_factor
     rng = np.random.default_rng(seed)
 
     results: dict[str, object] = {
         "footprint_ha": footprint_area,
         "treated_target_ha": target_area,
         "treatment": treatment,
+        "treat_factor": factor,
         "patterns": {},
     }
     # One ignition set per seed, shared by all three patterns: a pattern comparison
     # must not move the ignitions as well as the treatment.
     started = rng.choice(sorted(footprint), size=min(ignitions, len(footprint)), replace=False)
+    sub = blocks[blocks["block_id"].isin(footprint)].sort_values("block_id").copy()
     for pattern in ("random", "clumped", "barrier"):
         treated = _select_pattern(
             pattern=pattern,
@@ -323,25 +325,22 @@ def run(
             target_area=target_area,
             rng=np.random.default_rng(seed),
         )
-        ros_by_block = blocks.set_index("block_id")["ros_m_per_min"].to_dict()
-        ros_eff = {
-            b: (ros_by_block[b] * factor if b in treated else ros_by_block[b])
-            for b in footprint
-        }
-        traversal = {
-            b: (np.sqrt(max(area[b], 0.0) * 10000.0) / r) if r > 0 else float("inf")
-            for b, r in ros_eff.items()
-        }
-        burned: list[float] = []
-        for source in started:
-            times = _travel_times(adj, traversal, centroids, wind_deg, int(source))
-            burned.append(sum(area[b] for b, t in times.items() if t <= duration_min and b in footprint))
+        sub["treated"] = sub["block_id"].isin(treated)
+        sub["ros_eff"] = sub["ros_m_per_min"] * np.where(sub["treated"], factor, 1.0)
+        spread = simulate_fast(
+            blocks=sub,
+            adj=adj,
+            ignitions=ignitions,
+            duration_min=duration_min,
+            seed=seed,
+            wind_deg=wind_deg,
+        )
         results["patterns"][pattern] = {
             "treated_ha": float(sum(area[b] for b in treated)),
             "treated_blocks": len(treated),
             "treated_block_ids": sorted(int(b) for b in treated),
-            "mean_burned_ha": float(np.mean(burned)),
-            "p90_burned_ha": float(np.quantile(burned, 0.9)),
+            "mean_burned_ha": float(spread["mean_area_burned_ha"]),
+            "p90_burned_ha": float(spread["p90_area_burned_ha"]),
             **_connectivity(footprint, treated, adj, centroids, wind_deg, area),
         }
     return results
@@ -356,6 +355,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--treat-fraction", type=float, default=0.2, dest="treat_fraction")
     parser.add_argument("--treatment", choices=sorted(TREATMENT_HAZARD), default="fb")
     parser.add_argument("--scenario", default="p90")
+    parser.add_argument("--treat-factor", type=float, default=None, dest="treat_factor")
     parser.add_argument("--ignitions", type=int, default=40)
     parser.add_argument("--duration-min", type=float, default=480.0, dest="duration_min")
     parser.add_argument("--wind-dir", type=float, default=225.0, dest="wind_dir")
@@ -387,6 +387,7 @@ def main() -> None:
         wind_deg=args.wind_dir,
         seed=args.seed,
         footprint_seed=args.footprint_seed,
+        treat_factor=args.treat_factor,
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=2))
