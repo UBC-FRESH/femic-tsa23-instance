@@ -75,17 +75,23 @@ tipsy_io/
 plots/
 output/
 releases/
-data/bc/
+# data/bc is not ignored: data/bc/siteprod is archived, and a directory-level
+# ignore would make a file-level re-include impossible (git will not re-include
+# inside an excluded directory).
 data/downloads/
-data/shp/
+# data/shp: the TSA extract is archived.
 data/model_input_bundle/
+# VRI checkpoints: only the one the analyses consume is archived.
 data/*.feather
+!data/ria_vri_vclr1p_checkpoint7.feather
 data/*.pkl
 data/*.parquet
 data/03_input-*.csv
 data/04_output-*.csv
+!data/04_output-tsa23.csv
 data/tipsy_*.csv
 data/tipsy_*.xlsx
+!data/tipsy_params_tsa23.xlsx
 metadata/tsr/cached/
 
 # Virtual environment
@@ -101,8 +107,8 @@ reference/Patchworks/
 *.fmg
 *.xml
 
-# DataLad annex objects (tracked by git-annex, not git)
-.gitattributes
+# DataLad annex objects. .gitattributes is NOT ignored: the annex rules must be
+# tracked by git, or a fresh clone has no policy.
 .data/
 
 # Jupyter notebook checkpoints

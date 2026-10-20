@@ -1,0 +1,18 @@
+# DataLad/annex policy for this instance.
+#
+# Text and small files stay in git; binary or large files go to the annex and are
+# materialized on demand from the arbutus-s3 special remote. The archived set is
+# declared in workflows/freshforge/tsa23_materialization_overlay.yaml, and the
+# resolve-instead-of-archive set in docs/data-sources.rst.
+* annex.backend=MD5E
+**/.git* annex.largefiles=nothing
+* annex.largefiles=((mimeencoding=binary)or(largerthan=1mb))
+*.md annex.largefiles=nothing
+*.rst annex.largefiles=nothing
+*.yaml annex.largefiles=nothing
+*.yml annex.largefiles=nothing
+*.json annex.largefiles=nothing
+*.csv annex.largefiles=nothing
+*.sha256 annex.largefiles=nothing
+*.py annex.largefiles=nothing
+*.txt annex.largefiles=nothing
