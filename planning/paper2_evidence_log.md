@@ -488,3 +488,27 @@ Both are recorded in `scripts/verify_spread_account.py` where they bit.
 independent implementation. Its *fire-response validity* is not: E7/P16.1 showed that at
 the footprint WS4 can actually treat, the fire ranking is inside seed noise. E12 is a
 correctness check on the metric, not a revival of the bridge claim.
+
+**E13 — the hazard account ignored FT, and the published bundle was wrong.**
+`complete_hazard_feature.py` assigned the thinned (0.4) hazard to states starting
+`cc_pl_ct`, but this model's states are `cc_pl_ft30/40/50/60`. The rule never fired, so
+every thinned track read baseline 1.0: the hazard account could not see FT at all, and a
+scheduler targeting it would have valued FT at zero benefit.
+
+Measured on `compiled_fb_haz` after the fix:
+
+| hazard | tracks before | tracks after |
+| --- | ---: | ---: |
+| 1.0 baseline | 143,258 | 85,526 |
+| 0.4 thinned (FT) | 0 | 57,732 |
+| 0.05 fuel break (FB) | 15,179 | 15,179 |
+
+`compiled_sf` adds 100,388 tracks at 0.2 (surface fuel).
+
+**The bridge is unaffected.** All 1,877 footprint blocks read 1.0 in both the old and the
+rebuilt dataset (compared block by block, max delta 0.0), so the oracle's 471 / 765 / 913
+and the matched-footprint results stand.
+
+**The published bundle was stale and was republished** as `data-2026-10-20.1`
+(`sha256 58af953e...`), with `data-2026-10-20` marked superseded rather than silently
+overwritten.

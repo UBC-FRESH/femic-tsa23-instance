@@ -42,12 +42,15 @@ not a tracked file, because it is 72 MB:
 
 .. code-block:: bash
 
-   curl -LO https://github.com/UBC-FRESH/femic-tsa23-instance/releases/download/data-2026-10-20/tsa23-runtime-bundle.tar.gz
-   curl -LO https://github.com/UBC-FRESH/femic-tsa23-instance/releases/download/data-2026-10-20/tsa23-runtime-bundle.tar.gz.sha256
-   sha256sum -c tsa23-runtime-bundle.tar.gz.sha256
-   tar -xzf tsa23-runtime-bundle.tar.gz
+   TAG=data-2026-10-20.1
+   BASE=https://github.com/UBC-FRESH/femic-tsa23-instance/releases/download/$TAG
+   curl -LO $BASE/tsa23-runtime-bundle-2026-10-20.1.tar.gz
+   curl -LO $BASE/tsa23-runtime-bundle-2026-10-20.1.tar.gz.sha256
+   sha256sum -c tsa23-runtime-bundle-2026-10-20.1.tar.gz.sha256
+   tar -xzf tsa23-runtime-bundle-2026-10-20.1.tar.gz
 
-Or, with the GitHub CLI, ``gh release download data-2026-10-20``.
+Or, with the GitHub CLI,
+``gh release download data-2026-10-20.1 --pattern 'tsa23-runtime-bundle-2026-10-20.1.tar.gz*'``.
 
 *Rebuild from source.* Follow ``config/rebuild.yaml`` and the runbooks in ``runbooks/``.
 This is the reproducible path, but it needs VDYP and BatchTIPSY (under Wine on Linux),

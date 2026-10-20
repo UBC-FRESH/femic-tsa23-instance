@@ -31,7 +31,10 @@ def _hazard_curve(state: str, near_null_years: int) -> list[tuple[float, float]]
     """Return hazard curve points (x, y) for a silviculture state."""
     if state.startswith("fb_"):
         return [(0.0, 0.05), (float(max(1, near_null_years)), 0.05), (40.0, 1.0), (400.0, 1.0)]
-    if state.startswith("cc_pl_ct"):
+    # Thinned (FT) residual. The model's states are cc_pl_ft30/40/50/60; the earlier
+    # rule matched "cc_pl_ct", which never occurs, so FT silently read as baseline and
+    # the hazard account ignored the treatment entirely.
+    if state.startswith("cc_pl_ft"):
         return [(0.0, 0.4), (20.0, 0.4), (40.0, 1.0), (400.0, 1.0)]
     return [(0.0, 1.0), (400.0, 1.0)]
 
