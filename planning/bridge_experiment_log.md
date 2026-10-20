@@ -223,7 +223,7 @@ $PY scripts/fire_weather_scenarios.py \
   --quantiles 0.5,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.98
 
 $PY scripts/fbp_stand_curves.py \
-  --checkpoint data/ria_vri_vclr1p_checkpoint7.feather \
+  --checkpoint data/vri_vclr1p_checkpoint7.feather \
   --au-table data/model_input_bundle/au_table.csv \
   --tipsy-output data/04_output-tsa23.csv \
   --scenarios runtime/fire/fwi_scenarios.csv \
@@ -346,7 +346,7 @@ which numbers were superseded.
 # weather and stand curves
 $PY scripts/fire_weather_scenarios.py --out runtime/fire/fwi_scenarios.csv \
   --quantiles 0.5,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,0.98
-$PY scripts/fbp_stand_curves.py --checkpoint data/ria_vri_vclr1p_checkpoint7.feather \
+$PY scripts/fbp_stand_curves.py --checkpoint data/vri_vclr1p_checkpoint7.feather \
   --au-table data/model_input_bundle/au_table.csv \
   --tipsy-output data/04_output-tsa23.csv \
   --scenarios runtime/fire/fwi_scenarios.csv --out runtime/fire/fbp_stand_curves.csv

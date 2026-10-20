@@ -21,7 +21,7 @@ Fuel typing (FBP families):
 Usage::
 
     python scripts/fbp_stand_curves.py \
-        --checkpoint data/ria_vri_vclr1p_checkpoint7.feather \
+        --checkpoint data/vri_vclr1p_checkpoint7.feather \
         --au-table data/model_input_bundle/au_table.csv \
         --tipsy-output data/04_output-tsa23.csv \
         --scenarios runtime/fire/fwi_scenarios.csv \

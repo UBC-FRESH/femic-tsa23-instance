@@ -83,7 +83,7 @@ data/downloads/
 data/model_input_bundle/
 # VRI checkpoints: only the one the analyses consume is archived.
 data/*.feather
-!data/ria_vri_vclr1p_checkpoint7.feather
+!data/vri_vclr1p_checkpoint7.feather
 data/*.pkl
 data/*.parquet
 data/03_input-*.csv
