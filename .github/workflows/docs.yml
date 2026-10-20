@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/fuel-treatment-layer
   workflow_dispatch:
 
 permissions:

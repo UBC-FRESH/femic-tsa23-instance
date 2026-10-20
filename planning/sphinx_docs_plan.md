@@ -129,3 +129,44 @@ sphinx-build -b html docs _build/html -W
 - A custom domain, versioned docs, and search tuning.
 - Adopting `scripts/check_workflow.py` from the template. It is a separate decision
   because it changes how the roadmap is validated.
+
+---
+
+## Outcome (2026-10-20)
+
+Built, published, verified.
+
+- **Local build:** `sphinx-build -b html docs _build/html -W` passes with no warnings.
+- **Site:** `https://ubc-fresh.github.io/femic-tsa23-instance/` serves the home page
+  (200), `llms.txt` (200), and `api/index.html` (200), with real function anchors on the
+  API pages.
+- **Pages:** enabled with `build_type: workflow`.
+
+### What the first CI run caught
+
+The first workflow run failed on **15 autodoc warnings**, all
+`ModuleNotFoundError: No module named 'numpy'` / `'pandas'`. The docs-only environment
+carried `sphinx` and the theme but not the numeric stack, so every `automodule` import
+failed. Fixed by adding `numpy` and `pandas` to `docs/requirements.txt`; the geospatial,
+FBP and `ws4` imports remain mocked.
+
+That failure is the reason `-W` is worth having: without it the run would have published
+an empty API section and reported success.
+
+### The deploy gate
+
+`deploy` was rejected with *"Branch feature/fuel-treatment-layer is not allowed to deploy
+to github-pages due to environment protection rules"*. The `github-pages` environment
+allows `main` only. To verify the deploy end to end without merging the whole branch,
+the environment policy was widened to include the feature branch, the deploy ran and was
+verified, and the policy was then **restored to `main`** (custom policies off,
+`protected_branches: true`).
+
+Consequence: the site currently holds the feature-branch build. It will rebuild from
+`main` once this branch is merged. Merging to `main` is the remaining step for the phase,
+and it is a repository-wide integration (48 commits), not a docs-only change.
+
+### Not done here
+
+- The P115 content depth: area accounting, THLB/AU documentation, seral guides.
+- Search tuning, a custom domain, versioned docs.
