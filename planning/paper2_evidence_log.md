@@ -8,7 +8,14 @@ Environment: TSA23 instance (`femic-tsa23-instance`), WS4 `main` >= `a0e4a3d`,
 
 ---
 
-## E1 — Stand-scale treatment effect (FBP, weather-conditional)
+## Framing (closed #14)
+
+The plan of record is the **conditional bridge**: the 20% p90 result is a benchmark,
+the feasible ~5.5% matched-footprint result is negative (inside seed noise), and the
+WS4 compartment account is a verified fragmentation metric rather than a validated
+fire proxy. The full claim and the student's two framing options are in
+`planning/paper2_modelling_plan.md`, section "Framing decision (closed #14)".
+
 
 Data: `runtime/fire/fbp_stand_curves.csv` (45 AUs x 3 scenarios x 2 states x 21 ages).
 

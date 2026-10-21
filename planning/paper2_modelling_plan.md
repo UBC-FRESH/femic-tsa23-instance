@@ -19,9 +19,9 @@ vehicle for".
 fire-spread response as **native spatial accounts** (patch and connectivity), so
 a treatment schedule can be optimized against it inside the estate model?
 
-**RQ2 — the value.** Under which fire-weather conditions do fuel treatments
-reduce landscape fire behaviour, and how much of the benefit is **arrangement**
-(pattern / orientation) versus **treated area**?
+**RQ2 — the value.** Under which fire-weather conditions and at which **treated
+area** do fuel treatments reduce landscape fire behaviour, and how much of the
+benefit is **arrangement** (pattern / orientation) versus treated area?
 
 **RQ3 — the decision.** Does optimizing against the spatial fire accounts change
 the **treatment decision** (placement, timing) versus optimizing against area and
@@ -61,9 +61,13 @@ Result: treatments cut crown fire and intensity under median weather (C3 CFB
 weather-conditional.
 
 **E2 — pattern / orientation.** Equal-area random / clumped / wind-perpendicular
-barrier patterns through the spread model. *Status: done.* Result: barrier <
-clumped < random (20% treated: 19,640 / 19,870 / 20,298 ha mean burned); the
-arrangement effect grows with crown-fire suppression (~3% at 20%).
+barrier patterns through the spread model. *Status: done, conditional.* At **20%
+treated, p90**, barrier < clumped < random (19,640 / 19,870 / 20,298 ha mean
+burned), a ~3% spread. This is a **benchmark at a fifth of the landscape**, not a
+universal arrangement result: the effect depends on weather and on how close the
+treatment is to a hard break (E2c/E9/E10). At the **feasible ~5.5% footprint** in
+the matched-footprint test the five-seed mean ranking reverses and the mean gap
+(86 ha, 0.38%) is inside the seed range (~3,400 ha, 15%); see E7 and #14.
 
 **E3 — the bridge oracle.** Do WS4 spatial accounts reproduce the E2 ranking?
 *Status: done, negative.* Patch size ranks the barrier **worst** (largest 400+ ha
@@ -113,6 +117,33 @@ the integration of spatial risk into planning as under-developed.
 5. **Cost-benefit under budget (necessary, low novelty).** The thesis's stated
    core.
 
+## Framing decision (closed #14)
+
+The paper does **not** claim a universal arrangement effect. It reports three
+things, in this order:
+
+1. **The 20% benchmark is conditional.** At 17.9% of the fire model, p90 weather,
+   barrier < clumped < random, a ~3% mean spread. E2b/E2c/E9/E10 narrow it: the
+   ordering depends on the fire-weather scenario and on whether the treatment is a
+   soft slowdown or a near-hard break. At median weather the barrier is the worst
+   arrangement; above p85 it is best. It is a benchmark for "what arrangement can
+   do when a fifth of the landscape is treated", not a claim about an estate plan.
+2. **The feasible-estate answer is negative at current treatment levels.** At the
+   ~5.5% footprint WS4's FT can deliver, the five-seed means reverse and the mean
+   gap is 0.38%, well inside the ~15% seed range. A planning model cannot use this
+   fire model to choose an arrangement at that treatment level.
+3. **The compartment account is a correct metric, not a validated fire proxy.**
+   E12 verifies its values against an independent implementation, but E7/P16.1
+   show it does not track the fire outcome at the matched footprint. The bridge
+   validation is withdrawn; the account remains a targetable fragmentation metric.
+
+If the student chooses the 20% result as the paper's headline, the title, abstract
+and E2 must name **17.9% treated, p90 weather, and the near-hard treatment factor**.
+If the student chooses the estate-model question, the headline is the **negative**
+result and the 20% case is the upper-bound benchmark. The plan of record is the
+second framing with the first reported as a conditional benchmark; either way, no
+sentence may say "arrangement matters" without the treated fraction and weather.
+
 ## Deliverables and sequencing
 
 - **Paper 1** (Jamie's, the stand-level flowchart / decision-support guide) —
@@ -124,8 +155,9 @@ the integration of spatial risk into planning as under-developed.
 
 ## Honest uncertainties
 
-- The spatial effect is **small (~3%)** in the current model; it may not survive a
-  stronger fire model, or may be dwarfed by treated area. E2/E4 must say so.
+- The spatial effect is **conditional**: ~3% at the 20% p90 benchmark, inside noise at the
+  ~5.5% feasible footprint, and weather-dependent. The paper reports both; it does not
+  generalise from the 20% case.
 - The spread model is a **simplification** (no suppression, isotropic within a
   block, a flat treated-ROS factor standing in for crown-fire prevention). It
   needs a stronger, literature-grounded fire model before the numbers are quoted.
