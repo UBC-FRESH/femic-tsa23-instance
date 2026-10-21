@@ -583,3 +583,32 @@ pattern, so each pattern inherited the previous pattern's treated blocks; the la
 read as fully treated. A 40% spread was the tell. After the fix the spread is 3.6-4.7%,
 consistent with E2 and E15. Recorded because a plausible-looking result with a wrong
 harness is the exact failure mode this log exists to prevent.
+
+**E17 — the hazard-objective run fails, and the reason is not the optimizer.**
+`compiled_sf`, 5-year horizon, target `feature.FuelHazard` at year 4 <= 970,000 against a
+measured empty-schedule baseline of **992,334** (year 4; year 0 is 1,015,743), with a
+$100M budget split as FT $50M / FB $25M / SF $25M.
+
+Result: hazard 991,770 — a 0.06% reduction, target missed by 21,770 (penalty). The
+schedule contained 57 CC, 84 FB, 22 FT and 15 SF blocks, but **only FT and CC produced
+accounts**:
+
+| account | rows | sum |
+| --- | ---: | ---: |
+| `product.FuelTreatmentCost` | 22 | 5,285,691.7 |
+| `product.FuelBreakCost` | 0 | 0 |
+| `product.SurfaceFuelCost` | 0 | 0 |
+
+84 FB and 15 SF entries were inert, with no warning. Minimal reproductions are in
+`femic-tsa23-instance#18`: a single FB on an operable block produces nothing, and CC then
+FB still produces nothing.
+
+**Why the target was unreachable anyway.** At the instance's cost and hazard levels the
+cost per hazard-hectare of reduction is roughly: surface fuel $3,750, fuel break $5,263,
+thinning $33,333. Closing a 22,334 hazard-ha gap therefore needs ~$84M of SF or ~$118M of
+FB — and FT cannot do it under any plausible budget. So the *ranking* of treatments by
+hazard-per-dollar is already informative even though the optimizer cannot yet express it:
+SF and FB are an order of magnitude cheaper per hazard unit than FT.
+
+**Blocked on `#18`.** The treatment-mix question cannot be answered until an inapplicable
+scheduled treatment is either refused loudly or not offered.
