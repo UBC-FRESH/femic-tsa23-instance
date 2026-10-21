@@ -140,6 +140,44 @@ artifact for a thesis.
 4. Writes `runtime/literature/{seeds,nodes,edges}.csv`, `graph.json`, and `summary.md`
    (top works by in-degree, OpenAlex topic mix, publication years).
 
+### The graph, as built
+
+Full run on 2026-10-21:
+
+| metric | value |
+| --- | ---: |
+| seed bibliography entries | 257 |
+| resolved to a work | **187 (73%)** |
+| nodes (works) | 7,834 |
+| citation edges | 9,571 |
+| nodes with a title | 6,885 (88%) |
+
+Match methods: 147 exact Crossref title matches, 35 direct DOIs, 3 near-exact, and 72
+rejected as weak. The rejected set is the grey literature identified in the smoke test.
+
+The two densest clusters are exactly the thesis's intersection:
+
+| in-degree | work |
+| ---: | --- |
+| 18 | Design of Regular Landscape Fuel Treatment Patterns for Modifying Fire Growth and Behavior (Finney, 2001) |
+| 15 | Basic principles of forest fuel reduction treatments (Agee & Skinner, 2005) |
+| 12 | FARSITE: Fire Area Simulator (Finney, 1998) |
+| 10 | The Fire and Fuels Extension to the Forest Vegetation Simulator (Reinhardt & Crookston, 2003) |
+| 9 | A Hierarchical Approach to Forest Planning (Hoganson & Rose, 1991) |
+| 9 | Applying landscape principles to fire hazard reduction (Finney, 2004) |
+| 8 | A Combinatorial Heuristic Approach ... Machinery Location and Road Design |
+| 7 | Harvest scheduling with spatial constraints: a simulated annealing approach (Lockwood & Moore, 1993) |
+
+Topic mix (OpenAlex primary topic): Forest Management and Policy 1,202; Fire effects on
+ecosystems 835; Forest Biomass Utilization 496; Forest ecology and management 289; Land
+Use and Ecosystem Services 210; Multi-Criteria Decision Making 98; Optimization and
+Mathematical Programming 76.
+
+That split — fire behaviour on one side, harvest scheduling and OR on the other — is the
+literature space the thesis sits in, and it is now visible in one page
+(`planning/literature_graph_summary.md`). Artifacts under `runtime/literature/` are
+gitignored and regenerable by the command below.
+
 ### Status and the design change
 
 The first design resolved titles through OpenAlex directly and died on **HTTP 429**: the
