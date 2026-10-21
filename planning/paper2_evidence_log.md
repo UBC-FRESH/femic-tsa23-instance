@@ -612,3 +612,30 @@ SF and FB are an order of magnitude cheaper per hazard unit than FT.
 
 **Blocked on `#18`.** The treatment-mix question cannot be answered until an inapplicable
 scheduled treatment is either refused loudly or not offered.
+
+**E18 — FB and SF produced nothing because their products were on the wrong track.**
+WS4 resolves a product at apply time by `(track the treatment is applied to, treatment
+label)`. The FT layer writes its products on the source track, which is why thinning
+worked. `add_fuel_break_treatment.py` and `add_surface_fuel_treatment.py` copied the
+products onto the **destination** track instead, so the lookup missed every time and the
+treatment was applied with no accounting and no warning.
+
+| product | treatment | on source track | on destination track |
+| --- | --- | ---: | ---: |
+| `product.FuelTreatmentCost` | FT | 14,433 | 0 |
+| `product.FuelTreatmentCost` | FB | 0 | 14,433 |
+| `product.FuelBreakCost` | FB | 0 | 15,179 |
+| `product.SurfaceFuelCost` | SF | 0 | 100,388 |
+
+**Fix.** FB now copies the CC harvest products onto the source track and retags them FB,
+because an FB is a clearcut. SF produces only its cost, on the FT destination track: a
+surface-fuel treatment yields no timber, and copying the FT yields would double-count the
+thinning.
+
+**Verified on single blocks.** FB on block 3994: `product.FuelBreakCost` = $47,728.94 for
+9.5458 ha = $5,000/ha. FT then SF on block 52103: `product.FuelTreatmentCost` =
+$392,929.52 for 19.6465 ha = $20,000/ha, and `product.SurfaceFuelCost` = $58,939.43 the
+following year = $3,000/ha.
+
+**The bridge is unchanged**: the oracle still reproduces 471 / 765 / 913 after the
+rebuild, because only product rows moved, not the hazard features.

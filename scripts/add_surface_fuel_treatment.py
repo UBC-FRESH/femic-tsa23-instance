@@ -109,17 +109,19 @@ def add_surface_fuel(
     )
     new_features = pd.concat([new_features, hazard_rows], ignore_index=True)
 
-    new_products = products[products["track_id"].isin(dest_ids)].copy()
-    new_products["track_id"] = new_products["track_id"].map(dest_to_sf)
-    new_products["treatment"] = "SF"
+    # Products must live on the track the treatment is applied to (the FT destination),
+    # not the SF destination: WS4 resolves a product by (source track, treatment) at
+    # apply time. Surface-fuel work yields no timber, so only the cost is produced;
+    # copying the FT yields here would double-count the thinning.
     cost_rows = pd.DataFrame(
         {
-            "track_id": list(dest_to_sf.values()),
+            "track_id": [int(d) for d in dest_ids],
             "treatment": "SF",
             "label": "product.SurfaceFuelCost",
             "curve_id": cost_curve_id,
         }
     )
+    new_products = cost_rows
     new_products = pd.concat([new_products, cost_rows], ignore_index=True)
     # Several source tracks can carry the same product under different treatments;
     # retagging them to one treatment collapses those rows onto the same WS4 key.

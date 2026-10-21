@@ -128,14 +128,19 @@ def add_fuel_break(
     )
     new_features = pd.concat([new_features, hazard_rows], ignore_index=True)
 
-    # New products: copy, retag treatment to FB, add the disposal cost.
-    new_products = products[products["track_id"].isin(dest_ids)].copy()
-    new_products["track_id"] = new_products["track_id"].map(dest_to_fb)
+    # New products must live on the SOURCE track, not the destination. WS4 resolves a
+    # product by (track the treatment is applied to, treatment label) at apply time; rows
+    # written on the destination track make the treatment produce nothing, silently.
+    # The yield copied here is the CC harvest product, because an FB is a clearcut.
+    source_ids = sorted({int(s) for s in cc["track_id"]})
+    new_products = products[
+        products["track_id"].isin(source_ids) & (products["treatment"] == "CC")
+    ].copy()
     new_products["treatment"] = "FB"
     cost_rows = pd.DataFrame(
         [
-            {"track_id": fb, "treatment": "FB", "label": "product.FuelBreakCost", "curve_id": cost_curve_id}
-            for fb in dest_to_fb.values()
+            {"track_id": src, "treatment": "FB", "label": "product.FuelBreakCost", "curve_id": cost_curve_id}
+            for src in source_ids
         ]
     )
     new_products = pd.concat([new_products, cost_rows], ignore_index=True)
