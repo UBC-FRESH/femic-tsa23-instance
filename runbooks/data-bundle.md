@@ -13,11 +13,12 @@ an analysis until these inputs exist.
 | `runtime/fire/fbp_stand_curves.csv` | stand-scale FBP curves per AU, scenario, state, age |
 | `runtime/fire/fwi_scenarios.csv` | the fire-season weather ladder (10 quantiles) |
 | `runtime/fire/bridge_{pattern}_{sched,blocks}.csv` | the three published bridge patterns |
-| `runtime/ws4/compiled_fb_haz/` | compiled WS4 dataset with FB, SF and the hazard feature |
+| `runtime/ws4/compiled_fb_haz/` | compiled WS4 dataset with FB and the hazard feature |
+| `runtime/ws4/compiled_sf/` | the full treatment set: CC, FT, FB and SF |
 | `runtime/ws4/compiled_ft_econ/` | compiled WS4 dataset with the FT economics layer |
 | `runtime/fuel_ft_proto/` | study targets, the capped FT schedule, patch/spatial specs |
 
-Size: 72 MB compressed, about 175 MB unpacked.
+Size: 85 MB compressed, about 200 MB unpacked.
 
 ## Build it
 
@@ -42,14 +43,14 @@ tar -czf tsa23-runtime-bundle.tar.gz \
 
 ## Published copy
 
-`data-2026-10-20.1` on the repository's releases page (supersedes `data-2026-10-20`, whose
+`data-2026-10-21` on the repository's releases page (supersedes `data-2026-10-20`, whose
 FT hazard read baseline):
 
 ```
-https://github.com/UBC-FRESH/femic-tsa23-instance/releases/download/data-2026-10-20.1/tsa23-runtime-bundle-2026-10-20.1.tar.gz
+https://github.com/UBC-FRESH/femic-tsa23-instance/releases/download/data-2026-10-21/tsa23-runtime-bundle-2026-10-21.tar.gz
 ```
 
-`sha256: 58af953e612e9fb27a3a5127b375825842aef3bcce3b7f0bc9c03eae80811c0c`
+`sha256: d7d6a2ae3ac4b17bdb27c2d25f55ed7e36d1893b20b131e1e3496965c642b775`
 
 ## Use it
 
@@ -58,9 +59,9 @@ git clone https://github.com/UBC-FRESH/femic-tsa23-instance.git
 cd femic-tsa23-instance
 python3 -m venv .venv && . .venv/bin/activate
 python -m pip install -r requirements.txt
-gh release download data-2026-10-20.1 --pattern 'tsa23-runtime-bundle-2026-10-20.1.tar.gz*'
-sha256sum -c tsa23-runtime-bundle-2026-10-20.1.tar.gz.sha256
-tar -xzf tsa23-runtime-bundle-2026-10-20.1.tar.gz
+gh release download data-2026-10-21 --pattern 'tsa23-runtime-bundle-2026-10-21.tar.gz*'
+sha256sum -c tsa23-runtime-bundle-2026-10-21.tar.gz.sha256
+tar -xzf tsa23-runtime-bundle-2026-10-21.tar.gz
 python scripts/check_spread_equivalence.py \
   --cases runtime/fire/bridge_barrier_blocks.csv --ignitions 20
 ```

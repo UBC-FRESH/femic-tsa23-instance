@@ -70,6 +70,8 @@ from a CSV, not from a pattern generator.
 | seed | `--seed` | 1 | pattern layout + ignition draw |
 | footprint seed | `--footprint-seed` | 1 | which cluster; fix it for comparisons |
 | solver | `--method` | fast | `reference` is the per-ignition loop, for checking |
+| hazard source | `--hazard-dataset` | none | read each block's `feature.FuelHazard` from a compiled WS4 dataset instead of assuming 1.0. With the pre-slash dataset the published numbers reproduce exactly (E15) |
+| treated factor | `--treat-ros-factor` | 0.3 | spread multiplier applied to treated blocks; overrides the dataset hazard for those blocks |
 
 ## Expected outputs
 

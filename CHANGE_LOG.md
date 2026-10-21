@@ -1,5 +1,28 @@
 # Change Log
 
+## 2026-10-21 — Hazard account completed, treatments fixed, cost-effectiveness bounded
+
+- **FT hazard rule fixed.** It matched `cc_pl_ct*`, which never occurs in this model; 57,732
+  thinned tracks read baseline and FT carried zero hazard benefit. Now 0.4 (E13, `#10`).
+- **Clearcut slash spike added.** `cc_pl` = 2.0 for three years, decaying to 1.0 by year ten
+  (20,530 tracks). Parameters and their provenance are in
+  `planning/literature_slash_hazard.md` (E14).
+- **Spread model reads the hazard feature.** `--hazard-dataset` replaces the flat multiplier;
+  gated on reproducing the published run exactly (E15). Slash sensitivity holds the ranking
+  in 12 of 12 parameter combinations (E16).
+- **FB and SF produced nothing.** Their products were written on the destination track while
+  WS4 resolves products by `(source track, treatment)`. Both treatments applied with no
+  accounting and no warning. Fixed, verified per hectare (E18, `#18`).
+- **Hazard objective measured.** Baseline 992,334 at year 4; $100M buys 1.91%; the 2.25%
+  target needs about $118M (E17, E19, E20).
+- **Cost-effectiveness bounded.** Fuel break $5,263 per hazard-hectare, FT+SF $28,750,
+  thinning $33,333. A fuel break stops being cheapest only when its hazard exceeds 0.85
+  (`planning/hazard_cost_effectiveness.md`).
+- **Literature mapped.** Citation graph over the thesis bibliography: 187 of 257 entries
+  resolved, 7,834 nodes (`planning/literature_graph_summary.md`).
+- **TSR corpus documented.** 42 TSAs, 677 documents, cycles 1994-2024; TSA23's 18 documents
+  across four cycles are complete, and the extraction output is documented as an index.
+
 ## 2026-10-20 — Working instance, corrected datasets, published docs
 
 - `requirements.txt` replaced the submodule placeholder with the real analysis stack;

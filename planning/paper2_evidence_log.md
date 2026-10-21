@@ -604,11 +604,15 @@ accounts**:
 FB still produces nothing.
 
 **Why the target was unreachable anyway.** At the instance's cost and hazard levels the
-cost per hazard-hectare of reduction is roughly: surface fuel $3,750, fuel break $5,263,
-thinning $33,333. Closing a 22,334 hazard-ha gap therefore needs ~$84M of SF or ~$118M of
-FB — and FT cannot do it under any plausible budget. So the *ranking* of treatments by
-hazard-per-dollar is already informative even though the optimizer cannot yet express it:
-SF and FB are an order of magnitude cheaper per hazard unit than FT.
+cost per hazard-hectare of reduction is roughly: fuel break $5,263, thinning $33,333.
+Closing a 22,334 hazard-ha gap therefore needs ~$118M of FB — and FT cannot do it under any
+plausible budget. So the *ranking* of treatments by hazard-per-dollar is already
+informative even though the optimizer cannot yet express it.
+
+> **Corrected by E20.** This entry originally listed surface fuel at $3,750 per
+> hazard-hectare, as if SF could be applied alone. It cannot: SF follows a thinning, so the
+> FT+SF sequence costs $28,750. See E20 and
+> `planning/hazard_cost_effectiveness.md`.
 
 **Blocked on `#18`.** The treatment-mix question cannot be answered until an inapplicable
 scheduled treatment is either refused loudly or not offered.

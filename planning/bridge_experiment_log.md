@@ -374,3 +374,79 @@ $PY scripts/sensitivity_screen.py --out runtime/fire/weather_crossover.csv \
 | `e2036d4` | weather ladder (10 quantiles) and screen knobs |
 | `a83493b` | E9 sensitivity screen |
 | `73f29ce` | E10 crossover |
+
+## X11 — Hazard-fed spread model (E15)
+
+**Question.** Can the spread model read `feature.FuelHazard` instead of a flat multiplier,
+without changing any published number?
+
+**Commands.**
+
+```bash
+# gate: pre-slash dataset must reproduce the published run exactly
+$PY scripts/run_matched_footprint.py \
+  --treated-blocks runtime/fire/bridge_barrier_blocks.csv \
+  --seed 1 --treat-ros-factor 0.3 --ignitions 50 --duration-min 480 --wind-dir 225 \
+  --hazard-dataset runtime/ws4/_superseded_dup_product_rows/compiled_fb_haz_pre_slash \
+  --out /tmp/gate_old.json
+
+# with the slash state active
+$PY scripts/run_matched_footprint.py ... \
+  --hazard-dataset runtime/ws4/compiled_fb_haz --out /tmp/slash_barrier.json
+```
+
+**Result.** Gate reproduces 19,640.448328143004 and p90 37,637.13355349601 exactly. With
+the slash state: barrier 31,241 / clumped 31,739 / random 32,625 — ranking unchanged,
+magnitude +59%, arrangement effect 3.2% → 4.2%.
+
+## X12 — Slash parameter sensitivity (E16)
+
+**Command.**
+
+```bash
+$PY scripts/slash_sensitivity.py --ignitions 50
+```
+
+4 multipliers x 3 decay windows x 3 patterns. Ranking holds in 12/12, spread 3.6-4.7%.
+The first run reported the reverse ranking with a 40% spread: `ros_eff` was reset per
+parameter combination instead of per pattern, so each pattern inherited the previous
+pattern's treated blocks. Fixed before recording.
+
+## X13 — FB/SF product placement (E18)
+
+**Cause.** Products were written on the destination track; WS4 resolves them by
+`(source track, treatment)`, so both treatments applied with no accounting.
+
+**Commands.**
+
+```bash
+$PY_W4 scripts/add_fuel_break_treatment.py \
+  --dataset runtime/ws4/compiled_ft_econ --out runtime/ws4/compiled_fb
+$PY_W4 scripts/complete_hazard_feature.py \
+  --dataset runtime/ws4/compiled_fb --out runtime/ws4/compiled_fb_haz
+$PY_W4 scripts/add_surface_fuel_treatment.py \
+  --dataset runtime/ws4/compiled_fb_haz --out runtime/ws4/compiled_sf
+```
+
+**Verification per hectare.** FB on block 3994: `FuelBreakCost` $47,728.94 / 9.5458 ha =
+$5,000. FT then SF on block 52103: `FuelTreatmentCost` $392,929.52 / 19.6465 ha = $20,000;
+`SurfaceFuelCost` $58,939.43 = $3,000/ha.
+
+## X14 — Greedy hazard schedule (E20)
+
+**Command.**
+
+```bash
+$PY scripts/greedy_hazard_schedule.py --budget 100000000 --out runtime/ws4/greedy_hazard/schedule.csv
+$PY_W4 ws4 simulate --dataset runtime/ws4/compiled_sf \
+  --schedule runtime/ws4/greedy_hazard/schedule.csv --years 5 \
+  --out runtime/ws4/greedy_hazard/run
+```
+
+**Result.** 39,407 candidates; 2,969 fuel breaks; $99,999,852; hazard 973,334 at year 4
+(1.91%), against the 970,000 target. The greedy's projection (971,478) overshot the
+simulation by 1,856, so per-block reductions are not additive.
+
+**Break-even check.** `complete_hazard_feature.py --fb-hazard H` then the greedy again:
+FB still selected at h=0.2 and h=0.8, thinning takes over at h=0.9 — the analytic threshold
+is h=0.85.
