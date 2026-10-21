@@ -134,7 +134,26 @@ TSA23's 18 documents span four cycles, which is the complete set for this unit:
 | 2012 | 3 |
 
 The PDFs are user-local (`~/.femic/tsr/corpus`), not committed; the registry and the
-extracted facts are the tracked surfaces. These documents are also the grey literature
+extracted facts are the tracked surfaces.
+
+Extraction
+^^^^^^^^^^
+
+.. code-block:: bash
+
+   femic tsr extract --tsa 23 --output-path runtime/tsr/tsa23_candidate_facts.json
+
+Observed 2026-10-21: 18 documents, 0 failures, 766 candidate facts — 428
+`thlb_reference`, 165 `tipsy_input_candidate`, 134 `au_definition_candidate`, 21
+`source_layer_candidate`, 18 `document_metadata`.
+
+**Read it as an index, not as data.** The extractor is regex-based and most families are
+table-of-contents entries and stray numbers: "A3.1", "Site index", "timber harvesting land
+base is increased". Of the 21 source-layer candidates, 4 are noise and **17 are real BC
+layer names, every one from p.8 of `23tsdp12.pdf`** — which independently confirms the
+overlay's 17 adopted layers and the provenance it records. That, plus the page numbers on
+every fact, is what the output is good for: it points you at the page that supports a
+claim, it does not make the claim. These documents are also the grey literature
 behind the thesis's management assumptions — see
 `planning/literature_slash_hazard.md`, Part 2.
 
