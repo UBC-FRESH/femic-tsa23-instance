@@ -113,10 +113,30 @@ bcdc-order`` submits a DWDS order and ``bcdc-order-followup`` materializes it wh
 TSR corpus
 ~~~~~~~~~~
 
+FEMIC indexes the public BC Timber Supply Review document surface for every management
+unit, not just this one. The tracked registry (`metadata/tsr/` in FEMIC) covers
+**42 TSAs, 677 documents, cycles 1994-2024**.
+
 .. code-block:: bash
 
+   femic tsr index                   # refresh the registry (repo-tracked JSON)
    femic tsr fetch --tsa 23          # 18/18 PDFs cached
+   femic tsr extract --tsa 23        # candidate facts from the cached PDFs
    femic tsr overlay-report --instance-root .   # adopted_source_layers_count: 17
+
+TSA23's 18 documents span four cycles, which is the complete set for this unit:
+
+| cycle | documents |
+| --- | ---: |
+| 1995 | 6 |
+| 2001 | 6 |
+| 2006 | 3 |
+| 2012 | 3 |
+
+The PDFs are user-local (`~/.femic/tsr/corpus`), not committed; the registry and the
+extracted facts are the tracked surfaces. These documents are also the grey literature
+behind the thesis's management assumptions — see
+`planning/literature_slash_hazard.md`, Part 2.
 
 Not resolvable — archive or manual
 ----------------------------------
