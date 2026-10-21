@@ -675,3 +675,39 @@ hazard case inherits the same limit.
 
 So the treatment-mix question is now answerable in principle and blocked in practice by
 search scale, not by physics or by budget.
+
+**E20 — a greedy hazard schedule, and a correction to the cost-per-hazard ranking.**
+`scripts/greedy_hazard_schedule.py`: 39,407 operable candidates on `compiled_sf`, ranked by
+cost per hazard-hectare, taken until the $100M budget is spent.
+
+Result: **2,969 fuel-break blocks, $99,999,852**, simulated hazard at year 4 =
+**973,334** (1.91% below the 992,334 baseline), against the 970,000 target (2.25%). Missed
+by 3,334.
+
+Two findings.
+
+**1. The target is infeasible at $100M.** The modelled cost is $5,350 per hazard-hectare
+(the greedy's own average), so closing 22,334 hazard-ha needs about **$118M**. The earlier
+analytic figure of $5,263 was close; the budget, not the optimizer, is the limit.
+
+**2. Correction to E17's cost-per-hazard table.** It listed surface fuel at $3,750 per
+hazard-ha, as if SF could be applied on its own. It cannot: SF's source track is the FT
+destination, so it only follows a thinning. The true cost of an FT+SF sequence is
+($20,000 + $3,000) / 0.8 = **$28,750 per hazard-ha**, not $3,750. The corrected ranking is:
+
+| intervention | cost per hazard-ha |
+| --- | ---: |
+| fuel break (FB) | **$5,263** |
+| thinning then surface fuel (FT+SF) | $28,750 |
+| thinning (FT) | $33,333 |
+
+So fuel breaks are the only efficient hazard buy on this landscape, which is why the greedy
+selects nothing else. E17's surface-fuel row should be read with this correction.
+
+**3. The search gap is now quantified.** For the same $100M: the annealer reached 991,770
+(0.06% reduction, 178 blocks); the greedy reached 973,334 (1.91%, 2,969 blocks) — **30x
+more hazard reduction**. That is the scale `ws4#165` has to close.
+
+Caveat: the greedy's projection (971,478) overshot the simulated result (973,334) by 1,856,
+so per-block reductions are not perfectly additive — treatments shift ages and interact.
+The simulation is the number to trust.
