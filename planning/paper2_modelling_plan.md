@@ -75,7 +75,12 @@ share) where fire ranks it best, so the accounts need **connectivity**, not size
 This is the measured ceiling that defines the WS4 extension.
 
 **E4 — the decision.** With the connectivity account, does scheduling against it
-change placement/timing versus area+cost alone? *Status: pending the account.*
+change placement/timing versus area+cost alone? *Status: deferred as a
+decision-sensitivity experiment, not a bridge validation.* The account exists
+(E12) and the optimizer can target it, but #14 established that at the feasible
+footprint the account is not a validated fire-response proxy. Running E4 would
+measure the decision effect of a fragmentation metric; it cannot restore the
+fire claim. The paper's conditional/negative framing does not depend on E4.
 
 ## Treatment coverage (E5)
 
@@ -149,7 +154,8 @@ sentence may say "arrangement matters" without the treated fraction and weather.
 - **Paper 1** (Jamie's, the stand-level flowchart / decision-support guide) —
   separate; supplies the treatment logic the model consumes.
 - **Paper 2** (this): the landscape model. Sequence: E1, E2 (done) → the WS4
-  connectivity account → E3 oracle → E4 decision comparison → write-up.
+  connectivity account → E3 oracle → the #14 framing decision → write-up. E4 is
+  deferred as a decision-sensitivity experiment, not a bridge validation.
 - **WS4 extensions**: the connectivity/compartment account (prompt drafted); the
   optimizer seed (done: `--seed-greedy`).
 
