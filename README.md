@@ -5,8 +5,8 @@ graduate-student MASc thesis modelling project.
 
 ## What this is
 
-A self-contained, rebuildable TSA23 instance repository linked from the parent
-FEMIC repo at `external/femic-tsa23-instance`. It follows:
+A self-contained TSA23 instance repository, intended to sit at
+`external/femic-tsa23-instance` in a parent FEMIC checkout. It follows:
 
 - **TSA29 structural pattern**: installable `pyproject.toml`, `src/`, tests, config,
   runbooks, Sphinx docs, DataLad/public-data publication policy.
@@ -16,28 +16,37 @@ FEMIC repo at `external/femic-tsa23-instance`. It follows:
 
 ## Quick start
 
-```powershell
-# From the FEMIC parent repo root:
-git submodule update --init --recursive external/femic-tsa23-instance
-cd external/femic-tsa23-instance
-
-# Bootstrap Python environment
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip setuptools wheel
+```bash
+git clone https://github.com/UBC-FRESH/femic-tsa23-instance.git
+cd femic-tsa23-instance
+python3 -m venv .venv && . .venv/bin/activate
 python -m pip install -r requirements.txt
+
+# The data are not in git. Take the released bundle:
+gh release download data-2026-10-21 \
+  --pattern 'tsa23-runtime-bundle-2026-10-21.tar.gz*'
+sha256sum -c tsa23-runtime-bundle-2026-10-21.tar.gz.sha256
+tar -xzf tsa23-runtime-bundle-2026-10-21.tar.gz
 ```
 
-See the [docs](./docs/) for TSA23-specific guidance, rebuild procedures, and the
-student-facing modelling documentation.
+The repository is a **DataLad dataset**: the archived inputs under `data/` are git-annex
+pointers, so a plain clone leaves them unresolved. The bundle above needs no special
+remote; see `runbooks/data-bundle.md`.
+
+Full instructions, including verification and a first analysis, are in
+[`docs/quickstart.rst`](./docs/quickstart.rst) and published at
+https://ubc-fresh.github.io/femic-tsa23-instance/.
 
 ## Rebuild contract
 
-TSA23 rebuilds follow the FEMIC P13 canonical rebuild spec:
+A from-source rebuild follows the FEMIC P13 spec (`config/rebuild.spec.yaml`,
+`config/rebuild.yaml`), and **cannot run from a clean clone**: it needs the public-data
+corpus plus Wine (for BatchTIPSY/VDYP) and, for the reference parity lane, a licensed
+Patchworks install. The declared graphs live in `workflows/freshforge/`.
 
-- `config/rebuild.yaml` defines required inputs, command steps, and invariants.
-- Evidence reports sink to `runtime/evidence/`.
-- Do not hand-edit generated artifacts; regenerate via the rebuild runner.
+What a clone *can* do without a rebuild is analyse the released data bundle. The
+distinction is written out in [`docs/rebuild-contract.rst`](./docs/rebuild-contract.rst).
+Evidence reports sink to `runtime/evidence/`; do not hand-edit generated artifacts.
 
 ## Public safety
 
