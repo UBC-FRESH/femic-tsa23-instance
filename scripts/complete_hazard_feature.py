@@ -37,10 +37,12 @@ CC_SLASH_FULL_YEARS = 3
 CC_SLASH_DECAY_YEARS = 10
 
 
-def _hazard_curve(state: str, near_null_years: int) -> list[tuple[float, float]]:
+def _hazard_curve(
+    state: str, near_null_years: int, fb_hazard: float = 0.05
+) -> list[tuple[float, float]]:
     """Return hazard curve points (x, y) for a silviculture state."""
     if state.startswith("fb_"):
-        return [(0.0, 0.05), (float(max(1, near_null_years)), 0.05), (40.0, 1.0), (400.0, 1.0)]
+        return [(0.0, fb_hazard), (float(max(1, near_null_years)), fb_hazard), (40.0, 1.0), (400.0, 1.0)]
     # Thinned (FT) residual. The model's states are cc_pl_ft30/40/50/60; the earlier
     # rule matched "cc_pl_ct", which never occurs, so FT silently read as baseline and
     # the hazard account ignored the treatment entirely.
@@ -58,7 +60,9 @@ def _hazard_curve(state: str, near_null_years: int) -> list[tuple[float, float]]
     return [(0.0, 1.0), (400.0, 1.0)]
 
 
-def complete_hazard(*, dataset: Path, out: Path, near_null_years: int) -> Path:
+def complete_hazard(
+    *, dataset: Path, out: Path, near_null_years: int, fb_hazard: float = 0.05
+) -> Path:
     """Add a hazard feature to every track in a compiled dataset."""
     dataset = Path(dataset)
     out = Path(out)
@@ -72,7 +76,9 @@ def complete_hazard(*, dataset: Path, out: Path, near_null_years: int) -> Path:
     states = tracks["name"].map(
         lambda n: (STATE_RE.search(str(n)).group(1) if STATE_RE.search(str(n)) else "")
     )
-    curve_by_state = {state: _hazard_curve(state, near_null_years) for state in set(states)}
+    curve_by_state = {
+        state: _hazard_curve(state, near_null_years, fb_hazard) for state in set(states)
+    }
 
     curve_id_by_state: dict[str, int] = {}
     curve_rows: list[dict[str, float]] = []
@@ -114,6 +120,13 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--dataset", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--near-null-years", type=int, default=8, dest="near_null_years")
+    parser.add_argument(
+        "--fb-hazard",
+        type=float,
+        default=0.05,
+        dest="fb_hazard",
+        help="hazard multiplier for a fuel break; 0.05 is the instance default",
+    )
     return parser
 
 
@@ -121,7 +134,10 @@ def main() -> None:
     """Entry point."""
     args = _build_parser().parse_args()
     out = complete_hazard(
-        dataset=args.dataset, out=args.out, near_null_years=args.near_null_years
+        dataset=args.dataset,
+        out=args.out,
+        near_null_years=args.near_null_years,
+        fb_hazard=args.fb_hazard,
     )
     print(f"wrote {out}")
 
