@@ -639,3 +639,39 @@ following year = $3,000/ha.
 
 **The bridge is unchanged**: the oracle still reproduces 471 / 765 / 913 after the
 rebuild, because only product rows moved, not the hazard features.
+
+**E19 — with FB and SF accounting fixed, the binding constraint is search scale.**
+Re-run of the hazard objective on the corrected `compiled_sf` (E18):
+
+| account | value at year 4 |
+| --- | ---: |
+| `product.FuelTreatmentCost` | 5,285,691.7 |
+| `product.FuelBreakCost` | 3,094,954.6 |
+| `product.SurfaceFuelCost` | 401,997.2 |
+
+FB and SF now record real costs. Total spend is **$8.78M of a $100M budget**, so the budget
+is not what stops the run.
+
+**Hazard is unchanged at 991,770** — the same as the buggy run. That is consistent: the
+state transitions were always applied, so the hazard moved; only the accounting was
+missing. The missing products did not change the landscape, they changed the score.
+
+**What the gap actually needs:**
+
+| treatment | hectares to close 22,334 hazard-ha | cost |
+| --- | ---: | ---: |
+| surface fuel | 27,918 | $83.8M |
+| fuel break | 23,509 | $117.5M |
+| thinning | 37,223 | $744.5M |
+
+The run treated roughly **1,000 ha** — FT 264 ha, FB ~619 ha, SF ~134 ha — against the
+~28,000 ha of surface fuel the target requires. That is a factor of about 27.
+
+**Conclusion.** The hazard target is feasible within the stated budget (surface fuel at
+$83.8M), but the optimizer schedules 178 blocks where ~2,900 are needed. This is the same
+class of failure as P14: aggregate targets need thousands of moves and the annealer
+produces hundreds. The earlier `--seed-greedy` work addressed the aggregate-area case; the
+hazard case inherits the same limit.
+
+So the treatment-mix question is now answerable in principle and blocked in practice by
+search scale, not by physics or by budget.
