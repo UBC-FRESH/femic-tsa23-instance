@@ -687,6 +687,10 @@ hazard case inherits the same limit.
 So the treatment-mix question is now answerable in principle and blocked in practice by
 search scale, not by physics or by budget.
 
+> **Resolved by E21.** ws4 delivered a reduction-goal seed (`ws4#168`) and the feature
+> pre-screen (`ws4#169`); with them the target is met at a feasible level. The 178-block
+> figure above describes the annealer alone, not the seeded construction.
+
 **E20 — a greedy hazard schedule, and a correction to the cost-per-hazard ranking.**
 `scripts/greedy_hazard_schedule.py`: 39,407 operable candidates on `compiled_sf`, ranked by
 cost per hazard-hectare, taken until the $100M budget is spent.
@@ -722,3 +726,30 @@ more hazard reduction**. That is the scale `ws4#165` has to close.
 Caveat: the greedy's projection (971,478) overshot the simulated result (973,334) by 1,856,
 so per-block reductions are not perfectly additive — treatments shift ages and interact.
 The simulation is the number to trust.
+
+**E21 — the hazard target is now met with a seeded schedule, at a feasible level.**
+WS4 delivered the seeded construction requested in `ws4#165` (`#168` reduction-goal seed,
+`#169` feature pre-screen), and the instance's target was set to the feasible value
+`config/hazard_objective.yaml`, commit `aad257b`.
+
+Measured on this instance:
+
+| | |
+| --- | ---: |
+| `feature.FuelHazard`, year 4 | **985,981.3** |
+| target (commit `aad257b`) | 986,000 |
+| FT / FB / SF costs | all within their ceilings |
+| seed time | ~215 s with 8 workers |
+
+So the 986,000 target (0.64% below the 992,334 baseline) is met. A smaller 20,000-block
+pre-screen misses it at 986,581.2, which is why the full screen is the one used.
+
+**This does not contradict E19/E20, it reframes them.** The 970,000 target was infeasible
+at $100M (E20: ~$118M needed), and that was the real obstacle; the annealer's 178-block
+limit made it worse but was not the binding constraint on a *feasible* target. What E20
+called a "search gap" is now a delivered feature plus a corrected target.
+
+The distributional consequence, worth keeping straight in the paper: a feasible hazard
+objective buys about **0.6%** landscape hazard reduction at $100M, not the 2.25% the first
+target implied. Any statement about the benefit of treatment should use the feasible
+figure.
