@@ -92,6 +92,67 @@ NBAC polygons on the modelled burn probability would be the first external check
 model's spatial risk surface. Medium effort: fetch NBAC, rasterise/aggregate to blocks,
 compare. It does not make the model better; it makes its claims testable.
 
+## Paper 3 — Ulloa-Fierro et al. (2026), *Ecological Informatics* 99:104044
+
+**Treemün: a Python framework for spatial growth-and-yield simulation and harvest scheduling
+optimization in plantation forests** (open source, MIT, PyPI `treemun-sim`, repo
+`fulloaf/treemun`).
+
+- Discrete-time growth-and-yield simulator + **MILP** (Pyomo; HiGHS/CBC/CPLEX), for
+  *Pinus radiata* and *Eucalyptus globulus* plantations.
+- **Spatial adjacency and green-up constraints**, hard and soft, with shared-boundary
+  weights; GeoPackage in/out.
+- **Carbon accounting** on a dry-wood basis, and a carbon-stock-time objective.
+- **Multi-objective search**: NPV vs carbon weighted fronts, Pareto and epsilon-constraint
+  generation with knee-point detection.
+- Reports 44 passing tests and reproducible benchmark notebooks.
+
+### What maps onto ws4
+
+| paper element | ws4 today | gap |
+| --- | --- | --- |
+| MILP assignment | `opt/mip.py`, `opt/exact.py` (subset, additive accounts) | exact lane excludes spread connectivity |
+| adjacency / green-up | `opt/spatial.py` (opening, green-up, core area; move-based) | comparable; ws4 may even be ahead on incremental evaluation |
+| carbon accounting | not present | ws4 has no carbon account |
+| **multi-objective front generation** | weighted targets only | **no Pareto / epsilon-constraint driver** |
+| GeoPackage export of the schedule | web map, no GIS export | no schedule → GPKG writer |
+
+### F. Cost-hazard frontier — built (paper 3's epsilon-constraint idea)
+
+`greedy_hazard_schedule.py --budgets` now traces the frontier by cutting the same
+cost-per-hazard ranking at several budgets:
+
+| budget | blocks | hazard reduction | projected hazard at year 4 |
+| ---: | ---: | ---: | ---: |
+| $20M | 488 | 5,656 | 986,678 |
+| $40M | 1,089 | 9,456 | 982,878 |
+| $60M | 1,744 | 13,256 | 979,078 |
+| $80M | 2,364 | 17,056 | 975,278 |
+| $100M | 2,969 | 20,856 | 971,478 |
+| $120M | 3,589 | 24,656 | 967,678 |
+| $150M | 4,424 | 30,356 | 961,978 |
+| $200M | 5,940 | 39,856 | 952,478 |
+
+Caveat: these are greedy projections. The simulated $100M point was 973,334, about 1,856
+higher than projected, because per-block reductions are not additive. The frontier is a
+shape, not a set of quotes; the points the thesis uses should be simulated.
+
+That frontier is the cost-benefit curve the thesis needs, and it immediately explains the
+seeded optimizer's 986,000: the slightly-better-than-expected result sits near the $20M end
+of the curve, which is worth checking against its actual spend.
+
+### G. Carbon account — medium (paper 3)
+
+ws4 has no carbon account. A `product.Carbon` from harvested/standing biomass would make the
+NPV-versus-carbon question askable here as it is in Treemün. Needs a biomass-to-carbon
+conversion (species-specific density and fraction), which our TIPSY output already implies
+but does not expose.
+
+### H. Schedule → GeoPackage export — small (paper 3)
+
+A writer that joins the optimized schedule to the block geometry and emits GeoPackage. The
+web map exists; a GIS artifact does not, and a student will want one.
+
 ## What not to copy
 
 Both papers report **small** effects: a 0.5% resistance gain, a 0.3% risk reduction. Our own

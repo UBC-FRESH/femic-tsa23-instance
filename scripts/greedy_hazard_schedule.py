@@ -54,6 +54,11 @@ def main() -> None:
     parser.add_argument("--budget", type=float, default=100_000_000.0)
     parser.add_argument("--year", type=int, default=4)
     parser.add_argument("--out", type=Path, default=Path("runtime/ws4/greedy_hazard/schedule.csv"))
+    parser.add_argument(
+        "--budgets",
+        default="",
+        help="comma-separated budgets; writes a cost-hazard frontier CSV instead of one schedule",
+    )
     args = parser.parse_args()
 
     blocks = pd.read_parquet(args.dataset / "blocks.parquet")
@@ -112,6 +117,34 @@ def main() -> None:
             )
 
     frame = pd.DataFrame(candidates).sort_values("cost_per_hazard")
+
+    if args.budgets:
+        # Cost-hazard frontier: the same ranking cut at several budgets. This is the
+        # epsilon-constraint idea from Treemun (2026) done on a greedy, so the optimizer's
+        # seeded result can be read against a curve rather than a single point.
+        budgets = [float(b) for b in args.budgets.split(",") if b.strip()]
+        rows = []
+        for budget in budgets:
+            reduced = 0.0
+            spent = 0.0
+            blocks = 0
+            for row in frame.itertuples(index=False):
+                if spent + row.cost > budget:
+                    continue
+                spent += row.cost
+                reduced += row.hazard_reduction
+                blocks += 1
+            rows.append({"budget": budget, "spend": spent, "blocks": blocks,
+                         "hazard_reduction": reduced,
+                         "projected_hazard": args.baseline - reduced})
+        frontier = pd.DataFrame(rows)
+        out = args.out.with_name(args.out.stem + "_frontier.csv")
+        out.parent.mkdir(parents=True, exist_ok=True)
+        frontier.to_csv(out, index=False)
+        print(frontier.round(0).to_string(index=False))
+        print(f"\nwrote {out}")
+        return
+
     gap = args.baseline - args.target
     chosen: list[dict[str, object]] = []
     spent = 0.0
