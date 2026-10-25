@@ -38,7 +38,7 @@ def run(*, dataset: Path, topology: Path, fire_dir: Path, out_dir: Path) -> pd.D
         fire = json.loads((fire_dir / f"bridge_{pattern}.json").read_text())
         blocks = pd.read_csv(fire_dir / f"bridge_{pattern}_blocks.csv")
         schedule = fire_dir / f"bridge_{pattern}_sched.csv"
-        blocks.assign(treatment="FT", period=0).to_csv(schedule, index=False)
+        blocks.assign(treatment="FT", offset=0).to_csv(schedule, index=False)
         account = PatchAccount(
             name="patch.ft",
             criteria="product.Treated.managed.FT",

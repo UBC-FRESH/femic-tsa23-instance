@@ -121,14 +121,14 @@ def main() -> None:
             break
         if spent + row.cost > args.budget:
             continue
-        chosen.append({"block_id": row.block_id, "treatment": row.treatment, "period": 0,
+        chosen.append({"block_id": row.block_id, "treatment": row.treatment, "offset": 0,
                        "cost": row.cost, "reduction": row.hazard_reduction})
         spent += row.cost
         reduced += row.hazard_reduction
 
     out = pd.DataFrame(chosen)
     args.out.parent.mkdir(parents=True, exist_ok=True)
-    out[["block_id", "treatment", "period"]].to_csv(args.out, index=False)
+    out[["block_id", "treatment", "offset"]].to_csv(args.out, index=False)
     print(f"candidates: {len(frame)}")
     print(f"chosen: {len(out)} blocks")
     print(out.groupby("treatment").agg(blocks=("block_id", "size"), cost=("cost", "sum"),

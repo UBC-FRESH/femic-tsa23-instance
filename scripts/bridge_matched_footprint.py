@@ -396,7 +396,7 @@ def main() -> None:
     schedule_dir.mkdir(parents=True, exist_ok=True)
     for pattern, payload in result["patterns"].items():
         pd.DataFrame(
-            {"block_id": payload["treated_block_ids"], "treatment": "FB", "period": 0}
+            {"block_id": payload["treated_block_ids"], "treatment": "FB", "offset": 0}
         ).to_csv(schedule_dir / f"{pattern}_sched.csv", index=False)
     frame = pd.DataFrame(
         {k: {m: v for m, v in d.items() if m != "treated_block_ids"}
