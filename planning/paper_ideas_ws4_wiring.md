@@ -424,14 +424,20 @@ number that first suggested it did not.
 `greedy_hazard_schedule.py --burn-probability ... --budgets ...` ranks by risk-weighted
 reduction per dollar and cuts the ranking at several budgets:
 
-| budget | blocks | risk-weighted reduction |
-| ---: | ---: | ---: |
-| $5M | 373 | 69 |
-| $10M | 895 | 129 |
-| $13M | 1,216 | 162 |
-| $20M | 1,871 | 235 |
-| $50M | 3,735 | 498 |
-| $100M | 5,970 | 874 |
+Measured by simulating the four schedules anyone would cite (year 4, risk-weighted hazard;
+baseline 21,752):
+
+| budget | blocks | risk-weighted hazard | reduction |
+| ---: | ---: | ---: | ---: |
+| $10M | 895 | 21,671 | 81 |
+| $20M | 1,871 | 21,602 | 151 |
+| $50M | 3,735 | 21,403 | 349 |
+| $100M | 5,970 | 21,076 | 676 |
+
+The greedy **projections** for the same budgets were 129 / 235 / 498 / 874 — optimistic by
+40–50%, because per-block reductions are not additive. The simulated points are the ones to
+quote; the projection table earlier in this note is retained only to show the size of that
+error.
 
 The seeded optimizer's result — **714 blocks, $13.06M, reduction 170** — sits **above** the
 greedy at the same spend (162) and uses 41% fewer blocks. So on this objective the optimizer
