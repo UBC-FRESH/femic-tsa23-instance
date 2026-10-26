@@ -302,6 +302,45 @@ price or exclude the harvest treatment**, or pair CC with its abatement (which i
 what FB is — clearcut plus disposal). Otherwise the model will "reduce risk" by harvesting
 and then undo it.
 
+#### The controlled test: CC removed from the decision set
+
+Same dataset, same target, CC rows removed from `treatments` so the optimizer can only treat:
+
+| | with CC available | CC removed |
+| --- | ---: | ---: |
+| result, year 4 | 9,415,185 | **9,410,000** |
+| gap closed (target 9,346,000, baseline 9,419,209) | 5.5% | **12.6%** |
+| blocks | 199 (82 CC) | 195 (159 FB, 26 FT, 10 SF) |
+| spend | $6.4M of $100M | $12.2M of $100M |
+
+Removing CC **doubled** the progress, which confirms it was working against the objective.
+But the optimizer still uses **12% of the budget** and schedules 195 blocks, and still closes
+only an eighth of the target — so the binding constraint is the search scale (ws4#165), not
+CC and not the budget.
+
+So the two problems are separable and both real:
+
+1. **Modelling**: a hazard objective that lets the model harvest will fight itself. Fix by
+   pricing CC or removing it from the option set.
+2. **Search**: even with the right options, the seeded optimizer reaches 195 blocks where the
+   greedy reaches 5,741.
+
+##### The CC-slash sensitivity
+
+`complete_hazard_feature.py --cc-slash H` varies the parameter; the greedy re-ranks:
+
+| CC slash | baseline hazard, year 4 | greedy reduction at $100M | share of baseline |
+| ---: | ---: | ---: | ---: |
+| 1.5 | 992,527 | 19,928 | 2.01% |
+| 2.0 | 996,237 | 20,856 | 2.09% |
+| 3.0 | 1,003,658 | 22,345 | 2.23% |
+
+The baseline moves ~1% across a 2x range, but the **achievable reduction moves 12%** — and
+the reason is mechanics, not noise: 15,179 fuel-break options sit on tracks that are
+themselves in the `cc_pl` slash state (plantations past 90 years), so a higher assumed slash
+hazard makes those blocks more valuable to treat. The decision (fuel breaks only) does not
+change; the effect size does, modestly.
+
 ## What not to copy
 
 Both papers report **small** effects: a 0.5% resistance gain, a 0.3% risk reduction. Our own

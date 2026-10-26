@@ -38,7 +38,7 @@ CC_SLASH_DECAY_YEARS = 10
 
 
 def _hazard_curve(
-    state: str, near_null_years: int, fb_hazard: float = 0.05
+    state: str, near_null_years: int, fb_hazard: float = 0.05, cc_slash: float = None
 ) -> list[tuple[float, float]]:
     """Return hazard curve points (x, y) for a silviculture state."""
     if state.startswith("fb_"):
@@ -51,9 +51,10 @@ def _hazard_curve(
     if state == "cc_pl":
         # Fresh clearcut, no treatment: slash raises the hazard, then it decays as the
         # plantation establishes. Any *_ft or sf_* variant is handled above.
+        multiplier = CC_SLASH_MULTIPLIER if cc_slash is None else float(cc_slash)
         return [
-            (0.0, CC_SLASH_MULTIPLIER),
-            (float(CC_SLASH_FULL_YEARS), CC_SLASH_MULTIPLIER),
+            (0.0, multiplier),
+            (float(CC_SLASH_FULL_YEARS), multiplier),
             (float(CC_SLASH_DECAY_YEARS), 1.0),
             (400.0, 1.0),
         ]
@@ -61,7 +62,8 @@ def _hazard_curve(
 
 
 def complete_hazard(
-    *, dataset: Path, out: Path, near_null_years: int, fb_hazard: float = 0.05
+    *, dataset: Path, out: Path, near_null_years: int, fb_hazard: float = 0.05,
+    cc_slash: float | None = None,
 ) -> Path:
     """Add a hazard feature to every track in a compiled dataset."""
     dataset = Path(dataset)
@@ -77,7 +79,8 @@ def complete_hazard(
         lambda n: (STATE_RE.search(str(n)).group(1) if STATE_RE.search(str(n)) else "")
     )
     curve_by_state = {
-        state: _hazard_curve(state, near_null_years, fb_hazard) for state in set(states)
+        state: _hazard_curve(state, near_null_years, fb_hazard, cc_slash)
+        for state in set(states)
     }
 
     curve_id_by_state: dict[str, int] = {}
@@ -121,6 +124,13 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--near-null-years", type=int, default=8, dest="near_null_years")
     parser.add_argument(
+        "--cc-slash",
+        type=float,
+        default=None,
+        dest="cc_slash",
+        help="hazard multiplier for a fresh clearcut; default 2.0",
+    )
+    parser.add_argument(
         "--fb-hazard",
         type=float,
         default=0.05,
@@ -138,6 +148,7 @@ def main() -> None:
         out=args.out,
         near_null_years=args.near_null_years,
         fb_hazard=args.fb_hazard,
+        cc_slash=args.cc_slash,
     )
     print(f"wrote {out}")
 
