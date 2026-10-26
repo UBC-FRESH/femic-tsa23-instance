@@ -102,6 +102,30 @@ small, risky blocks over large, safe ones.
 That also explains why the unweighted frontier (idea F) is only a shape: its selection was
 arbitrary within each budget.
 
+#### Weather averaging softens it
+
+`scripts/burn_probability_map.py` runs every scenario in the ladder (ten, from median to
+extreme) with **no treatment** — the earlier map let thinned states carry a 0.6x rate, so it
+was not a clean baseline — and averages the per-block probability.
+
+| variant | blocks | mean p (ratio to landscape) | top risk quintile | components | largest | hazard reduction |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| unweighted | 2,969 | 0.0286 (0.89x) | 17.7% | 2,428 | 315 ha | 20,856 |
+| one scenario (p90) | 4,620 | 0.0773 (2.39x) | 99.4% | 535 | 15,737 ha | 19,751 |
+| weather-averaged | 5,741 | 0.0481 (**1.94x**) | 90.7% | 744 | 7,723 ha | 19,966 |
+
+So the strategy survives: still about twice the landscape's burn probability, still 90% of
+the treated area in the top risk quintile, still a 7,723 ha connected component. But the
+single-storm version overstated it — 99.4% in the top quintile was partly the schedule being
+fitted to one storm's geography.
+
+Two cautions on reading the table:
+
+- The "top quintile" is defined against the same map used for weighting, so a high share is
+  partly by construction. The informative comparison is **across variants**, not the absolute
+  multiple.
+- The averaged map is still one wind direction; averaging weather does not average wind.
+
 ### B. Severity account — built (paper 2, severity ≠ size)
 
 `scripts/add_cfb_feature.py` adds `feature.CrownFractionBurned` from the FBP curves already
