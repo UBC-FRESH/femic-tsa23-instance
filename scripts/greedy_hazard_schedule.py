@@ -16,6 +16,7 @@ Usage::
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 import pandas as pd
@@ -54,6 +55,13 @@ def main() -> None:
     parser.add_argument("--budget", type=float, default=100_000_000.0)
     parser.add_argument("--year", type=int, default=4)
     parser.add_argument("--out", type=Path, default=Path("runtime/ws4/greedy_hazard/schedule.csv"))
+    parser.add_argument(
+        "--burn-probability",
+        type=Path,
+        default=None,
+        dest="burn_probability",
+        help="weight hazard reduction by the block's burn probability (risk-weighted ranking)",
+    )
     parser.add_argument(
         "--budgets",
         default="",
@@ -116,7 +124,25 @@ def main() -> None:
                  "cost_per_hazard": cost / reduction}
             )
 
-    frame = pd.DataFrame(candidates).sort_values("cost_per_hazard")
+    frame = pd.DataFrame(candidates)
+    # Every FB candidate ties on cost per hazard-hectare: the reduction is 0.95 x area and
+    # the cost 5,000 x area for all of them, so area cancels and the ranking is constant.
+    # Without a second criterion the selection is just the first N block ids, which is how
+    # the first version produced a fragmented scatter. Weight by burn probability where it
+    # is supplied, and break remaining ties by area so fewer blocks buy the same hectares.
+    if args.burn_probability is not None:
+        payload = json.loads(args.burn_probability.read_text())
+        probability = {int(k): float(v) for k, v in (payload.get("burn_probability") or payload).items()}
+        frame["risk"] = frame["block_id"].map(probability).fillna(0.0)
+        frame["expected_reduction"] = frame["hazard_reduction"] * frame["risk"]
+        frame = frame[frame["expected_reduction"] > 0]
+        frame = frame.sort_values(
+            ["cost_per_hazard", "risk", "area_ha"], ascending=[True, False, False]
+        )
+        frame["sort_key"] = frame["cost_per_hazard"] / frame["risk"].clip(lower=1e-9)
+        frame = frame.sort_values(["sort_key", "area_ha"], ascending=[True, False])
+    else:
+        frame = frame.sort_values(["cost_per_hazard", "area_ha"], ascending=[True, False])
 
     if args.budgets:
         # Cost-hazard frontier: the same ranking cut at several budgets. This is the

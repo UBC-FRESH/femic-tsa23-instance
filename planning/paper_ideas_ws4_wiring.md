@@ -64,6 +64,44 @@ direction (225°), 200 ignitions, no treatment, p90 weather. For a paper-grade r
 should be averaged over the weather ladder (E10's ten scenarios) — the same one-wind caveat
 applies as everywhere else in the model.
 
+#### The map check that made it necessary
+
+`scripts/check_treated_map.py` compares a schedule's treated blocks with the landscape.
+Run on the unweighted greedy schedule it exposed a defect **in the greedy, not the data**:
+
+| | treated | landscape | ratio |
+| --- | ---: | ---: | ---: |
+| hazard | 1.0434 | 1.2493 | 0.84 |
+| burn probability | 0.0286 | 0.0323 | 0.89 |
+| area (ha) | 10.33 | 9.68 | 1.07 |
+| share in top burn-probability quintile | 17.7% | 23.2% | 0.76x |
+| connected components | 2,428 | — | — |
+| largest component | 315 ha (1%) | — | — |
+
+The treatments were **thinner than the landscape** in high-risk area and scattered into 2,428
+pieces. The cause: every fuel-break candidate ties on cost per hazard-hectare
+(5,000 / 0.95, area cancels), so the sort was a coin toss resolved by block id. There are
+66,584 eligible blocks and the ranking distinguished none of them.
+
+With `--burn-probability` the ranking becomes `cost / (reduction x p)`:
+
+| | unweighted | risk-weighted |
+| --- | ---: | ---: |
+| blocks | 2,969 | 4,620 |
+| mean burn probability | 0.0286 (0.89x) | **0.0773 (2.39x)** |
+| in top risk quintile | 17.7% (0.76x) | **99.4% (4.29x)** |
+| components | 2,428 | **535** |
+| largest component | 315 ha (1%) | **15,737 ha (56%)** |
+| hazard reduction | 20,856 | 19,751 |
+
+So the risk weighting does not just change a number; it turns an arbitrary scatter into a
+concentrated high-risk strategy — which is the FSim idea doing real work. The cost is a
+slightly smaller hazard reduction (19,751 against 20,856) because the ranking now prefers
+small, risky blocks over large, safe ones.
+
+That also explains why the unweighted frontier (idea F) is only a shape: its selection was
+arbitrary within each budget.
+
 ### B. Severity account — built (paper 2, severity ≠ size)
 
 `scripts/add_cfb_feature.py` adds `feature.CrownFractionBurned` from the FBP curves already
