@@ -368,6 +368,13 @@ An earlier version of this section withdrew these results because the account ap
 be inflated 425x. **That alarm was mine, not ws4's**, and it is worth recording how it
 happened because the same trap will recur.
 
+### The canonical accounts check out
+
+Before trusting any of this, the same independent check was run on the datasets the thesis
+entries actually use: `compiled_sf` and `compiled_fb_haz` both give **1,015,743** as the
+independent Σ area x hazard, and the simulator reports **1,015,743** at year 0. So E17, E19,
+E20 and E21 rest on a consistent account, not on the inflated one.
+
 ### What went wrong
 
 The feature builder first wrote `feature.RiskWeightedHazard` only on each block's *current*
@@ -411,6 +418,27 @@ The same 77-clearcut schedule now behaves as physics requires:
 
 So a hazard objective that allows harvesting does fight itself. The conclusion survives; the
 number that first suggested it did not.
+
+### The frontier, and where the optimizer sits
+
+`greedy_hazard_schedule.py --burn-probability ... --budgets ...` ranks by risk-weighted
+reduction per dollar and cuts the ranking at several budgets:
+
+| budget | blocks | risk-weighted reduction |
+| ---: | ---: | ---: |
+| $5M | 373 | 69 |
+| $10M | 895 | 129 |
+| $13M | 1,216 | 162 |
+| $20M | 1,871 | 235 |
+| $50M | 3,735 | 498 |
+| $100M | 5,970 | 874 |
+
+The seeded optimizer's result — **714 blocks, $13.06M, reduction 170** — sits **above** the
+greedy at the same spend (162) and uses 41% fewer blocks. So on this objective the optimizer
+is not merely able to hit a target; it is more efficient per dollar than the greedy ranking.
+
+That also replaces the arbitrary 0.78% target as the defensible statement: the frontier is
+the result, and the target is just one point on it.
 
 ### The build rule this exposed
 

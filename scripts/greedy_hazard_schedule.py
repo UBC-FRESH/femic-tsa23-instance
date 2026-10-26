@@ -152,6 +152,7 @@ def main() -> None:
         rows = []
         for budget in budgets:
             reduced = 0.0
+            expected = 0.0
             spent = 0.0
             blocks = 0
             for row in frame.itertuples(index=False):
@@ -159,9 +160,11 @@ def main() -> None:
                     continue
                 spent += row.cost
                 reduced += row.hazard_reduction
+                expected += getattr(row, "expected_reduction", row.hazard_reduction)
                 blocks += 1
             rows.append({"budget": budget, "spend": spent, "blocks": blocks,
                          "hazard_reduction": reduced,
+                         "risk_weighted_reduction": expected,
                          "projected_hazard": args.baseline - reduced})
         frontier = pd.DataFrame(rows)
         out = args.out.with_name(args.out.stem + "_frontier.csv")
