@@ -64,12 +64,24 @@ direction (225°), 200 ignitions, no treatment, p90 weather. For a paper-grade r
 should be averaged over the weather ladder (E10's ten scenarios) — the same one-wind caveat
 applies as everywhere else in the model.
 
-### B. Severity account — immediate, no new data (paper 2, severity ≠ size)
+### B. Severity account — built (paper 2, severity ≠ size)
 
-`runtime/fire/fbp_stand_curves.csv` already carries `cfb` (crown fraction burned) per AU,
-scenario, state and age. A `feature.CrownFractionBurned` per track gives the model a second
-outcome axis, which the review says the literature conflates with area. Cost: one script
-like the hazard builder; no new inputs.
+`scripts/add_cfb_feature.py` adds `feature.CrownFractionBurned` from the FBP curves already
+in the workspace. Verified: **258,825 tracks covered, 0 missing, 87 distinct (AU, state)
+curves**; a simulate reports 934,420 crown-burn-hectares at offset 0 under p90 weather
+(a mean CFB of about 0.945 over 988,816 ha).
+
+That gives the model the second outcome axis the review says the literature conflates with
+area: two landscapes can burn the same area at very different severity, and now the model
+can say so.
+
+Two recorded simplifications:
+
+- FBP carries only `untreated` and `thinned`; a state containing `_ft` maps to thinned and
+  everything else to untreated, so fuel-break and surface-fuel states read as untreated
+  (conservative for severity).
+- The curve is extended past the last modelled age with its final value, so a stand at age
+  255 does not silently fall back to age-0 severity.
 
 ### C. Neighbourhood resistance account — medium (paper 1, Portugal)
 
