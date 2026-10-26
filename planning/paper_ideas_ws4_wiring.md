@@ -83,19 +83,55 @@ Two recorded simplifications:
 - The curve is extended past the last modelled age with its final value, so a stand at age
   255 does not silently fall back to age-0 severity.
 
-### C. Neighbourhood resistance account — medium (paper 1, Portugal)
+### C. Neighbourhood resistance account — prototyped, and it does not rank (paper 1, Portugal)
 
-A spatial account `resistance.<sub>`: for each block, `1 −` the hazard-weighted mean of its
-topological neighbours (or a distance-weighted ring). That is the paper's indicator and it
-targets the review's "arrangement and continuity" gap directly. Implementation is a sibling
-of `ws4/spread/accounts.py`; the topology and the hazard feature both exist.
+`scripts/resistance_metric.py` computes the paper's indicator against the real simulator:
 
-### D. ILP versus the heuristic on the hazard target — cheap, and tells the truth
+```
+h_i        = feature.FuelHazard at the block
+s_i        = (h_i + sum_j h_j) / (1 + degree_i)
+resistance = 1 - s_i
+```
 
-Run `opt/exact.py` on a 500-block subset with the hazard target and compare its penalty with
-the seeded SA result (E21: 985,981.3). The paper's method is ILP; ws4's exact lane stops at
-additive accounts, so this would quantify the price of the spatial features the ILP cannot
-see. Worth doing before claiming the heuristic is good enough.
+Run on the three bridge patterns (5-year replay, area-weighted):
+
+| pattern | resistance (offset 4) | hazard |
+| --- | ---: | ---: |
+| barrier | 0.00687 | 0.99589 |
+| clumped | **0.00781** | 0.99472 |
+| random | 0.00654 | 0.99616 |
+
+The ranking is **clumped > barrier > random**, which is *not* the fire ranking
+(barrier < clumped < random). It is identical at 50 m and 100 m search distances, so this is
+not a neighbourhood-size artefact.
+
+**Why it fails:** with equal neighbour weights the indicator is essentially `1 − mean
+neighbourhood hazard`, so it inherits the hazard account's ordering — and the hazard account
+is not a fire-response proxy (E7/P16.1). The paper's gains were 0.9907 → 0.9959; the same
+near-no-op magnitude.
+
+Conclusion: **do not promote this to ws4 as a fire-response objective.** It can be reported
+as a proximity/adaptation metric with the same caveat as the compartment account, or dropped.
+A version that could rank would need a directional, rate-aware treatment of spread — i.e. the
+fire model, not an index.
+
+### D. ILP versus the heuristic — attempted, and the exact lane does not scale
+
+`ws4 solve-mip --limit-blocks N` is the exact lane. On this instance:
+
+| subset | wall clock | result |
+| ---: | ---: | --- |
+| 50 blocks | **300 s timeout** | no output |
+| 300 blocks | 1200 s timeout | no output |
+
+It enumerates options per block and simulates each option on its own, which is far too slow
+even for a diagnostic subset of this dataset. So a like-for-like ILP-versus-SA comparison is
+**not available here**; the paper's ILP method would need block aggregation (development
+types) before it can be applied at this scale — which is exactly the trade-off the paper
+does not discuss.
+
+Recorded as a blocker, not a result: it needs a subset of a *small* dataset, not a subset of
+a 102k-block landscape.
 
 ### E. NBAC validation overlay — validation, not wiring (paper 2)
 
@@ -160,10 +196,18 @@ NPV-versus-carbon question askable here as it is in Treemün. Needs a biomass-to
 conversion (species-specific density and fraction), which our TIPSY output already implies
 but does not expose.
 
-### H. Schedule → GeoPackage export — small (paper 3)
+### H. Schedule → GeoPackage export — built (paper 3)
 
-A writer that joins the optimized schedule to the block geometry and emits GeoPackage. The
-web map exists; a GIS artifact does not, and a student will want one.
+`scripts/schedule_to_geopackage.py` joins a schedule to the dissolved block geometry:
+
+- **102,128 features**, EPSG:3005, one per block, 120 MB;
+- columns `block_id`, `area_ha`, `treatment`, `offset`, `treated`, `geometry`;
+- optional `--dataset` adds the block's `feature.FuelHazard`;
+- verified on the greedy schedule: 2,969 treated blocks, all FB.
+
+The web service (`docs/reference/web.rst`) already joins runs to geometry for the browser map
+via `GET /api/runs/{run}/map`, with `bbox` and `zoom`; this is the static counterpart for
+QGIS, and it needs no server.
 
 ## What not to copy
 
