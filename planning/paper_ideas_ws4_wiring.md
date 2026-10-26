@@ -271,6 +271,37 @@ The web service (`docs/reference/web.rst`) already joins runs to geometry for th
 via `GET /api/runs/{run}/map`, with `bbox` and `zoom`; this is the static counterpart for
 QGIS, and it needs no server.
 
+## The risk-weighted objective as a ws4 target
+
+`compiled_sf_risk` carries the wind-and-weather-averaged `feature.BurnProbability` and the
+derived `feature.RiskWeightedHazard`; `config/risk_objective.yaml` targets the latter with the
+same $100M split used for the plain hazard objective.
+
+| | plain hazard (E21) | risk-weighted |
+| --- | ---: | ---: |
+| baseline, year 4 | 992,334 | 9,419,209 |
+| target | 986,000 | 9,346,000 |
+| reached | **985,981** | **9,415,185** |
+| gap closed | met | **5.5%** |
+| blocks | — | 199 (82 CC, 77 FB, 26 FT, 14 SF) |
+| spend | — | $6.4M of $100M |
+
+So the account is **targetable** — ws4 accepts it and evaluates it per period — but the
+optimizer closes 5.5% of the required gap. The greedy closes all of it and would go further:
+5,741 fuel-break blocks, 19,966 hazard-ha, roughly **50x** the optimizer's movement on this
+objective.
+
+**The detail that matters more than the shortfall:** the schedule includes **82 clearcuts**.
+A plain CC is the model's harvest treatment and it creates the `cc_pl` slash state (hazard
+2.0), so every CC pushes the objective the wrong way while the 77 fuel breaks push it right.
+The optimizer is fighting itself, and the seed does not know that harvesting is a cost under
+this objective.
+
+That is a modelling problem before it is an optimizer problem: **a hazard objective must
+price or exclude the harvest treatment**, or pair CC with its abatement (which is exactly
+what FB is — clearcut plus disposal). Otherwise the model will "reduce risk" by harvesting
+and then undo it.
+
 ## What not to copy
 
 Both papers report **small** effects: a 0.5% resistance gain, a 0.3% risk reduction. Our own
