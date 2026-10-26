@@ -360,3 +360,45 @@ is the first simulation year). Handled here:
 
 Any command in `planning/bridge_experiment_log.md` that hands ws4 a schedule now needs the
 same treatment if the CSV predates this change.
+
+
+## Withdrawn: the risk-weighted optimizer results
+
+**Both optimizer runs on `feature.RiskWeightedHazard` are withdrawn**, including the one that
+"met the target" with 435 fuel breaks and the one that met it with 77 clearcuts and zero cost.
+
+The arithmetic does not reconcile:
+
+| | |
+| --- | ---: |
+| `RiskWeightedHazard` curve values | min 0.0000, max 0.1390, mean 0.0142 |
+| total block area | 988,816 ha |
+| **maximum possible area-weighted sum** | **137,445** |
+| account value the simulator reports | **9,419,209** |
+
+A quantity that cannot exceed 137,445 is reported as 9.4 million — 68x its own upper bound.
+So the account is not the area-weighted sum its name implies; it is almost certainly summing
+per **track** or per **fragment** rather than per block, and a block with several tracks is
+counted several times.
+
+Consequences:
+
+- The "target met" results are artefacts of that inflation, not risk reduction. A clearcut
+  that raises hazard cannot legitimately meet a risk target; the earlier finding that CC
+  "fights the objective" was therefore also reading a broken number.
+- The greedy numbers in this note are computed in this repository's own arithmetic
+  (area x reduction x p) and are internally consistent, but they are **not** in the same units
+  as the ws4 account, so the "optimizer versus greedy" comparison above is void.
+- The burn-probability maps, the GeoPackage, and the placement comparison are unaffected:
+  they are built from per-block values, not from the account.
+
+What has to happen before this line resumes:
+
+1. Check how ws4 aggregates a **feature** account across tracks and fragments — the patch and
+   spread accounts are explicit about area weighting; a feature account may not be.
+2. Rebuild the feature so one block contributes once, then re-derive the baseline and confirm
+   the reported value is bounded by area x max value.
+3. Only then re-run the optimizer and the greedy in one unit system.
+
+Until then the only supported statements are the ones in E7/E9/E10/E16/E20, which do not use
+this account.
