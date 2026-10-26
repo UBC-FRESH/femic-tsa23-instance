@@ -1,14 +1,13 @@
 # Risk-weighted hazard objective: reduce feature.RiskWeightedHazard under the same $100M.
 #
-# Baseline measured 2026-10-26 on compiled_sf_risk with an empty schedule:
-#   feature.RiskWeightedHazard at offset 4 = 9,406,251
-# The target is a 0.64% reduction, matching the feasible plain-hazard target in
-# config/hazard_objective.yaml so the two runs are comparable.
+# Baseline measured 2026-10-26 on the rebuilt compiled_sf_risk with an empty schedule:
+#   feature.RiskWeightedHazard at year 4 = 21,752.09
+# The target is a 0.78% reduction, matching the scale of config/hazard_objective.yaml.
 targets:
   - account: feature.RiskWeightedHazard
     year: 4
     period_width: 1
-    maximum: 9346000.0
+    maximum: 21582.0
     max_weight: 1.0
   - account: product.FuelTreatmentCost
     year: 4

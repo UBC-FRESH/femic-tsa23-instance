@@ -47,6 +47,17 @@ def main() -> None:
 
     hazard = features[features["label"] == "feature.FuelHazard"][["track_id", "curve_id"]]
     hazard_by_track = dict(zip(hazard.track_id.astype(int), hazard.curve_id.astype(int)))
+
+    # A treatment moves a block's fragment to a *destination* track. If a feature exists only
+    # on the current tracks, a treated block drops out of the account entirely and the account
+    # "improves" by deleting area. Build a track -> block map that follows the treatments.
+    treatments = pd.read_parquet(args.dataset / "treatments.parquet")
+    track_block = {int(t): int(b) for t, b in zip(blocks["track_id"], blocks["block_id"])}
+    for row in treatments.itertuples(index=False):
+        source_block = track_block.get(int(row.track_id))
+        if source_block is not None:
+            track_block.setdefault(int(row.new_track), source_block)
+    all_tracks = pd.read_parquet(args.dataset / "tracks.parquet")["track_id"].astype(int).tolist()
     points = (
         curves.groupby("curve_id")[["x", "y"]]
         .apply(lambda g: list(zip(g.x.astype(float), g.y.astype(float))))
@@ -58,9 +69,10 @@ def main() -> None:
     new_points: list[dict[str, float]] = []
     probability_curve: dict[float, int] = {}
 
-    for row in blocks.itertuples(index=False):
-        block = int(row.block_id)
-        track = int(row.track_id)
+    for track in all_tracks:
+        block = track_block.get(track)
+        if block is None:
+            continue
         p = per_block.get(block, 0.0)
         rounded = round(p, 4)
         if rounded not in probability_curve:

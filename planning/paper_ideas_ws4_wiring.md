@@ -362,43 +362,60 @@ Any command in `planning/bridge_experiment_log.md` that hands ws4 a schedule now
 same treatment if the CSV predates this change.
 
 
-## Withdrawn: the risk-weighted optimizer results
+## The risk-weighted line, corrected
 
-**Both optimizer runs on `feature.RiskWeightedHazard` are withdrawn**, including the one that
-"met the target" with 435 fuel breaks and the one that met it with 77 clearcuts and zero cost.
+An earlier version of this section withdrew these results because the account appeared to
+be inflated 425x. **That alarm was mine, not ws4's**, and it is worth recording how it
+happened because the same trap will recur.
 
-The arithmetic does not reconcile:
+### What went wrong
+
+The feature builder first wrote `feature.RiskWeightedHazard` only on each block's *current*
+tracks. A treatment moves a fragment to a destination track, so a treated block dropped out of
+the account entirely. After fixing the builder to cover destination tracks I rebuilt
+`compiled_sf_risk` **in place**, then compared a baseline recorded against the old build
+(9,419,209) with a run on the new one. Two different datasets, one conclusion drawn across
+them. Filed as ws4#435 and closed as invalid, with the correction on the record.
+
+### The check that settles it
+
+On the rebuilt dataset, the simulator and an independent interpolation agree:
+
+| account | independent sum | `account_values` |
+| --- | ---: | ---: |
+| `feature.FuelHazard` | 1,015,743 | 1,015,743 |
+| `feature.RiskWeightedHazard` | 22,167 (offset -1) | 22,167 (offset -1), 21,752 (year 4) |
+
+### The result, on the corrected build
+
+Baseline `feature.RiskWeightedHazard` at year 4 = **21,752.1**; target 21,582 (0.78% down):
 
 | | |
 | --- | ---: |
-| `RiskWeightedHazard` curve values | min 0.0000, max 0.1390, mean 0.0142 |
-| total block area | 988,816 ha |
-| **maximum possible area-weighted sum** | **137,445** |
-| account value the simulator reports | **9,419,209** |
+| reached | **21,582.0** — met |
+| blocks | 714, all fuel break |
+| spend | $13.06M of $100M |
 
-A quantity that cannot exceed 137,445 is reported as 9.4 million — 68x its own upper bound.
-So the account is not the area-weighted sum its name implies; it is almost certainly summing
-per **track** or per **fragment** rather than per block, and a block with several tracks is
-counted several times.
+So the risk-weighted account is **targetable**, and a modest reduction is reachable with 13%
+of the budget. The earlier "77 clearcuts met the target at zero cost" was a stale-build
+artefact.
 
-Consequences:
+### The CC claim, re-tested on the corrected build
 
-- The "target met" results are artefacts of that inflation, not risk reduction. A clearcut
-  that raises hazard cannot legitimately meet a risk target; the earlier finding that CC
-  "fights the objective" was therefore also reading a broken number.
-- The greedy numbers in this note are computed in this repository's own arithmetic
-  (area x reduction x p) and are internally consistent, but they are **not** in the same units
-  as the ws4 account, so the "optimizer versus greedy" comparison above is void.
-- The burn-probability maps, the GeoPackage, and the placement comparison are unaffected:
-  they are built from per-block values, not from the account.
+The same 77-clearcut schedule now behaves as physics requires:
 
-What has to happen before this line resumes:
+| account | baseline | with 77 CC | change |
+| --- | ---: | ---: | ---: |
+| `feature.FuelHazard` | 996,236.9 | 998,843.2 | **+0.26%** |
+| `feature.RiskWeightedHazard` | 21,752.1 | 21,815.5 | **+0.29%** |
 
-1. Check how ws4 aggregates a **feature** account across tracks and fragments — the patch and
-   spread accounts are explicit about area weighting; a feature account may not be.
-2. Rebuild the feature so one block contributes once, then re-derive the baseline and confirm
-   the reported value is bounded by area x max value.
-3. Only then re-run the optimizer and the greedy in one unit system.
+So a hazard objective that allows harvesting does fight itself. The conclusion survives; the
+number that first suggested it did not.
 
-Until then the only supported statements are the ones in E7/E9/E10/E16/E20, which do not use
-this account.
+### The build rule this exposed
+
+**A feature read through a criterion must exist on every track a block can reach, including
+treatment destinations.** Otherwise a schedule removes blocks from the account and the
+account improves by deleting area. That is a property of the dataset build, not of ws4, and
+it should be a check whenever a feature is added: after any treatment, does the block still
+have a value?
