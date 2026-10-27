@@ -161,7 +161,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument("--cost-per-ha", type=float, default=3000.0, dest="cost_per_ha")
+    parser.add_argument("--cost-per-ha", type=float, default=3750.0, dest="cost_per_ha")
     parser.add_argument("--window-years", type=int, default=10, dest="window_years")
     return parser
 

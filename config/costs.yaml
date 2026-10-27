@@ -1,0 +1,46 @@
+# Fuel-treatment cost assumptions (CAD per treated hectare).
+#
+# These replace the earlier PI point estimates ($20,000 FT / $5,000 FB / $3,000 SF).
+# They are anchored on BC programme evidence, not on a single study:
+#
+# - BC Forest Practices Board, FPB/SIR/43, "Fuel Management in the Wildland Urban
+#   Interface - Update", May 2015, p. 18: the average cost of a fuel-management
+#   treatment under the Strategic Wildfire Prevention Initiative was about
+#   $10,000/ha in 2009, and "the average unit cost in 2014 has not changed since
+#   2009". That is the gross cost of mechanical thinning, pruning, pile burning
+#   and disposal - the closest published analogue to FT.
+#
+# - FNESS / Indigenous Services Canada, "2024-2025 Operational Fuel Treatment
+#   Program & Application Guide", cost allowances: up to $7,500/ha in the
+#   Cariboo, Kamloops, Northwest and Southeast fire centres; $11,500/ha in
+#   Prince George; $13,500/ha on the coast; maintenance up to $3,750/ha;
+#   prescription up to $450/ha. TSA23 (100 Mile House) lies in the Cariboo
+#   Fire Centre, so $7,500/ha is the relevant programme ceiling.
+#
+# Mapping to WS4 treatments:
+#   FT  thinning + fuel disposal        -> $10,000/ha (FPB provincial average)
+#   FB  clearcut + full fuel disposal   -> $7,500/ha  (Cariboo operational cap;
+#       the merchantable clearcut it contains is the reason the net subsidy sits
+#       below the gross thinning average)
+#   SF  surface-fuel reduction after FT -> $3,750/ha  (maintenance allowance)
+#
+# Sensitivity anchors (the range a report should carry, not a point):
+#   low     $3,750/ha  maintenance-level work only
+#   base    values above
+#   high    $13,500/ha coastal cap (upper bound on programme cost)
+costs:
+  FT:
+    per_ha: 10000.0
+    source: "FPB/SIR/43 (2015) p.18: ~$10,000/ha average, unchanged 2009-2014"
+  FB:
+    per_ha: 7500.0
+    source: "FNESS 2024/25 guide: Cariboo Fire Centre operational allowance, up to $7,500/ha"
+  SF:
+    per_ha: 3750.0
+    source: "FNESS 2024/25 guide: maintenance allowance, up to $3,750/ha"
+
+# The substitution rate for the cost sensitivity runs; the base values are used
+# unless a scenario overrides them.
+sensitivity:
+  low_multiplier: 0.5     # $3,750 / $5,000 / $1,875
+  high_multiplier: 1.8    # $18,000 / $13,500 / $6,750

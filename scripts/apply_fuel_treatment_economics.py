@@ -132,7 +132,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument("--cost-per-ha", type=float, default=20000.0)
+    parser.add_argument("--cost-per-ha", type=float, default=10000.0)
     parser.add_argument("--biomass-per-ha", type=float, default=30.0)
     parser.add_argument("--chipping", action="store_true")
     parser.add_argument("--chipping-cost-per-ha", type=float, default=5000.0)
