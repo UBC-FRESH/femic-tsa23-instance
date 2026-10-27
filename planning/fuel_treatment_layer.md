@@ -60,9 +60,16 @@ TSA23 application:
   (`UBC-FRESH/femic` multi-origin CT change), verified to emit FT on both the
   `baseline` (natural) and `cc_pl` (planted) tracks.
 
-## Economics (PI parameters)
+## Economics (BC programme evidence)
 
-- **Treatment cost: $20,000/ha.** Charged per treated hectare when FT is applied.
+- **Treatment cost: $10,000/ha.** Charged per treated hectare when FT is applied.
+  Anchored on BC Forest Practices Board FPB/SIR/43 (2015, p. 18): the average fuel
+  management treatment under the Strategic Wildfire Prevention Initiative was about
+  $10,000/ha, unchanged 2009–2014. Full assumptions and sources: `config/costs.yaml`.
+- **Fuel break (FB) disposal: $7,500/ha.** The FNESS 2024/25 Cariboo Fire Centre
+  operational allowance (TSA23 is in the Cariboo Fire Centre). The merchantable
+  clearcut FB contains is why its net subsidy sits below the gross thinning average.
+- **Surface fuel (SF): $3,750/ha.** The FNESS maintenance allowance.
 - **Small-log commercial output**: merchantable volume from the removal,
   resolved through the BTC `log-grades` indicator bank (low grades).
 - **Woody biomass product**: fuel collected during the treatment, expressed as a
@@ -79,7 +86,7 @@ TSA23 application:
 | FT treatment + state transition | FEMIC export | `commercial_thinning` in `config/silviculture.tsa23.yaml`, `label: FT` |
 | Small-log product | FEMIC/BTC | `btc_indicator_banks: [log-grades]` (export-supported) |
 | Woody-biomass product | FEMIC/BTC | BTC `biomass-live` / `residual-fibre` banks (build-stage; not yet in the export allow-list) |
-| Treatment cost ($20k/ha) | FEMIC/instance economics | area cost applied to the FT treatment (MKRF pattern: `harvest_costs.*.yaml`) |
+| Treatment cost ($10k/ha) | FEMIC/instance economics | area cost applied to the FT treatment (MKRF pattern: `harvest_costs.*.yaml`); source in `config/costs.yaml` |
 | Chipping variant | config + products | separate FT variant; removes biomass product, adds cost |
 | Budget constraint | WS4 | a level target with a `maximum` on the FT cost account, per period |
 | Objective | WS4 | a target on a fire-metric account (to be defined from Chapter 1 curves) |
