@@ -35,7 +35,7 @@ the c5 network routes all of them.
 
 | Run | Result | Record |
 |---|---|---|
-| Report-only c5 routing, 102,128 blocks | 99,541 linked/routed, 0 no-linkage, median 52.6 km to nearest mill | `fresh-road/examples/tsa23_c5_network/ws4_report/` |
+| Report-only c5 routing, 102,128 blocks | 102,128 linked/routed, 0 no-linkage, median 44.5 km to nearest mill | `fresh-road/examples/tsa23_c5_network/ws4_report/` |
 | 5-year simulation, 2,000-block schedule | 0 unrouted route rows; 44.66 km average haul; build 28.98 M, haul 21.67 M, maintenance 11.73 M, total 62.38 M CAD | `fresh-road/examples/tsa23_c5_network/ws4_sim/` |
 | c5 accounting on existing `risk_opt_final` schedule | 714 blocks, 0 unrouted; build 11.23 M, haul 60.89 M, maintenance 4.56 M, total 76.68 M CAD; product accounts identical to base | `reports/ws4-route-c5-risk-final.md` |
 | Road-aware optimizer scenario, 10 M build bound | 100 iterations, 2,031 blocks, 0 unrouted, build 27.41 M; target not met; benchmark only | `reports/ws4-road-aware-opt.md` |
