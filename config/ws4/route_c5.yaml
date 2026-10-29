@@ -1,0 +1,17 @@
+# TSA 23 c5-style route configuration.
+# Promoted from fresh-road/examples/tsa23_c5_network/route_fixture.
+# No objective, constraint, growth, or solver change is implied.
+route:
+  segments: ../../runtime/ws4/roads_c5/segments.csv
+  vertices: ../../runtime/ws4/roads_c5/vertices.csv
+  destinations: ../../runtime/ws4/roads_c5/destinations.csv
+  linkages: ../../runtime/ws4/roads_c5/linkages.csv
+  initial_roads: all
+
+route_accounts:
+  - {destination: destination.MILL_95_LBR, kind: haul, account: route.Mill_95_LBR.haul}
+  - {destination: destination.MILL_694_LGH, kind: haul, account: route.Mill_694_LGH.haul}
+  - {destination: destination.MILL_733_LGH, kind: haul, account: route.Mill_733_LGH.haul}
+  - {destination: destination.MILL_95_LBR, kind: volume, account: product.Mill_95_LBR.Yield}
+  - {destination: destination.MILL_694_LGH, kind: volume, account: product.Mill_694_LGH.Yield}
+  - {destination: destination.MILL_733_LGH, kind: volume, account: product.Mill_733_LGH.Yield}
