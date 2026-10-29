@@ -1,0 +1,30 @@
+# Road-aware smoke scenario.
+# The harvest risk targets are unchanged; one route build budget is added as a
+# scenario constraint at year 0.  The 10M CAD value is a benchmark bound, not a
+# policy recommendation.
+targets:
+  - account: feature.RiskWeightedHazard
+    year: 4
+    period_width: 1
+    maximum: 21582.0
+    max_weight: 1.0
+  - account: product.FuelTreatmentCost
+    year: 4
+    period_width: 5
+    maximum: 50000000.0
+    max_weight: 10.0
+  - account: product.FuelBreakCost
+    year: 4
+    period_width: 5
+    maximum: 25000000.0
+    max_weight: 10.0
+  - account: product.SurfaceFuelCost
+    year: 4
+    period_width: 5
+    maximum: 25000000.0
+    max_weight: 10.0
+  - account: route.Total.build
+    period: 1
+    period_width: 1
+    maximum: 10000000.0
+    max_weight: 1.0
