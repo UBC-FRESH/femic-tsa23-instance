@@ -79,6 +79,22 @@ The parent FEMIC repository carries the reusable extractor and runbook
 ``examples/inv01_tsa23_full``.  Project working data belongs on the data drive
 under ``/srv/shared-data/gep/ws4/tmp/inv01-data``, never in ``/tmp``.
 
+Model status
+------------
+
+The current surface is valid for BA/volume on only 14.9% of TSA 23; height is
+available on 48.2%.  A three-band 25 m status mask labels no-point-cloud,
+omitted/no-DEM, processed/no-cell, height-only, and BA/volume-valid areas.  The
+mask and the high-biomass acquisition request are in
+``notes/reports/inv01-tsa23-model-status.md`` and
+``notes/reports/inv01-tsa23-acquisition-request.md``.
+
+.. figure:: /_static/inv01-tsa23-model-status.png
+   :alt: TSA 23 model status mask
+   :width: 100%
+
+   Current pilot model-status mask.
+
 Decision
 --------
 
