@@ -13,6 +13,15 @@ at prediction time.
 The cards use first-return point-cloud metrics and exact FAIB plot support.
 LOOCV RMSE is 0.688 m height, 4.414 m2/ha basal area, and 20.666 m3/ha volume.
 
+## Applicability limits
+
+The cards stop at `Lhmean` 14.1882 m for BA/volume and `Lhp95` 24.07 m for
+height.  High-biomass IDF stands above those ranges are unsupported.  Three of
+four external TSA 23 high-biomass plots were outside the BA/volume range, and
+one was outside the height range.  The full-run map drops out-of-range cells
+rather than extrapolating.  TSA 29 is an exploratory transfer experiment; TSA 22
+(Okanagan) is not used for TSA 23 training.
+
 ## Status
 
 These are **pilot cards, not an operational inventory**:
