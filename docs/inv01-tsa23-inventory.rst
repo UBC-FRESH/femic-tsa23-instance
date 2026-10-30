@@ -63,7 +63,9 @@ High-biomass experiment
    holdout for BA and volume but not height, and the volume bias remained
    +53 m3/ha.  It is **not published** as model cards.  TSA 22 (Okanagan) is
    excluded from TSA 23 training and is transfer-test-only.  See
-   ``experiments/inv01-high-biomass/``.
+   ``experiments/inv01-high-biomass/``.  The archive audit and acquisition
+   shortlist are in
+   ``notes/reports/inv01-tsa23-high-biomass-acquisition-targets.md``.
 
 Data and provenance
 -------------------
