@@ -14,6 +14,16 @@ A self-contained TSA23 instance repository, intended to sit at
   design phase sequencing, FreshForge workflow evolution, publication QA, teaching
   docs trajectory.
 
+## INV-01 inventory pilot
+
+The public INV-01 evidence surface is in `docs/inv01-tsa23-inventory.rst`.  It
+includes the three TSA 23 IDF pilot model cards, the full-mosaic and VRI
+reports, the PSP holdout, and the omitted-tile priority analysis.
+
+These are **14-plot pilot cards**, not an operational TSA 23 inventory.  Raw
+LidarBC data and 25 m products stay in the Chinook archive; the repository holds
+only the cards, reports, tabular evidence, figures, and priority GeoPackage.
+
 ## Quick start
 
 ```bash

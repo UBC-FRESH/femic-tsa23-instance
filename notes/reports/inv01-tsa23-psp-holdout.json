@@ -1,0 +1,76 @@
+{
+  "run_id": "inv01-tsa23-psp-holdout",
+  "n_plots": 4,
+  "sites": [
+    4025090,
+    4025091,
+    4025094,
+    4025095
+  ],
+  "tile": "lidarbc:4:117213",
+  "lidar_year": 2019,
+  "measurement_year": 2018,
+  "dem": "layer6 1m 2019",
+  "metrics": {
+    "height": {
+      "n": 4,
+      "obs_mean": 19.86498857584317,
+      "pred_mean": 20.861873691194198,
+      "bias": 0.9968851153510276,
+      "mae": 1.0698106375089051,
+      "rmse": 1.4622950061674684
+    },
+    "ba": {
+      "n": 4,
+      "obs_mean": 36.61438406566908,
+      "pred_mean": 37.54538795933448,
+      "bias": 0.9310038936653955,
+      "mae": 6.967261635806072,
+      "rmse": 8.350632417082249
+    },
+    "volume": {
+      "n": 4,
+      "obs_mean": 263.70456227982316,
+      "pred_mean": 352.9719814053666,
+      "bias": 89.26741912554343,
+      "mae": 97.63516904905961,
+      "rmse": 118.20656667012294
+    }
+  },
+  "applicability": {
+    "height_range": {
+      "Lhp95": [
+        9.508,
+        24.07
+      ]
+    },
+    "ba_volume_range": {
+      "Lhmean": [
+        5.8017,
+        14.1882
+      ],
+      "CC2m": [
+        56.3442,
+        86.3423
+      ]
+    },
+    "height_in_range": 3,
+    "height_out_of_range": 1,
+    "ba_volume_in_range": 1,
+    "ba_volume_out_of_range": 3,
+    "interpretation": "These four high-biomass plots are mostly outside the published card ranges; the holdout is an extrapolation stress test, not an in-domain validation."
+  },
+  "exploratory_refit": {
+    "note": "Leave-one-tile-out on 14 training + 4 holdout; candidate refit on same forms did not improve aggregate RMSE.",
+    "current": {
+      "height_rmse": 0.8556,
+      "ba_rmse": 5.0439,
+      "volume_rmse": 57.5646
+    },
+    "candidate": {
+      "height_rmse": 0.9409,
+      "ba_rmse": 5.2637,
+      "volume_rmse": 57.9153
+    }
+  }
+}

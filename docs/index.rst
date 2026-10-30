@@ -18,6 +18,7 @@ behind each number lives in ``planning/``.
    quickstart
    rebuild-contract
    data-sources
+   inv01-tsa23-inventory
    tsr-guidance
    seral-interpretation
    troubleshooting
