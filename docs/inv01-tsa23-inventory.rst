@@ -79,7 +79,8 @@ the term-based nonlinear volume card; both load through the standard FEMIC
 reader.  ``config/inventory/experimental.yaml`` records the model set and
 coverage.  The paired hybrid evidence remains under
 ``experiments/inv01-regional-calibration/hybrid_bundle/``.  Standard CLI parity
-is documented in ``notes/reports/inv01-tsa23-cli-parity.md``.
+is documented in ``notes/reports/inv01-tsa23-cli-parity.md``; the config-driven
+full-grid rerun is byte-identical to the explicit-path outputs.
 
 Data and provenance
 -------------------
