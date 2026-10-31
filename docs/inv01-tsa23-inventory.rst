@@ -75,7 +75,8 @@ Regional open-data calibration
    (8.35 -> 6.67 m2/ha); height keeps the current card.  These are experimental,
    not published operational cards.  The loadable cards, bundle manifest, and
    leave-one-TSA-out CV are under
-   ``experiments/inv01-regional-calibration/model_bundle/``.
+   ``experiments/inv01-regional-calibration/model_bundle/``.  The nonlinear
+   volume candidate is under ``experiments/inv01-regional-calibration/nonlinear_volume/``.
 
 Data and provenance
 -------------------
