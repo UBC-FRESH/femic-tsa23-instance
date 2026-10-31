@@ -73,12 +73,13 @@ Regional open-data calibration
    regional volume candidate reduces the four-plot external RMSE from 118.2 to
    42.5 m3/ha and bias from +89.3 to -3.4.  The BA candidate also improves
    (8.35 -> 6.67 m2/ha); height keeps the current card.  These are experimental,
-   not published operational cards.  The loadable cards, bundle manifest, and
-   leave-one-TSA-out CV are under
-   ``experiments/inv01-regional-calibration/model_bundle/``.  The nonlinear
-   volume candidate is under ``experiments/inv01-regional-calibration/nonlinear_volume/``.  The paired hybrid bundle is
-   ``experiments/inv01-regional-calibration/hybrid_bundle/``.  Standard CLI parity is
-   documented in ``notes/reports/inv01-tsa23-cli-parity.md``.
+   not published operational cards.  The default experimental model root is
+``config/inventory/models/experimental/``.  It contains the linear BA card and
+the term-based nonlinear volume card; both load through the standard FEMIC
+reader.  ``config/inventory/experimental.yaml`` records the model set and
+coverage.  The paired hybrid evidence remains under
+``experiments/inv01-regional-calibration/hybrid_bundle/``.  Standard CLI parity
+is documented in ``notes/reports/inv01-tsa23-cli-parity.md``.
 
 Data and provenance
 -------------------
