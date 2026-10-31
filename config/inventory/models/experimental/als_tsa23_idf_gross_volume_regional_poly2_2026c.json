@@ -58,12 +58,13 @@
       "regional IDF high-biomass calibration"
     ],
     "species": [],
-    "notes": "Experimental nonlinear volume candidate; TSA23 external check four clustered plots."
+    "notes": "Experimental nonlinear volume candidate; TSA23 external check is four clustered plots (RMSE 42.092); leave-one-TSA23-tile-out RMSE is 25.473 m3/ha across 13 tiles and 18 plots."
   },
   "caveats": [
     "Experimental nonlinear model; not operational.",
-    "External RMSE is four clustered TSA23 plots.",
-    "Cross-region volume transfer is mixed.",
+    "External RMSE is four clustered TSA23 plots (42.092 m3/ha).",
+    "Cross-region volume transfer is mixed; leave-one-TSA-out RMSE is 16-67 m3/ha.",
+    "Spatial holdout is 18 plots across 13 tiles, with the four-plot high-biomass tile hardest.",
     "Do not extrapolate outside predictor ranges."
   ]
 }
