@@ -114,10 +114,11 @@ Decision
 --------
 
 Use the current cards and the regional candidates as open-data pilot products,
-not operational inventory.  The regional BA/volume candidates are the active
-experimental direction; height keeps the current card.  The next model step is
-to promote or reject the candidates with a larger spatial holdout, then rerun
-the coverage analysis.  There is no acquisition gate in the package workflow.
+not operational inventory.  The hybrid BA/volume bundle is the instance's
+default experimental root; height keeps the current card.  Joint BA/volume
+coverage rises to 23.6%, but the external check remains four clustered plots and
+cross-region transfer is mixed.  See
+``notes/reports/inv01-tsa23-hybrid-vs-current.md``.
 
 Evidence index
 --------------
