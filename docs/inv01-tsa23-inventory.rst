@@ -77,7 +77,8 @@ Regional open-data calibration
    leave-one-TSA-out CV are under
    ``experiments/inv01-regional-calibration/model_bundle/``.  The nonlinear
    volume candidate is under ``experiments/inv01-regional-calibration/nonlinear_volume/``.  The paired hybrid bundle is
-   ``experiments/inv01-regional-calibration/hybrid_bundle/``.
+   ``experiments/inv01-regional-calibration/hybrid_bundle/``.  Standard CLI parity is
+   documented in ``notes/reports/inv01-tsa23-cli-parity.md``.
 
 Data and provenance
 -------------------
