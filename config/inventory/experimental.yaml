@@ -1,0 +1,15 @@
+schema_version: femic.inventory.experimental.v1
+bundle_id: inv01-tsa23-hybrid-regional-2026c
+bundle_version: 2026.1-exp
+status: experimental
+height_model: config/inventory/models/als_tsa23_idf_lorey_height_2026.json
+ba_model: config/inventory/models/experimental/als_tsa23_idf_basal_area_regional_2026c.json
+volume_model: config/inventory/models/experimental/als_tsa23_idf_gross_volume_regional_poly2_2026c.json
+coverage:
+  joint_ba_volume_share: 0.2359
+  volume_cells: 4745557
+  volume_mean_m3_ha: 170.8414407369314
+caveats:
+  - Experimental open-data model; not an operational inventory.
+  - Height keeps the current card.
+  - External holdout is four clustered TSA23 plots.
