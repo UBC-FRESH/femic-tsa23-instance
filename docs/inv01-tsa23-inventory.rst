@@ -87,7 +87,8 @@ available on 48.2%.  A three-band 25 m status mask labels no-point-cloud,
 omitted/no-DEM, processed/no-cell, height-only, and BA/volume-valid areas.  The
 mask and the high-biomass acquisition request are in
 ``notes/reports/inv01-tsa23-model-status.md`` and
-``notes/reports/inv01-tsa23-acquisition-request.md``.
+``notes/reports/inv01-tsa23-acquisition-request.md``.  The sender-ready package
+is in ``notes/reports/inv01-tsa23-acquisition-bundle/``.
 
 .. figure:: /_static/inv01-tsa23-model-status.png
    :alt: TSA 23 model status mask
