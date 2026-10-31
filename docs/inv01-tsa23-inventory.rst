@@ -91,13 +91,13 @@ under ``/srv/shared-data/gep/ws4/tmp/inv01-data``, never in ``/tmp``.
 Model status
 ------------
 
-The current surface is valid for BA/volume on only 14.9% of TSA 23; height is
-available on 48.2%.  A three-band 25 m status mask labels no-point-cloud,
-omitted/no-DEM, processed/no-cell, height-only, and BA/volume-valid areas.  The
-mask and the high-biomass acquisition request are in
-``notes/reports/inv01-tsa23-model-status.md`` and
-``notes/reports/inv01-tsa23-acquisition-request.md``.  The sender-ready package
-is in ``notes/reports/inv01-tsa23-acquisition-bundle/``.
+The current surface has BA/volume on 14.9% of TSA 23 and height on 33.3%.  A
+three-band 25 m status mask labels no-point-cloud, omitted/no-DEM,
+processed/no-cell, height-only, and BA/volume-valid areas.  Applying the
+experimental regional BA/volume candidates raises joint BA/volume coverage to
+**23.6%** while height stays unchanged.  The masks and full-grid application
+are documented in ``notes/reports/inv01-tsa23-model-status.md`` and
+``notes/reports/inv01-tsa23-regional-inventory.md``.
 
 .. figure:: /_static/inv01-tsa23-model-status.png
    :alt: TSA 23 model status mask
@@ -108,10 +108,11 @@ is in ``notes/reports/inv01-tsa23-acquisition-bundle/``.
 Decision
 --------
 
-Do not operationalize the current cards.  The next defensible step is to extend
-the high-biomass TSA 23 calibration and validate with a tile-level spatial
-holdout.  Coverage expansion of the 907 omitted tiles comes after the model is
-defensible.
+Use the current cards and the regional candidates as open-data pilot products,
+not operational inventory.  The regional BA/volume candidates are the active
+experimental direction; height keeps the current card.  The next model step is
+to promote or reject the candidates with a larger spatial holdout, then rerun
+the coverage analysis.  There is no acquisition gate in the package workflow.
 
 Evidence index
 --------------
