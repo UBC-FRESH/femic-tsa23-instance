@@ -73,8 +73,9 @@ Regional open-data calibration
    regional volume candidate reduces the four-plot external RMSE from 118.2 to
    42.5 m3/ha and bias from +89.3 to -3.4.  The BA candidate also improves
    (8.35 -> 6.67 m2/ha); height keeps the current card.  These are experimental,
-   not published operational cards.  See
-   ``experiments/inv01-regional-calibration/``.
+   not published operational cards.  The loadable cards, bundle manifest, and
+   leave-one-TSA-out CV are under
+   ``experiments/inv01-regional-calibration/model_bundle/``.
 
 Data and provenance
 -------------------
