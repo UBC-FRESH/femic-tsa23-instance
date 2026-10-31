@@ -71,8 +71,9 @@ Regional open-data calibration
    Using the full BC PSP + LidarBC set, 24 high-biomass IDF plots produced
    features; 19 non-TSA-23 plots supplement the 14 TSA 23 training plots.  The
    regional volume candidate reduces the four-plot external RMSE from 118.2 to
-   42.5 m3/ha and bias from +89.3 to -3.4.  Height and BA do not improve.  This
-   is experimental, not a published card.  See
+   42.5 m3/ha and bias from +89.3 to -3.4.  The BA candidate also improves
+   (8.35 -> 6.67 m2/ha); height keeps the current card.  These are experimental,
+   not published operational cards.  See
    ``experiments/inv01-regional-calibration/``.
 
 Data and provenance
