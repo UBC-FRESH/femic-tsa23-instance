@@ -25,13 +25,15 @@ femic lidar inventory \
   --bundle <validated-bundle> \
   --features <volume-features.csv> \
   --model-key volume \
+  --model-config config/inventory/experimental.yaml \
   --instance-root <instance-root> \
   --output-dir <volume-output>
 ```
 
-`--model-key` resolves the card from `config/inventory/default.yaml`.  To use
-these research cards, pass `--model-config config/inventory/experimental.yaml`.
-An explicit `--model` path still works.
+`--model-key` resolves the card from `config/inventory/default.yaml`, which
+contains height and BA only.  To use these research cards, including volume,
+pass `--model-config config/inventory/experimental.yaml`.  An explicit
+`--model` path still works.
 
 The full-grid feature export must contain `fragment_id` plus the card's raw
 predictors.  The nonlinear volume card does not require a companion script.
