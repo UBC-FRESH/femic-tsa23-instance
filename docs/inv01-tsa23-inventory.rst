@@ -78,7 +78,7 @@ is ``config/inventory/models/experimental/``.  It contains the linear BA card
 and the term-based nonlinear volume card; both load through the standard FEMIC
 reader.  ``config/inventory/experimental.yaml`` records the model set and
 coverage.  The instance default is ``config/inventory/default.yaml``, which
-points at the published TSA 23 height and BA cards.  Volume is available only
+contains the published TSA 23 BA card only.  Height and volume are available only
 through the experimental/research configuration or an explicit card path.  The
 paired hybrid evidence remains
 under ``experiments/inv01-regional-calibration/hybrid_bundle/``.  Standard CLI parity
@@ -124,12 +124,14 @@ the instance default; height keeps the current card.  Joint BA/volume coverage
 rises to 23.6%.
 The four high-biomass plots are not the full validation set.  The strict
 independent BC IDF check covers 38 plots: BA RMSE 8.86 m2/ha (36 in range) and
-volume RMSE 67.02 m3/ha (28 in range).  The 56-plot expanded set includes 18
-fallback tiles at 6-11 years and gives 8.02 and 62.93.  The independent TSA23
-subset has 7 plots and BA RMSE 15.02; no independent TSA23 volume plot is inside
-the predictor range.  A time-lag sensitivity over 435 independent plots shows
-volume error rising to 99 m3/ha at 21-30 years and 116 m3/ha beyond 30 years.
-The model is therefore not operational and the published cards stay unchanged.
+volume RMSE 67.02 m3/ha (28 in range).  Height strict RMSE is 2.54 m (19 plots);
+TSA 23 strict height RMSE is 4.18 m (6 plots), so height is not in the default
+product.  The 56-plot expanded set includes 18 fallback tiles at 6-11 years.
+The independent TSA23 subset has 7 plots and BA RMSE 15.02; no independent TSA23
+volume plot is inside the predictor range.  A time-lag sensitivity over 435
+independent plots shows volume error rising to 99 m3/ha at 21-30 years and 116
+m3/ha beyond 30 years.  The model is therefore not operational and the default
+product is BA only.
 A spatially blocked refit did not improve BA; the selected volume form improved
 independent in-domain RMSE to 52.06 m3/ha but still has no independent TSA 23
 volume coverage.  No refit is promoted.  See
@@ -154,3 +156,4 @@ Evidence index
 - ``notes/reports/inv01-tsa23-refit-applicability.md``
 - ``notes/reports/inv01-tsa23-time-lag.md``
 - ``notes/reports/inv01-tsa23-time-aware-refit.md``
+- ``notes/reports/inv01-tsa23-height-validation.md``

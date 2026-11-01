@@ -13,9 +13,11 @@ at prediction time.
 The cards use first-return point-cloud metrics and exact FAIB plot support.
 LOOCV RMSE is 0.688 m height, 4.414 m2/ha basal area, and 20.666 m3/ha volume.
 
-The default inventory config uses only the height and BA cards.  Volume remains
-available as a published card, but it is outside the defensible default product
-until independent TSA 23 volume validation improves.
+The default inventory config uses only the BA card.  Height is withheld after
+independent validation gave strict RMSE 2.54 m and TSA 23 strict RMSE 4.18 m.
+Volume is withheld after strict independent RMSE 67.02 m3/ha and TSA 23
+time-aware RMSE 93.86 m3/ha.  Both remain published cards available through
+explicit paths or the research config.
 
 ## Applicability limits
 
