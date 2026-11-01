@@ -115,12 +115,15 @@ Decision
 --------
 
 Use the current cards and the regional candidates as open-data pilot products,
-not operational inventory.  The hybrid BA/volume bundle is the instance's
-default experimental root; height keeps the current card.  Joint BA/volume
-coverage rises to 23.6%.  A leave-one-TSA23-tile-out check across 13 tiles and
-18 plots gives BA RMSE 6.188 m2/ha and volume RMSE 25.473 m3/ha; the four
-clustered high-biomass plots remain the hardest fold, and cross-region transfer
-is mixed.  See ``notes/reports/inv01-tsa23-hybrid-vs-current.md`` and
+not operational inventory.  The hybrid BA/volume bundle remains an experimental
+root; height keeps the current card.  Joint BA/volume coverage rises to 23.6%.
+The four high-biomass plots are not the full validation set.  An independent BC
+IDF check covers 56 plots: BA RMSE 8.02 m2/ha (54 in range) and volume RMSE
+62.93 m3/ha (44 in range).  The independent TSA23 subset has 7 plots and BA RMSE
+15.02; no independent TSA23 volume plot is inside the predictor range.  The
+model is therefore not operational and the published cards stay unchanged.  See
+``notes/reports/inv01-tsa23-bc-validation.md``,
+``notes/reports/inv01-tsa23-hybrid-vs-current.md``, and
 ``notes/reports/inv01-tsa23-spatial-holdout.md``.
 
 Evidence index
@@ -134,3 +137,4 @@ Evidence index
 - ``experiments/inv01-high-biomass/``
 - ``notes/reports/inv01-tsa23-hybrid-vs-current.md``
 - ``notes/reports/inv01-tsa23-spatial-holdout.md``
+- ``notes/reports/inv01-tsa23-bc-validation.md``
