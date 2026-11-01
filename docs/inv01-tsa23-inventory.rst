@@ -150,3 +150,5 @@ Evidence index
 - ``notes/reports/inv01-tsa23-spatial-holdout.md``
 - ``notes/reports/inv01-tsa23-bc-validation.md``
 - ``notes/reports/inv01-tsa23-refit-applicability.md``
+- ``notes/reports/inv01-tsa23-time-lag.md``
+- ``notes/reports/inv01-tsa23-time-aware-refit.md``
