@@ -58,12 +58,12 @@
       "regional IDF high-biomass calibration"
     ],
     "species": [],
-    "notes": "Experimental nonlinear volume candidate. Independent BC IDF check: 44 in-range plots, volume RMSE 62.93 m3/ha. Four-plot TSA 23 high-biomass external check was 42.09. No independent TSA 23 plot falls inside the volume predictor range. Not operational."
+    "notes": "Experimental nonlinear volume candidate. Strict independent BC IDF check: 28 in-range plots, volume RMSE 67.02 m3/ha; the 56-plot expanded set is 62.93. Four-plot TSA 23 external check was 42.09. No independent TSA 23 volume plot is inside the predictor range. Not operational."
   },
   "caveats": [
     "Experimental nonlinear model; not operational.",
     "Four-plot high-biomass external check is not the full validation set.",
-    "Independent BC IDF check has 44 in-range plots, volume RMSE 62.93 m3/ha.",
+    "Strict independent BC IDF check: 28 in-range plots, volume RMSE 67.02 m3/ha; 56-plot expanded set is 62.93.",
     "No independent TSA 23 volume plot is inside the predictor range; do not extrapolate.",
     "Cross-region volume transfer is mixed."
   ]

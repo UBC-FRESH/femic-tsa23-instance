@@ -120,15 +120,19 @@ Use the current cards and the regional candidates as open-data pilot products,
 not operational inventory.  The hybrid BA/volume bundle is research-only, not
 the instance default; height keeps the current card.  Joint BA/volume coverage
 rises to 23.6%.
-The four high-biomass plots are not the full validation set.  An independent BC
-IDF check covers 56 plots: BA RMSE 8.02 m2/ha (54 in range) and volume RMSE
-62.93 m3/ha (44 in range).  The independent TSA23 subset has 7 plots and BA RMSE
-15.02; no independent TSA23 volume plot is inside the predictor range.  The
-model is therefore not operational and the published cards stay unchanged.  A
-spatially blocked refit did not improve BA; the selected volume form improved
+The four high-biomass plots are not the full validation set.  The strict
+independent BC IDF check covers 38 plots: BA RMSE 8.86 m2/ha (36 in range) and
+volume RMSE 67.02 m3/ha (28 in range).  The 56-plot expanded set includes 18
+fallback tiles at 6-11 years and gives 8.02 and 62.93.  The independent TSA23
+subset has 7 plots and BA RMSE 15.02; no independent TSA23 volume plot is inside
+the predictor range.  A time-lag sensitivity over 435 independent plots shows
+volume error rising to 99 m3/ha at 21-30 years and 116 m3/ha beyond 30 years.
+The model is therefore not operational and the published cards stay unchanged.
+A spatially blocked refit did not improve BA; the selected volume form improved
 independent in-domain RMSE to 52.06 m3/ha but still has no independent TSA 23
 volume coverage.  No refit is promoted.  See
-``notes/reports/inv01-tsa23-bc-validation.md`` and
+``notes/reports/inv01-tsa23-bc-validation.md``,
+``notes/reports/inv01-tsa23-time-lag.md``, and
 ``notes/reports/inv01-tsa23-refit-applicability.md``,
 ``notes/reports/inv01-tsa23-hybrid-vs-current.md``, and
 ``notes/reports/inv01-tsa23-spatial-holdout.md``.

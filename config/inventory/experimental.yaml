@@ -11,8 +11,11 @@ coverage:
   volume_mean_m3_ha: 170.8414407369314
 validation:
   independent_bc_idf_plots: 56
+  strict_independent_bc_idf_plots: 38
   independent_bc_ba_rmse_m2_ha: 8.0246
   independent_bc_volume_rmse_m3_ha: 62.9262
+  strict_independent_bc_ba_rmse_m2_ha: 8.8620
+  strict_independent_bc_volume_rmse_m3_ha: 67.0197
   independent_tsa23_plots: 7
   independent_tsa23_ba_rmse_m2_ha: 15.0243
   independent_tsa23_volume_in_range: 0
