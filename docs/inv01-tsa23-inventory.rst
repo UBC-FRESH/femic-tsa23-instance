@@ -131,7 +131,10 @@ The independent TSA23 subset has 7 plots and BA RMSE 15.02; no independent TSA23
 volume plot is inside the predictor range.  A time-lag sensitivity over 435
 independent plots shows volume error rising to 99 m3/ha at 21-30 years and 116
 m3/ha beyond 30 years.  The model is therefore not operational and the default
-product is BA only.
+product is BA only.  The BA-only pilot release has 2,942,755 rows and 25 m
+pixels, 14.9% TSA BA coverage, and an explicit non-operational status; see
+``notes/reports/inv01-tsa23-ba-pilot-release.md`` and
+``metadata/inv01/tsa23_ba_pilot_manifest.json``.
 A spatially blocked refit did not improve BA; the selected volume form improved
 independent in-domain RMSE to 52.06 m3/ha but still has no independent TSA 23
 volume coverage.  No refit is promoted.  See
