@@ -39,10 +39,9 @@ predictors.  The nonlinear volume card does not require a companion script.
 ## Status
 
 Experimental only.  The four-plot high-biomass external check is not the full
-validation set.  The independent BC IDF check covers 56 plots: BA RMSE 8.02
-m2/ha (54 in range) and volume RMSE 62.93 m3/ha (44 in range).  The independent
-TSA23 subset has 7 plots and BA RMSE 15.02; no independent TSA23 volume plot is
-inside the predictor range.  The earlier leave-one-TSA23-tile-out check is BA
-RMSE 6.188 and volume RMSE 25.473, but that set is small and partly used in model
-selection.  Raw data and full-grid products stay in the data archive, not this
-repository.
+validation set.  The strict independent BC IDF check covers 38 plots: BA RMSE
+8.86 m2/ha (36 in range) and volume RMSE 67.02 m3/ha (28 in range).  The
+56-plot expanded check includes 18 fallback tiles at 6-11 years and gives 8.02
+and 62.93.  The independent TSA23 subset has 7 plots and BA RMSE 15.02; no
+independent TSA23 volume plot is inside the predictor range.  Raw data and
+full-grid products stay in the data archive, not this repository.

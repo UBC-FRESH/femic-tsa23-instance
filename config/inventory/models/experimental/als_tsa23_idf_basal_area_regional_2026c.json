@@ -21,7 +21,7 @@
       "regional IDF high-biomass calibration"
     ],
     "species": [],
-    "notes": "Experimental regional candidate. Independent BC IDF check: 54 in-range plots, BA RMSE 8.02 m2/ha. Four-plot TSA 23 high-biomass external check was BA RMSE 6.67. TSA 23 independent subset: 7 plots, BA RMSE 15.02. Not an operational inventory."
+    "notes": "Experimental regional candidate. Strict independent BC IDF check: 36 in-range plots, BA RMSE 8.86 m2/ha; the 56-plot expanded set (including 6-11 year fallback) is 8.02. Four-plot TSA 23 high-biomass external check was 6.67. TSA 23 independent subset: 7 plots, BA RMSE 15.02. Not operational."
   },
   "predictor_ranges": {
     "Lhmean": [
@@ -36,7 +36,8 @@
   "caveats": [
     "Experimental regional candidate; not a published operational card.",
     "Four-plot high-biomass external check is not the full validation set.",
-    "Independent BC IDF check has 54 in-range plots, BA RMSE 8.02 m2/ha; TSA 23 independent subset is 15.02 m2/ha.",
-    "Wide BC IDF plots frequently fall outside the predictor range; do not extrapolate."
+    "Strict independent BC IDF check: 36 in-range plots, BA RMSE 8.86 m2/ha; 56-plot expanded set is 8.02.",
+    "TSA 23 independent subset: 7 plots, BA RMSE 15.02.",
+    "Do not extrapolate outside predictor ranges."
   ]
 }
