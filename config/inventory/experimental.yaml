@@ -9,7 +9,16 @@ coverage:
   joint_ba_volume_share: 0.2359
   volume_cells: 4745557
   volume_mean_m3_ha: 170.8414407369314
+validation:
+  independent_bc_idf_plots: 56
+  independent_bc_ba_rmse_m2_ha: 8.0246
+  independent_bc_volume_rmse_m3_ha: 62.9262
+  independent_tsa23_plots: 7
+  independent_tsa23_ba_rmse_m2_ha: 15.0243
+  independent_tsa23_volume_in_range: 0
 caveats:
   - Experimental open-data model; not an operational inventory.
   - Height keeps the current card.
-  - External holdout is four clustered TSA23 plots.
+  - The four-plot high-biomass external check is not the full validation set.
+  - Independent BC IDF check: 56 plots, BA RMSE 8.02 m2/ha, volume RMSE 62.93 m3/ha.
+  - No independent TSA 23 volume plot is inside the predictor range.
