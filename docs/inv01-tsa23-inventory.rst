@@ -73,14 +73,16 @@ Regional open-data calibration
    regional volume candidate reduces the four-plot external RMSE from 118.2 to
    42.5 m3/ha and bias from +89.3 to -3.4.  The BA candidate also improves
    (8.35 -> 6.67 m2/ha); height keeps the current card.  These are experimental,
-   not published operational cards.  The default experimental model root is
-``config/inventory/models/experimental/``.  It contains the linear BA card and
-the term-based nonlinear volume card; both load through the standard FEMIC
+   not published operational cards.  The research-only experimental model root
+is ``config/inventory/models/experimental/``.  It contains the linear BA card
+and the term-based nonlinear volume card; both load through the standard FEMIC
 reader.  ``config/inventory/experimental.yaml`` records the model set and
-coverage.  The paired hybrid evidence remains under
-``experiments/inv01-regional-calibration/hybrid_bundle/``.  Standard CLI parity
+coverage.  The instance default is ``config/inventory/default.yaml``, which
+points at the published TSA 23 pilot cards.  The paired hybrid evidence remains
+under ``experiments/inv01-regional-calibration/hybrid_bundle/``.  Standard CLI parity
 is documented in ``notes/reports/inv01-tsa23-cli-parity.md``; the config-driven
-full-grid rerun is byte-identical to the explicit-path outputs.
+full-grid rerun reproduces the explicit-path prediction columns; the RMSE
+column now carries the independent validation values.
 
 Data and provenance
 -------------------
@@ -115,8 +117,9 @@ Decision
 --------
 
 Use the current cards and the regional candidates as open-data pilot products,
-not operational inventory.  The hybrid BA/volume bundle remains an experimental
-root; height keeps the current card.  Joint BA/volume coverage rises to 23.6%.
+not operational inventory.  The hybrid BA/volume bundle is research-only, not
+the instance default; height keeps the current card.  Joint BA/volume coverage
+rises to 23.6%.
 The four high-biomass plots are not the full validation set.  An independent BC
 IDF check covers 56 plots: BA RMSE 8.02 m2/ha (54 in range) and volume RMSE
 62.93 m3/ha (44 in range).  The independent TSA23 subset has 7 plots and BA RMSE

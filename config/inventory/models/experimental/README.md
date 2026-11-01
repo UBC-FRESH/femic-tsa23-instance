@@ -1,6 +1,7 @@
 # Experimental inventory model root
 
-This is the default experimental model root for the TSA23 instance.
+This is the research-only experimental model root for the TSA23 instance.
+The default model config is `config/inventory/default.yaml`.
 
 - `als_tsa23_idf_basal_area_regional_2026c.json` — linear BA card
 - `als_tsa23_idf_gross_volume_regional_poly2_2026c.json` — `log_terms` volume card
@@ -28,8 +29,9 @@ femic lidar inventory \
   --output-dir <volume-output>
 ```
 
-`--model-key` resolves the card from `config/inventory/experimental.yaml`.  An
-explicit `--model` path still works.
+`--model-key` resolves the card from `config/inventory/default.yaml`.  To use
+these research cards, pass `--model-config config/inventory/experimental.yaml`.
+An explicit `--model` path still works.
 
 The full-grid feature export must contain `fragment_id` plus the card's raw
 predictors.  The nonlinear volume card does not require a companion script.
