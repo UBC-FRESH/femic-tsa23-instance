@@ -31,7 +31,7 @@ femic lidar inventory \
 ```
 
 `--model-key` resolves the card from `config/inventory/default.yaml`, which
-contains height and BA only.  To use these research cards, including volume,
+contains BA only.  To use these research cards, including height and volume,
 pass `--model-config config/inventory/experimental.yaml`.  An explicit
 `--model` path still works.
 

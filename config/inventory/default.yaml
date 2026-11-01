@@ -1,11 +1,10 @@
 schema_version: femic.inventory.models.v1
-bundle_id: inv01-tsa23-published-ba-height-2026
+bundle_id: inv01-tsa23-published-ba-2026
 bundle_version: 2026.1
 status: published-pilot
-height_model: config/inventory/models/als_tsa23_idf_lorey_height_2026.json
 ba_model: config/inventory/models/als_tsa23_idf_basal_area_2026.json
 caveats:
   - Published TSA23 IDF pilot cards; not an operational inventory.
-  - Default product is height plus BA; volume is withheld from the default.
+  - Default product is BA only; height and volume are withheld from the default.
   - LOOCV only; no independent P48/P49 validation.
   - High-biomass IDF stands above the predictor ranges are unsupported.
