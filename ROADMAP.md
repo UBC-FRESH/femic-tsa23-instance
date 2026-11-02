@@ -117,3 +117,34 @@ Note: the site deploys from `main` — workflow run 39459197168 built and publis
 after the merge to `main` (PR #17). The documentation infrastructure is complete; the
 editorial depth is P115's, which is why P117.4 is deferred rather than done.
 
+
+## Phase 10: Target semantics and forest-condition card
+
+Parent issue: #49
+Branch: `feature/p123-target-semantics-condition-card`
+Status: active
+
+Goal: record the WS4 P86 interpretation of the road-aware target and publish a
+report-only forest-condition card for the BA-only inventory pilot, without changing
+the model, data, targets, or solver.
+
+- [x] P123.1 Record P86 semantics and publish the forest-condition card (#50)
+  - [x] Write the P86 target-semantics note.
+  - [x] Publish the JSON and Markdown forest-condition card.
+  - [x] Add the card validation test.
+  - [x] Update the roadmap and changelog.
+  - [x] Queue the phase pull request.
+
+Acceptance criteria:
+
+- The note treats the 10,000,000 CAD route-build bound as a soft aspiration, not a
+  solver failure.
+- The card carries a review status, source, version, applicability, uncertainty, and
+  an advisory alert; it is report-only.
+- The local test rejects a missing source, a non-finite value, and an invalid review
+  status.
+- No model, data, target, or solver value changes.
+
+Note: the card carries only the BA-only inventory indicator. The instance has no
+TSA 23 DHI calculation or source, so the DHI fixture from the separate WS4 P90
+example is not copied here.

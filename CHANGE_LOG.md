@@ -104,3 +104,20 @@ BC layers plus Wine and Patchworks, and cannot run from this tree).
   before TSA/treed filtering.
 - Formalized Phase 1 as parent issue #1 with child issues #2-#5 on branch
   `feature/p109-source-discovery-materialization`.
+
+## 2026-11-02 — P123 target semantics and forest-condition card
+
+- Added `reports/tsa23-target-semantics.md`, which interprets the unmet
+  10,000,000 CAD route-build target under WS4 P86: a target maximum is a one-sided
+  penalty hinge, and the lower weight (1.0) lets fuel cost (weight 10.0) dominate the
+  trade-off. The note does not claim the bound is infeasible and does not change the
+  target file.
+- Published `reports/tsa23-forest-condition-2026.json` and `.md` as a
+  `ws4.forest_condition.report.v1` card. It carries the BA-only 23.87 m2/ha indicator,
+  the 8.86 m2/ha strict independent RMSE, the 14.9% coverage applicability, and an
+  advisory coverage alert. It is `draft` and report-only.
+- Added `tests/test_forest_condition_card.py` with five local contract checks.
+- A DHI indicator is omitted because the instance has no TSA 23 DHI calculation or
+  source; the WS4 P90 DHI fixture is not copied.
+- Verification: `python -m pytest tests/test_forest_condition_card.py -q` -> 5 passed;
+  `python -m json.tool reports/tsa23-forest-condition-2026.json` -> OK.
