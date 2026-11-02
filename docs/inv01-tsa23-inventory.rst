@@ -147,6 +147,20 @@ volume coverage.  No refit is promoted.  See
 ``notes/reports/inv01-tsa23-hybrid-vs-current.md``, and
 ``notes/reports/inv01-tsa23-spatial-holdout.md``.
 
+WS4 consumer test
+-----------------
+
+The P124 consumer test maps the BA pilot to the compiled TSA 23 WS4 fragment grid
+and adds report-only fields to a copy of `compiled_ft_econ`.  The table and raster
+match at all 2,942,755 valid cells (maximum difference 1.9e-6), with `-9999`
+treated as abstention.  Of those cells, 2,833,996 match a fragment and 108,759
+(3.7%) are outside the fragment grid or on edges.  The copy has 52,827 matched
+fragments and 41,719 matched blocks.  `ws4 validate` passes and a one-year
+100-block FT simulation completes; `Simulator.from_dataset` loads the fragment
+fields, so the consumer reads them and ignores them for simulation semantics.
+The production dataset and all model values are unchanged.  See
+``reports/tsa23-ba-consumer-test.md``.
+
 Evidence index
 --------------
 

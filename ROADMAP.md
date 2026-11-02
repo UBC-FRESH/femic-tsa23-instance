@@ -122,7 +122,7 @@ editorial depth is P115's, which is why P117.4 is deferred rather than done.
 
 Parent issue: #49
 Branch: `feature/p123-target-semantics-condition-card`
-Status: active
+Status: complete
 
 Goal: record the WS4 P86 interpretation of the road-aware target and publish a
 report-only forest-condition card for the BA-only inventory pilot, without changing
@@ -148,3 +148,30 @@ Acceptance criteria:
 Note: the card carries only the BA-only inventory indicator. The instance has no
 TSA 23 DHI calculation or source, so the DHI fixture from the separate WS4 P90
 example is not copied here.
+
+## Phase 11: TSA 23 BA-only WS4 consumer test
+
+Parent issue: #52
+Branch: `feature/p124-ba-consumer-test`
+Status: active
+
+Goal: map the published BA-only pilot to the compiled TSA 23 WS4 fragment grid,
+add report-only fields to a copy, and run one validate/simulate consumer test
+without changing the production dataset or model.
+
+- [x] P124.1 Run the TSA 23 BA-only WS4 consumer test (#53)
+  - [x] Verify the BA table and raster identity.
+  - [x] Build the cell-to-fragment join and report match counts.
+  - [x] Add the report-only fields to a copied dataset.
+  - [x] Run `ws4 validate` and one bounded `ws4 simulate`.
+  - [x] Write the report and JSON summary.
+  - [x] Add the helper test, update the roadmap/changelog, and queue the PR.
+
+Acceptance criteria:
+
+- Valid cells match the raster; `-9999` is not treated as zero.
+- Matched and unmatched cells are reported.
+- The copied fragment and block tables carry the report-only fields.
+- `ws4 validate` passes and the bounded simulation completes.
+- The report states read/ignored/refused behavior.
+- The production dataset and model are unchanged.

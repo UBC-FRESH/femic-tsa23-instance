@@ -124,3 +124,23 @@ BC layers plus Wine and Patchworks, and cannot run from this tree).
 - Docs CI compatibility: fixed the malformed definition-list indentation in
   `docs/inv01-tsa23-inventory.rst` that produced a docutils warning. A clean
   `sphinx-build -b html docs _build/html -W` now succeeds.
+
+## 2026-11-02 — P124 TSA 23 BA-only WS4 consumer test
+
+- Added `scripts/verify_ba_pilot_consumer.py` and focused helper tests. The script
+  maps the 25 m BA pilot to the compiled TSA 23 fragment grid, adds report-only
+  `inventory_ba_*` fields to a copy of `compiled_ft_econ`, validates the copy, and
+  runs a one-year 100-block FT simulation.
+- Table and raster match at 2,942,755 valid cells (maximum difference 1.9e-6);
+  `-9999` is treated as abstention. 2,833,996 cells match a fragment and 108,759
+  (3.7%) are outside the fragment grid or on edges.
+- The copy has 52,827 matched fragments and 41,719 matched blocks; the matched cell
+  area is 177,124.75 ha. Matched BA mean/min/max: 23.95 / 10.73 / 42.01 m2/ha.
+- `ws4 validate` passes and the simulation completes. `Simulator.from_dataset` loads
+  the fragment fields; the block fields are present in the table but the simulator has
+  no separate block table. The consumer reads the fields and ignores them for
+  simulation semantics.
+- The production dataset and all model values are unchanged. Report:
+  `reports/tsa23-ba-consumer-test.md`.
+- Verification: `python -m pytest tests/test_verify_ba_pilot_consumer.py -q` -> 4
+  passed; ruff clean; clean `sphinx-build -b html docs _build/html -W` succeeds.
