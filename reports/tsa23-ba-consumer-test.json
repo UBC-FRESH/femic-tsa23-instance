@@ -1,0 +1,28 @@
+{
+  "ba_max_matched": 42.01152455448009,
+  "ba_mean_matched": 23.953528859574863,
+  "ba_min_matched": 10.727730992400314,
+  "block_fields_present": [
+    "inventory_ba_available",
+    "inventory_ba_m2_ha"
+  ],
+  "fragment_fields_present": [
+    "inventory_ba_available",
+    "inventory_ba_cells",
+    "inventory_ba_m2_ha"
+  ],
+  "matched_area_ha": 308541.8302804155,
+  "matched_blocks": 41719,
+  "matched_cell_area_ha": 177124.75,
+  "matched_cells": 2833996,
+  "matched_fragments": 52827,
+  "raster_valid_pixels": 2942755,
+  "simulate_completed": true,
+  "simulate_passed": true,
+  "simulator_reads_fragment_fields": true,
+  "table_raster_max_abs_diff": 1.907337207285309e-06,
+  "table_rows": 2942755,
+  "unmatched_cells": 108759,
+  "validate_passed": true,
+  "years": 1
+}
