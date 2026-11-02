@@ -1,0 +1,39 @@
+{
+  "schema_version": "ws4.forest_condition.report.v1",
+  "report_id": "tsa23-ba-pilot-2026",
+  "scenario_id": "inv01-ba-pilot",
+  "generated_utc": "2026-11-02T00:00:00Z",
+  "period": "2026",
+  "review_status": "draft",
+  "indicators": [
+    {
+      "name": "basal_area",
+      "value": 23.87,
+      "unit": "m2/ha",
+      "source": "femic.inventory.als",
+      "source_version": "2026.1",
+      "uncertainty": 8.86,
+      "uncertainty_kind": "RMSE",
+      "applicability": "TSA23 IDF; BA-only pilot; 36 in-range strict independent plots",
+      "status": "ok",
+      "trend": "not_available",
+      "note": "14.9% TSA coverage; 7 independent TSA 23 plots; not operational."
+    }
+  ],
+  "alerts": [
+    {
+      "code": "ba-coverage",
+      "severity": "watch",
+      "message": "BA-only pilot covers 14.9% of TSA 23; treat -9999 as abstention and do not use for operational decisions.",
+      "indicator": "basal_area",
+      "advisory": true
+    }
+  ],
+  "provenance": {
+    "instance": "femic-tsa23-instance@4170451",
+    "source": "metadata/inv01/tsa23_ba_pilot_manifest.json",
+    "model_card": "config/inventory/models/als_tsa23_idf_basal_area_2026.json",
+    "model_card_sha256": "c9d2c8de369af5cceb7070531d0e924452cab52b50de39d31dad3e831d82e5a9",
+    "acceptance": "notes/reports/inv01-tsa23-ba-pilot-acceptance.md"
+  }
+}
