@@ -74,17 +74,17 @@ Regional open-data calibration
    42.5 m3/ha and bias from +89.3 to -3.4.  The BA candidate also improves
    (8.35 -> 6.67 m2/ha); height keeps the current card.  These are experimental,
    not published operational cards.  The research-only experimental model root
-is ``config/inventory/models/experimental/``.  It contains the linear BA card
-and the term-based nonlinear volume card; both load through the standard FEMIC
-reader.  ``config/inventory/experimental.yaml`` records the model set and
-coverage.  The instance default is ``config/inventory/default.yaml``, which
-contains the published TSA 23 BA card only.  Height and volume are available only
-through the experimental/research configuration or an explicit card path.  The
-paired hybrid evidence remains
-under ``experiments/inv01-regional-calibration/hybrid_bundle/``.  Standard CLI parity
-is documented in ``notes/reports/inv01-tsa23-cli-parity.md``; the config-driven
-full-grid rerun reproduces the explicit-path prediction columns; the RMSE
-column now carries the independent validation values.
+   is ``config/inventory/models/experimental/``.  It contains the linear BA card
+   and the term-based nonlinear volume card; both load through the standard FEMIC
+   reader.  ``config/inventory/experimental.yaml`` records the model set and
+   coverage.  The instance default is ``config/inventory/default.yaml``, which
+   contains the published TSA 23 BA card only.  Height and volume are available only
+   through the experimental/research configuration or an explicit card path.  The
+   paired hybrid evidence remains
+   under ``experiments/inv01-regional-calibration/hybrid_bundle/``.  Standard CLI parity
+   is documented in ``notes/reports/inv01-tsa23-cli-parity.md``; the config-driven
+   full-grid rerun reproduces the explicit-path prediction columns; the RMSE
+   column now carries the independent validation values.
 
 Data and provenance
 -------------------

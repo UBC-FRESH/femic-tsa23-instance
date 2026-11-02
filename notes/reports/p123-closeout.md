@@ -66,6 +66,9 @@ python -m pytest tests/test_forest_condition_card.py -q
 
 python -m json.tool reports/tsa23-forest-condition-2026.json >/dev/null
 OK
+
+sphinx-build -b html docs _build/html -W
+Build succeeded.
 ```
 
 The card was also loaded and rendered through the open WS4 P90
@@ -87,7 +90,9 @@ OK
 | Deviation | Cause | Remedy |
 | --- | --- | --- |
 | No DHI indicator in the card | The instance has no TSA 23 DHI calculation or source | The parent and child issues were edited and a scope comment was posted; the WS4 P90 DHI fixture is not copied |
-| No full dashboard gate | The TSA23 instance does not ship the seeded dashboard | The focused test and JSON parse are recorded as the available gates |
+| No full dashboard gate | The TSA23 instance does not ship the seeded dashboard | The focused test, JSON parse, and Sphinx build are recorded as the available gates |
+| A pre-existing docs warning blocked the docs build | Malformed definition-list indentation in `docs/inv01-tsa23-inventory.rst` | Fixed in this phase; a clean `sphinx-build -W` now succeeds |
+| No PR CI run | The only workflow triggers on push to `main` or manual dispatch | The local docs build and focused test are recorded; CI runs on merge |
 
 ## 6. Next phase
 

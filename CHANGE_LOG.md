@@ -121,3 +121,6 @@ BC layers plus Wine and Patchworks, and cannot run from this tree).
   source; the WS4 P90 DHI fixture is not copied.
 - Verification: `python -m pytest tests/test_forest_condition_card.py -q` -> 5 passed;
   `python -m json.tool reports/tsa23-forest-condition-2026.json` -> OK.
+- Docs CI compatibility: fixed the malformed definition-list indentation in
+  `docs/inv01-tsa23-inventory.rst` that produced a docutils warning. A clean
+  `sphinx-build -b html docs _build/html -W` now succeeds.
